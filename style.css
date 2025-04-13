@@ -1,0 +1,180 @@
+:root {
+    --bg: #eee;
+    --bg-active: #ccc;
+    --bg-hover: #ddd;
+    --border: 1px solid var(--bg-active);
+    --border-radius: 0;
+    --btn-bg: var(--bg);
+    --btn-bg-hover: var(--bg-hover);
+    --btn-border: var(--border);
+    --btn-border-radius: var(--border-radius);
+    --spacing: .25rem;
+    --spacing-wide: .5rem;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: sans-serif;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    display: grid;
+    grid-template: 
+        "top  top"  2rem
+        "left main" 1fr
+       / 4rem 1fr;
+    height: 100%;
+    margin: 0;
+}
+
+button {
+    background: var(--btn-bg);
+    border: var(--btn-border);
+}
+
+button:hover {
+    background: var(--btn-bg-hover);
+}
+
+canvas {
+    position: absolute;
+}
+
+dialog {
+    border: var(--border);
+    padding: 0;
+}
+
+dialog::backdrop {
+    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, .25);
+}
+
+dialog header {
+    --btn-border: none;
+    padding: var(--spacing);
+    background: var(--bg);
+    display: flex;
+    justify-content: space-between;
+}
+
+dialog header h1 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+dialog footer {
+    padding: var(--spacing);
+    background: var(--bg);
+    display: flex;
+    gap: var(--spacing);
+}
+
+dialog input,
+dialog label {
+    margin: var(--spacing);
+}
+
+.hidden {
+    display: none!important;
+}
+
+#drawing-area {
+    grid-area: main;
+    position: relative;
+    overflow: hidden;
+}
+
+#menu {
+    --btn-border: none;
+    --menu-bg: var(--bg);
+    --menu-border: var(--border);
+    display: flex;
+    align-items: stretch;
+    grid-area: top;
+    background: var(--menu-bg);
+    border: var(--menu-border);
+}
+
+#menu menu {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#menu menu:not([popover]),
+#menu menu:popover-open {
+    display: flex;
+    align-items: stretch;
+}
+
+#menu menu:popover-open {
+    inset: unset;
+    position: absolute;
+}
+
+#menu li {
+    display: block;
+    padding: var(--spacing);
+}
+
+#menu button {
+    display: block;
+    height: 100%;
+}
+
+#menu menu menu {
+    flex-direction: column;
+    background: var(--menu-bg);
+    border: var(--menu-border);
+    padding: var(--spacing);
+}
+
+#menu menu menu li {
+    padding: 0;
+}
+
+#menu menu menu li button {
+    padding: var(--spacing) var(--spacing-wide);
+    width: 100%;
+    text-align: start;
+}
+
+#menu > menu {
+    width: 100%;
+}
+
+#menu > menu > li:last-child {
+    /* this is the language menu */
+    margin-left: auto;
+}
+
+#toolbar {
+    grid-area: left;
+    padding: var(--spacing);
+    background: var(--bg);
+    border: var(--border);
+}
+
+#toolbar input {
+    display: none;
+}
+
+#toolbar label {
+    font-size: 3rem;
+    display: block;
+    text-align: center;
+}
+
+#toolbar label:hover {
+    background: var(--bg-hover);
+}
+
+#toolbar input:checked + label {
+    background-color: var(--bg-active);
+}

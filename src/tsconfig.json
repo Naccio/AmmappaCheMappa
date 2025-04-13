@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "sourceMap": false,
+    "outFile": "../script.js",
+    "removeComments": true,
+    "strict": true
+  },
+  "include": ["*.ts", "Model/GridMap.ts", "Model/Lazy.ts", "Rendering/LineStyle.ts", "UI/Tools/ToolActivator.ts", "UI/DrawingArea.ts", "UI/TerrainLayer.ts", "UI/Layer.ts", "UI/GridLayer.ts", "UI/CanvasProvider.ts", "Rendering/CellDrawer.ts", "Rendering/CellDrawerFactory.ts", "Rendering/CellRenderer.ts"]
+}

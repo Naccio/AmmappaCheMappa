@@ -1,0 +1,22 @@
+{
+    "button_label_cancel": "Annulla",
+    "button_label_confirm": "Conferma",
+    "command_label_export": "Esporta mappa",
+    "command_label_new": "Nuova mappa...",
+    "command_label_open": "Apri mappa...",
+    "command_label_save": "Salva mappa",
+    "form_title_new_map": "Nuova mappa",
+    "form_title_new_text": "Nuovo testo",
+    "input_label_columns": "Colonne",
+    "input_label_rows": "Righe",
+    "input_label_size": "Dimensione",
+    "input_label_text": "Testo",
+    "menu_label_language": "Lingua",
+    "tool_label_eraser": "Gomma",
+    "tool_label_mountains": "Montagne",
+    "tool_label_places": "Luogo",
+    "tool_label_rivers": "Fiume",
+    "tool_label_roads": "Strada",
+    "tool_label_text": "Testo",
+    "tool_label_trees": "Alberi"
+}

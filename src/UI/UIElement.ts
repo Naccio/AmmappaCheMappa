@@ -1,0 +1,3 @@
+interface UIElement {
+    build(): void;
+}
