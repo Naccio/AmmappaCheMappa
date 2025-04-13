@@ -1,0 +1,22 @@
+{
+    "button_label_cancel": "Cancel",
+    "button_label_confirm": "Confirm",
+    "command_label_export": "Export map",
+    "command_label_new": "New map...",
+    "command_label_open": "Open map...",
+    "command_label_save": "Save map",
+    "form_title_new_map": "New map",
+    "form_title_new_text": "New text",
+    "input_label_columns": "Columns",
+    "input_label_rows": "Rows",
+    "input_label_size": "Size",
+    "input_label_text": "Text",
+    "menu_label_language": "Language",
+    "tool_label_eraser": "Eraser",
+    "tool_label_mountains": "Mountains",
+    "tool_label_places": "Place",
+    "tool_label_rivers": "River",
+    "tool_label_roads": "Road",
+    "tool_label_text": "Text",
+    "tool_label_trees": "Trees"
+}
