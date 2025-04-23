@@ -3,7 +3,7 @@
 class TreeRenderer extends GenericObjectRenderer<Tree> {
     private readonly lineWidth = 2;
 
-    protected is(object: GridObject) : object is Tree {
+    protected is(object: MapObject) : object is Tree {
         return TreesHelper.isTree(object);
     }
 

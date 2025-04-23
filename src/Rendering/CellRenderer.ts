@@ -16,7 +16,7 @@ class CellRenderer {
         }
     }
 
-    private renderObject(object: GridObject, drawer: CellDrawer) {
+    private renderObject(object: MapObject, drawer: CellDrawer) {
         for (let strategy of this.renderers) {
             strategy.render(object, drawer);
         }

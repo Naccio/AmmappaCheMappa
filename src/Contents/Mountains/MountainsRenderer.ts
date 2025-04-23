@@ -3,7 +3,7 @@
 class MountainsRenderer extends GenericObjectRenderer<Mountain> {
     private readonly lineWidth = 4;
 
-    protected is(object: GridObject) : object is Mountain {
+    protected is(object: MapObject) : object is Mountain {
         return MountainsHelper.isMountain(object);
     }
 

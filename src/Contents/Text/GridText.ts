@@ -1,7 +1,7 @@
-/// <reference path="../../Model/GridObject.ts" />
+/// <reference path="../../Model/MapObject.ts" />
 /// <reference path="../../Model/Point.ts" />
 
-interface GridText extends GridObject {
+interface GridText extends MapObject {
     position: Point,
     value: string,
     fontSize: number

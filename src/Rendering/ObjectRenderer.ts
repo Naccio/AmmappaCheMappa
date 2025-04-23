@@ -1,3 +1,3 @@
 interface ObjectRenderer {
-    render(object: GridObject, drawer: CellDrawer): void;
+    render(object: MapObject, drawer: CellDrawer): void;
 }

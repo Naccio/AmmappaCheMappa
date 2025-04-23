@@ -3,7 +3,7 @@
 class RiverRenderer extends GenericObjectRenderer<River> {
     private readonly lineWidth = 6;
 
-    protected is(object: GridObject) : object is River {
+    protected is(object: MapObject) : object is River {
         return RiversHelper.isRiver(object);
     }
 

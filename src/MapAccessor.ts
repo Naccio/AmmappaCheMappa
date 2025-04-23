@@ -137,7 +137,7 @@ class MapAccessor {
             .subtract(cellPosition);
     }
 
-    public setObjects(index: CellIndex, objects: GridObject[]) {
+    public setObjects(index: CellIndex, objects: MapObject[]) {
         const cell = this._cells[index.column][index.row],
             cellName = GridHelper.cellIndexToName(index);
 

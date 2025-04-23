@@ -1,6 +1,6 @@
-/// <reference path="../../Model/GridObject.ts" />
+/// <reference path="../../Model/MapObject.ts" />
 
-interface Tree extends GridObject {
+interface Tree extends MapObject {
     position: Point,
     crownWidth: number,
     crownHeight: number

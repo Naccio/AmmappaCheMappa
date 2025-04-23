@@ -4,7 +4,7 @@
 class RoadRenderer extends GenericObjectRenderer<Road> {
     private readonly lineWidth = 2;
 
-    protected is(object: GridObject) : object is Road {
+    protected is(object: MapObject) : object is Road {
         return object.type === 'road';
     }
 

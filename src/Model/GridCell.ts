@@ -2,5 +2,5 @@
 
 interface GridCell {
     coordinates: CellIndex;
-    objects: GridObject[];
+    objects: MapObject[];
 }

@@ -8,7 +8,7 @@ class PlacesHelper {
         return cell.objects.filter(o => this.isPlace(o));
     }
 
-    public static isPlace(object: GridObject) : object is Place {
+    public static isPlace(object: MapObject) : object is Place {
         return object.type === this.objectType;
     }
 }

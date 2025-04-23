@@ -1,3 +1,3 @@
-interface Place extends GridObject {
+interface Place extends MapObject {
     position: Point
 }

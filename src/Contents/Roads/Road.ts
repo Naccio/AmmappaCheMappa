@@ -1,7 +1,7 @@
-/// <reference path="../../Model/GridObject.ts" />
+/// <reference path="../../Model/MapObject.ts" />
 /// <reference path="../../Model/Point.ts" />
 
-interface Road extends GridObject {
+interface Road extends MapObject {
     from: Point,
     to: Point
 }

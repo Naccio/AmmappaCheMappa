@@ -25,7 +25,7 @@ class  TreesHelper {
         }
     }
 
-    public static isTree(object: GridObject) : object is Tree {
+    public static isTree(object: MapObject) : object is Tree {
         return object.type === this.objectType;
     }
 }

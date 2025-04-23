@@ -8,7 +8,7 @@ class  MountainsHelper {
         return cell.objects.filter(o => this.isMountain(o));
     }
 
-    public static isMountain(object: GridObject) : object is Mountain {
+    public static isMountain(object: MapObject) : object is Mountain {
         return object.type === this.objectType;
     }
 }

@@ -13,7 +13,7 @@ class PlaceRenderer extends GenericObjectRenderer<Place> {
         });
     }
 
-    protected is(object: GridObject) : object is Place {
+    protected is(object: MapObject) : object is Place {
         return PlacesHelper.isPlace(object);
     }
 
