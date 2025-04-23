@@ -5,7 +5,8 @@ class MapFactory {
             rows: height,
             pixelsPerCell: 100,
             zoom: 2,
-            objects: {}
+            objects: {},
+            layers: []
         };
     }
 }
