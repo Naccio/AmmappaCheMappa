@@ -1,3 +1,4 @@
+/// <reference path="CellDrawerFactory.ts" />
 /// <reference path="ObjectRenderer.ts" />
 
 class CellRenderer {

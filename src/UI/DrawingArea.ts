@@ -14,7 +14,7 @@ class DrawingArea implements UIElement {
     private lastShift: Point = VectorMath.zero;
     private lastWheelClick = 0;
 
-    constructor(private layers: Layer[], private tool: ToolActivator) {
+    constructor(private layers: DrawingLayer[], private tool: ToolActivator) {
     }
 
     public build() {

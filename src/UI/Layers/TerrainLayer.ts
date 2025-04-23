@@ -1,11 +1,10 @@
-/// <reference path="../MapAccessor.ts" />
-/// <reference path="../Rendering/CanvasDrawer.ts" />
-/// <reference path="../Rendering/CellRenderer.ts" />
-/// <reference path="CanvasProvider.ts" />
-/// <reference path="Layer.ts" />
+/// <reference path="../../MapAccessor.ts" />
+/// <reference path="../../Rendering/CanvasDrawer.ts" />
+/// <reference path="../../Rendering/CellRenderer.ts" />
+/// <reference path="../CanvasProvider.ts" />
 
-class TextLayer implements Layer {
-    private readonly id = 'text';
+class TerrainLayer implements DrawingLayer {
+    private readonly id = 'terrain';
 
     private drawer?: CanvasDrawer;
 

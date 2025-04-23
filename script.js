@@ -345,6 +345,18 @@ class MountainsRenderer extends GenericObjectRenderer {
         });
     }
 }
+class CellDrawerFactory {
+    mapAccessor;
+    canvasProvider;
+    constructor(mapAccessor, canvasProvider) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+    }
+    create(cell, layer) {
+        const canvas = this.canvasProvider.get(layer);
+        return new CellDrawer(cell, this.mapAccessor, canvas);
+    }
+}
 class CellRenderer {
     drawerFactory;
     renderers;
@@ -1149,6 +1161,212 @@ class ApplicationUI {
         }
     }
 }
+class MapDrawer {
+    map;
+    container;
+    parentShift;
+    actualShift = VectorMath.zero;
+    currentShift = VectorMath.zero;
+    constructor(map, container) {
+        this.map = map;
+        this.container = container;
+        const parentShift = container.parentElement?.getBoundingClientRect();
+        this.parentShift = parentShift === undefined
+            ? VectorMath.zero
+            : parentShift;
+    }
+    center() {
+        this.shift(VectorMath.multiply(this.currentShift, -1));
+    }
+    getMapPoint(viewportPoint) {
+        return VectorMath.subtract(viewportPoint, this.actualShift);
+    }
+    resize(direction) {
+        const map = this.map, min = 1, max = 5, currentZoom = map.zoom, newZoom = MathHelper.clamp(currentZoom + direction, min, max), multiplier = map.pixelsPerCell / newZoom;
+        map.zoom = newZoom;
+        this.container.style.width = map.columns * multiplier + 'px';
+        this.container.style.height = map.rows * multiplier + 'px';
+        this.shift(VectorMath.zero);
+    }
+    shift(vector) {
+        this.currentShift = VectorMath.add(this.currentShift, vector);
+        this.actualShift = this.computeActualShift();
+        const containerShift = VectorMath.subtract(this.actualShift, this.parentShift);
+        this.container.style.left = containerShift.x + 'px';
+        this.container.style.top = containerShift.y + 'px';
+    }
+    computeActualShift() {
+        const shiftToCenter = {
+            x: (window.innerWidth - this.container.clientWidth) / 2,
+            y: (window.innerHeight - this.container.clientHeight) / 2
+        };
+        return VectorMath.add(this.currentShift, shiftToCenter);
+    }
+}
+class DrawingArea {
+    layers;
+    tool;
+    id = 'drawing-area';
+    doubleClickThreshold = 250;
+    _drawer;
+    _wrapper;
+    isShifting = false;
+    isDrawing = false;
+    lastShift = VectorMath.zero;
+    lastWheelClick = 0;
+    constructor(layers, tool) {
+        this.layers = layers;
+        this.tool = tool;
+    }
+    build() {
+        const wrapper = document.createElement('div');
+        wrapper.id = this.id;
+        window.addEventListener('blur', this.blurHandler);
+        wrapper.addEventListener('mousedown', this.mouseDownHandler);
+        wrapper.addEventListener('mouseleave', this.mouseLeaveHandler);
+        wrapper.addEventListener('mousemove', this.mouseMoveHandler);
+        document.addEventListener('mouseup', this.mouseUpHandler);
+        wrapper.addEventListener('wheel', this.wheelHandler);
+        document.body.append(wrapper);
+        this._wrapper = wrapper;
+    }
+    setup(map) {
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        this.wrapper.innerHTML = '';
+        this.wrapper.append(container);
+        this._drawer = new MapDrawer(map, container);
+        this.drawer.resize(0);
+        this.layers.forEach(l => l.setup(container));
+        this.drawer.center();
+    }
+    get drawer() {
+        if (this._drawer === undefined) {
+            throw new Error('UI not built');
+        }
+        return this._drawer;
+    }
+    get wrapper() {
+        if (this._wrapper === undefined) {
+            throw new Error('UI not built');
+        }
+        return this._wrapper;
+    }
+    getMapPoint(point) {
+        return this.drawer.getMapPoint(point);
+    }
+    startDraw(coordinates) {
+        ;
+        this.isDrawing = true;
+        this.tool.start(coordinates);
+    }
+    startShift(coordinates) {
+        this.isShifting = true;
+        this.lastShift = coordinates;
+    }
+    stop(coordinates) {
+        if (this.isDrawing) {
+            this.tool.stop(coordinates);
+            this.isDrawing = false;
+        }
+        this.isShifting = false;
+    }
+    updateShift(coordinates) {
+        const shift = VectorMath.subtract(coordinates, this.lastShift);
+        this.lastShift = coordinates;
+        this.drawer.shift(shift);
+    }
+    zoom(direction) {
+        this.drawer.resize(direction);
+        this.layers.forEach(l => l.zoom());
+    }
+    blurHandler = () => {
+        this.stop(undefined);
+    };
+    mouseDownHandler = (e) => {
+        const coordinates = {
+            x: e.clientX,
+            y: e.clientY
+        };
+        if (Utilities.hasFlag(e.buttons, 4)) {
+            const now = Date.now();
+            if (now - this.lastWheelClick < this.doubleClickThreshold) {
+                this.drawer.center();
+            }
+            this.lastWheelClick = now;
+            this.startShift(coordinates);
+        }
+        else if (Utilities.hasFlag(e.buttons, 1)) {
+            const mapCoordinates = this.getMapPoint(coordinates);
+            this.startDraw(mapCoordinates);
+        }
+    };
+    mouseLeaveHandler = () => {
+        this.tool.move(undefined);
+    };
+    mouseMoveHandler = (e) => {
+        const coordinates = {
+            x: e.clientX,
+            y: e.clientY
+        };
+        if (this.isShifting) {
+            this.updateShift(coordinates);
+        }
+        else if (this.isDrawing) {
+            const mapCoordinates = this.getMapPoint(coordinates);
+            this.tool.move(mapCoordinates);
+        }
+    };
+    mouseUpHandler = (e) => {
+        const coordinates = this.getMapPoint({
+            x: e.clientX,
+            y: e.clientY
+        });
+        this.stop(coordinates);
+    };
+    wheelHandler = (e) => {
+        const direction = Math.sign(e.deltaY);
+        this.zoom(direction);
+    };
+}
+class GridLayer {
+    mapAccessor;
+    canvasProvider;
+    container;
+    constructor(mapAccessor, canvasProvider) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+    }
+    render(drawer) {
+        this.renderAtScale(drawer, this.mapAccessor.map.pixelsPerCell);
+    }
+    setup(container) {
+        const drawer = this.canvasProvider.create('grid', container.clientWidth, container.clientHeight), map = this.mapAccessor.map, spacing = map.pixelsPerCell / map.zoom;
+        this.renderAtScale(drawer, spacing);
+        this.container = container;
+        container.append(drawer.canvas);
+    }
+    zoom() {
+        if (this.container === undefined) {
+            return;
+        }
+        this.setup(this.container);
+    }
+    renderAtScale(drawer, spacing) {
+        const map = this.mapAccessor.map, style = {
+            color: '#999',
+            lineWidth: 2
+        };
+        for (let i = 0; i < map.columns + 1; i++) {
+            const x = i * spacing, y1 = 0, y2 = drawer.height;
+            drawer.line([{ x, y: y1 }, { x, y: y2 }], style);
+        }
+        for (let i = 0; i < map.rows + 1; i++) {
+            const y = i * spacing, x1 = 0, x2 = drawer.width;
+            drawer.line([{ x: x1, y }, { x: x2, y }], style);
+        }
+    }
+}
 class CanvasProvider {
     canvases = {};
     create(id, width, height, scale) {
@@ -1194,6 +1412,78 @@ class UILayer {
     }
     zoom() {
         this._drawer?.scale(1 / this.mapAccessor.map.zoom);
+    }
+}
+class TextLayer {
+    mapAccessor;
+    canvasProvider;
+    renderer;
+    id = 'text';
+    drawer;
+    constructor(mapAccessor, canvasProvider, renderer) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+        this.renderer = renderer;
+    }
+    render(drawer) {
+        if (this.drawer === undefined) {
+            return;
+        }
+        this.draw();
+        drawer.image(this.drawer);
+    }
+    setup(container) {
+        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        container.append(drawer.canvas);
+        this.drawer = drawer;
+        this.draw();
+    }
+    zoom() {
+        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
+    }
+    draw() {
+        const map = this.mapAccessor.map;
+        for (let column = 0; column < map.columns; column++) {
+            for (let row = 0; row < map.rows; row++) {
+                this.renderer.render({ column, row }, this.id);
+            }
+        }
+    }
+}
+class TerrainLayer {
+    mapAccessor;
+    canvasProvider;
+    renderer;
+    id = 'terrain';
+    drawer;
+    constructor(mapAccessor, canvasProvider, renderer) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+        this.renderer = renderer;
+    }
+    render(drawer) {
+        if (this.drawer === undefined) {
+            return;
+        }
+        this.draw();
+        drawer.image(this.drawer);
+    }
+    setup(container) {
+        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        container.append(drawer.canvas);
+        this.drawer = drawer;
+        this.draw();
+    }
+    zoom() {
+        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
+    }
+    draw() {
+        const map = this.mapAccessor.map;
+        for (let column = 0; column < map.columns; column++) {
+            for (let row = 0; row < map.rows; row++) {
+                this.renderer.render({ column, row }, this.id);
+            }
+        }
     }
 }
 class ButtonMenuEntry {
@@ -1332,42 +1622,6 @@ class Menu {
             container.append(element);
         }
         document.body.append(container);
-    }
-}
-class TextLayer {
-    mapAccessor;
-    canvasProvider;
-    renderer;
-    id = 'text';
-    drawer;
-    constructor(mapAccessor, canvasProvider, renderer) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-        this.renderer = renderer;
-    }
-    render(drawer) {
-        if (this.drawer === undefined) {
-            return;
-        }
-        this.draw();
-        drawer.image(this.drawer);
-    }
-    setup(container) {
-        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
-        container.append(drawer.canvas);
-        this.drawer = drawer;
-        this.draw();
-    }
-    zoom() {
-        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
-    }
-    draw() {
-        const map = this.mapAccessor.map;
-        for (let column = 0; column < map.columns; column++) {
-            for (let row = 0; row < map.rows; row++) {
-                this.renderer.render({ column, row }, this.id);
-            }
-        }
     }
 }
 class Eraser extends CellTool {
@@ -1573,6 +1827,10 @@ class Utilities {
         element.download = filename;
         element.click();
     }
+    static generateId(slug) {
+        const connector = '_', date = Date.now().toString(36), random = Math.random().toString(36).substring(2);
+        return [slug, date, random].join(connector);
+    }
     static hasFlag(value, flag) {
         return (value & flag) === flag;
     }
@@ -1658,272 +1916,5 @@ class VectorCalculator {
     }
     subtract(v) {
         return VectorMath.subtract(this, v);
-    }
-}
-class Lazy {
-    factory;
-    _value;
-    constructor(factory) {
-        this.factory = factory;
-    }
-    get value() {
-        if (this._value === undefined) {
-            this._value = this.factory();
-        }
-        return this._value;
-    }
-}
-class MapDrawer {
-    map;
-    container;
-    parentShift;
-    actualShift = VectorMath.zero;
-    currentShift = VectorMath.zero;
-    constructor(map, container) {
-        this.map = map;
-        this.container = container;
-        const parentShift = container.parentElement?.getBoundingClientRect();
-        this.parentShift = parentShift === undefined
-            ? VectorMath.zero
-            : parentShift;
-    }
-    center() {
-        this.shift(VectorMath.multiply(this.currentShift, -1));
-    }
-    getMapPoint(viewportPoint) {
-        return VectorMath.subtract(viewportPoint, this.actualShift);
-    }
-    resize(direction) {
-        const map = this.map, min = 1, max = 5, currentZoom = map.zoom, newZoom = MathHelper.clamp(currentZoom + direction, min, max), multiplier = map.pixelsPerCell / newZoom;
-        map.zoom = newZoom;
-        this.container.style.width = map.columns * multiplier + 'px';
-        this.container.style.height = map.rows * multiplier + 'px';
-        this.shift(VectorMath.zero);
-    }
-    shift(vector) {
-        this.currentShift = VectorMath.add(this.currentShift, vector);
-        this.actualShift = this.computeActualShift();
-        const containerShift = VectorMath.subtract(this.actualShift, this.parentShift);
-        this.container.style.left = containerShift.x + 'px';
-        this.container.style.top = containerShift.y + 'px';
-    }
-    computeActualShift() {
-        const shiftToCenter = {
-            x: (window.innerWidth - this.container.clientWidth) / 2,
-            y: (window.innerHeight - this.container.clientHeight) / 2
-        };
-        return VectorMath.add(this.currentShift, shiftToCenter);
-    }
-}
-class DrawingArea {
-    layers;
-    tool;
-    id = 'drawing-area';
-    doubleClickThreshold = 250;
-    _drawer;
-    _wrapper;
-    isShifting = false;
-    isDrawing = false;
-    lastShift = VectorMath.zero;
-    lastWheelClick = 0;
-    constructor(layers, tool) {
-        this.layers = layers;
-        this.tool = tool;
-    }
-    build() {
-        const wrapper = document.createElement('div');
-        wrapper.id = this.id;
-        window.addEventListener('blur', this.blurHandler);
-        wrapper.addEventListener('mousedown', this.mouseDownHandler);
-        wrapper.addEventListener('mouseleave', this.mouseLeaveHandler);
-        wrapper.addEventListener('mousemove', this.mouseMoveHandler);
-        document.addEventListener('mouseup', this.mouseUpHandler);
-        wrapper.addEventListener('wheel', this.wheelHandler);
-        document.body.append(wrapper);
-        this._wrapper = wrapper;
-    }
-    setup(map) {
-        const container = document.createElement('div');
-        container.style.position = 'absolute';
-        this.wrapper.innerHTML = '';
-        this.wrapper.append(container);
-        this._drawer = new MapDrawer(map, container);
-        this.drawer.resize(0);
-        this.layers.forEach(l => l.setup(container));
-        this.drawer.center();
-    }
-    get drawer() {
-        if (this._drawer === undefined) {
-            throw new Error('UI not built');
-        }
-        return this._drawer;
-    }
-    get wrapper() {
-        if (this._wrapper === undefined) {
-            throw new Error('UI not built');
-        }
-        return this._wrapper;
-    }
-    getMapPoint(point) {
-        return this.drawer.getMapPoint(point);
-    }
-    startDraw(coordinates) {
-        ;
-        this.isDrawing = true;
-        this.tool.start(coordinates);
-    }
-    startShift(coordinates) {
-        this.isShifting = true;
-        this.lastShift = coordinates;
-    }
-    stop(coordinates) {
-        if (this.isDrawing) {
-            this.tool.stop(coordinates);
-            this.isDrawing = false;
-        }
-        this.isShifting = false;
-    }
-    updateShift(coordinates) {
-        const shift = VectorMath.subtract(coordinates, this.lastShift);
-        this.lastShift = coordinates;
-        this.drawer.shift(shift);
-    }
-    zoom(direction) {
-        this.drawer.resize(direction);
-        this.layers.forEach(l => l.zoom());
-    }
-    blurHandler = () => {
-        this.stop(undefined);
-    };
-    mouseDownHandler = (e) => {
-        const coordinates = {
-            x: e.clientX,
-            y: e.clientY
-        };
-        if (Utilities.hasFlag(e.buttons, 4)) {
-            const now = Date.now();
-            if (now - this.lastWheelClick < this.doubleClickThreshold) {
-                this.drawer.center();
-            }
-            this.lastWheelClick = now;
-            this.startShift(coordinates);
-        }
-        else if (Utilities.hasFlag(e.buttons, 1)) {
-            const mapCoordinates = this.getMapPoint(coordinates);
-            this.startDraw(mapCoordinates);
-        }
-    };
-    mouseLeaveHandler = () => {
-        this.tool.move(undefined);
-    };
-    mouseMoveHandler = (e) => {
-        const coordinates = {
-            x: e.clientX,
-            y: e.clientY
-        };
-        if (this.isShifting) {
-            this.updateShift(coordinates);
-        }
-        else if (this.isDrawing) {
-            const mapCoordinates = this.getMapPoint(coordinates);
-            this.tool.move(mapCoordinates);
-        }
-    };
-    mouseUpHandler = (e) => {
-        const coordinates = this.getMapPoint({
-            x: e.clientX,
-            y: e.clientY
-        });
-        this.stop(coordinates);
-    };
-    wheelHandler = (e) => {
-        const direction = Math.sign(e.deltaY);
-        this.zoom(direction);
-    };
-}
-class TerrainLayer {
-    mapAccessor;
-    canvasProvider;
-    renderer;
-    id = 'terrain';
-    drawer;
-    constructor(mapAccessor, canvasProvider, renderer) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-        this.renderer = renderer;
-    }
-    render(drawer) {
-        if (this.drawer === undefined) {
-            return;
-        }
-        this.draw();
-        drawer.image(this.drawer);
-    }
-    setup(container) {
-        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
-        container.append(drawer.canvas);
-        this.drawer = drawer;
-        this.draw();
-    }
-    zoom() {
-        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
-    }
-    draw() {
-        const map = this.mapAccessor.map;
-        for (let column = 0; column < map.columns; column++) {
-            for (let row = 0; row < map.rows; row++) {
-                this.renderer.render({ column, row }, this.id);
-            }
-        }
-    }
-}
-class GridLayer {
-    mapAccessor;
-    canvasProvider;
-    container;
-    constructor(mapAccessor, canvasProvider) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-    }
-    render(drawer) {
-        this.renderAtScale(drawer, this.mapAccessor.map.pixelsPerCell);
-    }
-    setup(container) {
-        const drawer = this.canvasProvider.create('grid', container.clientWidth, container.clientHeight), map = this.mapAccessor.map, spacing = map.pixelsPerCell / map.zoom;
-        this.renderAtScale(drawer, spacing);
-        this.container = container;
-        container.append(drawer.canvas);
-    }
-    zoom() {
-        if (this.container === undefined) {
-            return;
-        }
-        this.setup(this.container);
-    }
-    renderAtScale(drawer, spacing) {
-        const map = this.mapAccessor.map, style = {
-            color: '#999',
-            lineWidth: 2
-        };
-        for (let i = 0; i < map.columns + 1; i++) {
-            const x = i * spacing, y1 = 0, y2 = drawer.height;
-            drawer.line([{ x, y: y1 }, { x, y: y2 }], style);
-        }
-        for (let i = 0; i < map.rows + 1; i++) {
-            const y = i * spacing, x1 = 0, x2 = drawer.width;
-            drawer.line([{ x: x1, y }, { x: x2, y }], style);
-        }
-    }
-}
-class CellDrawerFactory {
-    mapAccessor;
-    canvasProvider;
-    constructor(mapAccessor, canvasProvider) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-    }
-    create(cell, layer) {
-        const canvas = this.canvasProvider.get(layer);
-        return new CellDrawer(cell, this.mapAccessor, canvas);
     }
 }

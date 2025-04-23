@@ -1,3 +1,6 @@
+/// <reference path="../Model/CellIndex.ts" />
+/// <reference path="CellDrawer.ts" />
+
 class CellDrawerFactory {
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }

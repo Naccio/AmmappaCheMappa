@@ -1,3 +1,5 @@
+/// <reference path="../UIElement.ts" />
+
 class Toolbar implements UIElement {
     private _activeTool?: Tool;
 

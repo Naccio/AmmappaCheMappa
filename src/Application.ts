@@ -16,12 +16,15 @@
 /// <reference path='Contents/Trees/TreesTool.ts'/>
 /// <reference path='Localization/Localizer.ts'/>
 /// <reference path='UI/ApplicationUI.ts'/>
-/// <reference path='UI/UILayer.ts'/>
+/// <reference path='UI/DrawingArea.ts'/>
+/// <reference path='UI/Layers/GridLayer.ts'/>
+/// <reference path='UI/Layers/UILayer.ts'/>
+/// <reference path='UI/Layers/TextLayer.ts'/>
+/// <reference path='UI/Layers/TerrainLayer.ts'/>
 /// <reference path='UI/Menu/CommandMenuEntry.ts'/>
 /// <reference path='UI/Menu/LanguageMenu.ts'/>
 /// <reference path='UI/Menu/Menu.ts'/>
 /// <reference path='UI/Menu/SubmenuMenuEntry.ts'/>
-/// <reference path='UI/TextLayer.ts'/>
 /// <reference path='UI/Tools/Eraser.ts'/>
 /// <reference path='UI/Tools/ToolActivator.ts'/>
 

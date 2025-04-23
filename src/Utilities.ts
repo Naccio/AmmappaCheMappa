@@ -1,3 +1,5 @@
+/// <reference path="Model/GridMap.ts" />
+
 class Utilities {
 
     public static download(filename: string, content: string) {
@@ -7,6 +9,14 @@ class Utilities {
         element.download = filename;
       
         element.click();
+    }
+
+    public static generateId(slug: string) {
+        const connector = '_',
+            date = Date.now().toString(36),
+            random = Math.random().toString(36).substring(2);
+
+        return [slug, date, random].join(connector);
     }
 
     public static hasFlag(value: number, flag: number) {
