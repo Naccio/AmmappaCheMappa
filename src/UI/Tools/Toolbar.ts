@@ -14,7 +14,7 @@ class Toolbar implements UIElement {
         container.id = 'toolbar';
 
         for (let tool of this.tools) {
-            const id = tool.id,
+            const id = 'tool-' + tool.id,
                 radio = document.createElement('input'),
                 label = document.createElement('label');
 
@@ -24,7 +24,7 @@ class Toolbar implements UIElement {
             radio.id = id;
 
             label.htmlFor = id;
-            label.innerText = id[0].toLocaleUpperCase();
+            label.innerText = tool.id[0].toLocaleUpperCase();
             label.title = this.localizer[tool.labelResourceId];
 
             radio.addEventListener('change', () => this._activeTool = tool);

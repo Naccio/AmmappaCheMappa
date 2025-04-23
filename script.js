@@ -1013,7 +1013,7 @@ class Localizer {
     }
 }
 class TextHelper {
-    static layer = 'terrain';
+    static layer = 'text';
     static objectType = 'text';
     static isPlace(object) {
         return object.type === this.objectType;
@@ -1334,6 +1334,42 @@ class Menu {
         document.body.append(container);
     }
 }
+class TextLayer {
+    mapAccessor;
+    canvasProvider;
+    renderer;
+    id = 'text';
+    drawer;
+    constructor(mapAccessor, canvasProvider, renderer) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+        this.renderer = renderer;
+    }
+    render(drawer) {
+        if (this.drawer === undefined) {
+            return;
+        }
+        this.draw();
+        drawer.image(this.drawer);
+    }
+    setup(container) {
+        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        container.append(drawer.canvas);
+        this.drawer = drawer;
+        this.draw();
+    }
+    zoom() {
+        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
+    }
+    draw() {
+        const map = this.mapAccessor.map;
+        for (let column = 0; column < map.columns; column++) {
+            for (let row = 0; row < map.rows; row++) {
+                this.renderer.render({ column, row }, this.id);
+            }
+        }
+    }
+}
 class Eraser extends CellTool {
     renderer;
     id = 'eraser';
@@ -1363,13 +1399,13 @@ class Toolbar {
         const container = document.createElement('div');
         container.id = 'toolbar';
         for (let tool of this.tools) {
-            const id = tool.id, radio = document.createElement('input'), label = document.createElement('label');
+            const id = 'tool-' + tool.id, radio = document.createElement('input'), label = document.createElement('label');
             radio.type = 'radio';
             radio.name = 'active-tool';
             radio.value = id;
             radio.id = id;
             label.htmlFor = id;
-            label.innerText = id[0].toLocaleUpperCase();
+            label.innerText = tool.id[0].toLocaleUpperCase();
             label.title = this.localizer[tool.labelResourceId];
             radio.addEventListener('change', () => this._activeTool = tool);
             container.append(radio);
@@ -1436,9 +1472,11 @@ class Application {
         const eraser = new Eraser(mapAccessor, cellRenderer);
         const modalLauncher = new ModalLauncher(localizer);
         const terrainLayer = new TerrainLayer(mapAccessor, canvasProvider, cellRenderer);
+        const textLayer = new TextLayer(mapAccessor, canvasProvider, cellRenderer);
         const uiLayer = new UILayer(mapAccessor, canvasProvider);
         const layers = [
             terrainLayer,
+            textLayer,
             grid,
             uiLayer
         ];

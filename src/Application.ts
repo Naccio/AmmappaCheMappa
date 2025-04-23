@@ -21,6 +21,7 @@
 /// <reference path='UI/Menu/LanguageMenu.ts'/>
 /// <reference path='UI/Menu/Menu.ts'/>
 /// <reference path='UI/Menu/SubmenuMenuEntry.ts'/>
+/// <reference path='UI/TextLayer.ts'/>
 /// <reference path='UI/Tools/Eraser.ts'/>
 /// <reference path='UI/Tools/ToolActivator.ts'/>
 
@@ -57,9 +58,11 @@ class Application {
         const eraser = new Eraser(mapAccessor, cellRenderer);
         const modalLauncher = new ModalLauncher(localizer);
         const terrainLayer = new TerrainLayer(mapAccessor, canvasProvider, cellRenderer);
+        const textLayer = new TextLayer(mapAccessor, canvasProvider, cellRenderer);
         const uiLayer = new UILayer(mapAccessor, canvasProvider);
         const layers = [
             terrainLayer,
+            textLayer,
             grid,
             uiLayer
         ];
