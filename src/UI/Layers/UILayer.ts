@@ -4,12 +4,12 @@
 class UILayer implements DrawingLayer {
     private readonly id = 'ui';
 
-    private _drawer?: CanvasDrawer;
+    private _drawer?: Drawer;
 
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }
 
-    public get drawer() : CanvasDrawer {
+    public get drawer() : Drawer {
         if (this._drawer === undefined) {
             throw new Error('UI not initialized.');
         }

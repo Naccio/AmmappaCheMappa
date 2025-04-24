@@ -1,3 +1,5 @@
+/// <reference path="LayerAbstractFactory.ts" />
+
 class LayerFactory {
 
     public constructor(private factories: LayerAbstractFactory[]) {

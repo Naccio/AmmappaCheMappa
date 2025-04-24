@@ -1,4 +1,5 @@
 /// <reference path="../UI/Layers/DrawingLayer.ts" />
+/// <reference path="CanvasDrawer.ts" />
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {

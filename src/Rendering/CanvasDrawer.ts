@@ -1,7 +1,6 @@
-/// <reference path="../Model/Point.ts" />
-/// <reference path="ShapeStyle.ts" />
+/// <reference path="Drawer.ts" />
 
-class CanvasDrawer {
+class CanvasDrawer implements Drawer{
 
     private readonly context: CanvasRenderingContext2D;
 

@@ -4,7 +4,7 @@ class GridLayer implements DrawingLayer {
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }
 
-    public render(drawer: CanvasDrawer) {
+    public render(drawer: Drawer) {
         this.renderAtScale(drawer, this.mapAccessor.map.pixelsPerCell);
     }
 
@@ -27,7 +27,7 @@ class GridLayer implements DrawingLayer {
         this.setup(this.container);
     }
 
-    private renderAtScale(drawer: CanvasDrawer, spacing: number) {
+    private renderAtScale(drawer: Drawer, spacing: number) {
         const map = this.mapAccessor.map,
             style: LineStyle = {
                 color: '#999',

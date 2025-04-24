@@ -1,17 +1,12 @@
-/// <reference path="../../MapAccessor.ts" />
-/// <reference path="../../Rendering/CanvasDrawer.ts" />
-/// <reference path="../../Rendering/CellRenderer.ts" />
-/// <reference path="../CanvasProvider.ts" />
-
 class TerrainLayer implements DrawingLayer {
     private readonly id = 'terrain';
 
-    private drawer?: CanvasDrawer;
+    private drawer?: Drawer;
 
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider, private renderer: CellRenderer) {
     }
 
-    public render(drawer: CanvasDrawer) {
+    public render(drawer: Drawer) {
         if (this.drawer === undefined) {
             return;
         }

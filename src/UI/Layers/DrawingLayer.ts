@@ -1,5 +1,5 @@
 interface DrawingLayer {
-    render(drawer: CanvasDrawer): void;
+    render(drawer: Drawer): void;
     setup(container: HTMLElement): void;
     zoom(): void;
 }

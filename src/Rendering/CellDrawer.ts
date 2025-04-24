@@ -1,7 +1,7 @@
-/// <reference path="CanvasDrawer.ts" />
+/// <reference path="Drawer.ts" />
 
 class CellDrawer {
-    constructor(private cellIndex: CellIndex, private mapAccessor: MapAccessor, private drawer: CanvasDrawer) {
+    constructor(private cellIndex: CellIndex, private mapAccessor: MapAccessor, private drawer: Drawer) {
     }
 
     public get cell() {
