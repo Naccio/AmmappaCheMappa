@@ -1,4 +1,4 @@
-class TerrainLayer implements DrawingLayer {
+class TerrainLayer implements DrawingLayer, LayerRenderer {
     private readonly id = 'terrain';
 
     private drawer?: Drawer;

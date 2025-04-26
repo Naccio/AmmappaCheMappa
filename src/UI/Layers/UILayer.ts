@@ -1,5 +1,6 @@
 /// <reference path="../../MapAccessor.ts"/>
 /// <reference path="../CanvasProvider.ts"/>
+/// <reference path="DrawingLayer.ts"/>
 
 class UILayer implements DrawingLayer {
     private readonly id = 'ui';
@@ -15,9 +16,6 @@ class UILayer implements DrawingLayer {
         }
 
         return this._drawer;
-    }
-
-    public render() {
     }
 
     public setup(container: HTMLElement) {

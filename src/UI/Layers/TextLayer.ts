@@ -1,4 +1,4 @@
-class TextLayer implements DrawingLayer {
+class TextLayer implements DrawingLayer, LayerRenderer {
     private readonly id = 'text';
 
     private drawer?: Drawer;

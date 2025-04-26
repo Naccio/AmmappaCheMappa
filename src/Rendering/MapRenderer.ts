@@ -1,9 +1,9 @@
-/// <reference path="../UI/Layers/DrawingLayer.ts" />
 /// <reference path="CanvasDrawer.ts" />
+/// <reference path="LayerRenderer.ts" />
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {
-    constructor(private mapAccessor: MapAccessor, private layers: DrawingLayer[]) {
+    constructor(private mapAccessor: MapAccessor, private layers: LayerRenderer[]) {
     }
 
     render() : RenderedMap {

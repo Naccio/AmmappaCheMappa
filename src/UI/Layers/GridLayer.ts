@@ -1,4 +1,4 @@
-class GridLayer implements DrawingLayer {
+class GridLayer implements DrawingLayer, LayerRenderer {
     private container?: HTMLElement;
 
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {

@@ -63,13 +63,18 @@ class Application {
         const terrainLayer = new TerrainLayer(mapAccessor, canvasProvider, cellRenderer);
         const textLayer = new TextLayer(mapAccessor, canvasProvider, cellRenderer);
         const uiLayer = new UILayer(mapAccessor, canvasProvider);
-        const layers = [
+        const drawingLayers = [
             terrainLayer,
             textLayer,
             grid,
             uiLayer
         ];
-        const mapRenderer = new MapRenderer(mapAccessor, layers);
+        const layerRenderers = [
+            terrainLayer,
+            textLayer,
+            grid
+        ];
+        const mapRenderer = new MapRenderer(mapAccessor, layerRenderers);
         const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, cellRenderer);
         const placesTool = new PlacesTool(mapAccessor, cellRenderer);
         const riversTool = new RiversTool(mapAccessor, cellRenderer);
@@ -86,7 +91,7 @@ class Application {
             eraser
         ], localizer);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layers, toolActivator);
+        const drawingArea = new DrawingArea(drawingLayers, toolActivator);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
