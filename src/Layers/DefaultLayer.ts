@@ -1,9 +1,7 @@
 class DefaultLayer implements DrawingLayer, LayerRenderer {
-    private readonly id = 'terrain';
-
     private drawer?: Drawer;
 
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider, private renderer: CellRenderer) {
+    constructor(private id: string, private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider, private renderer: CellRenderer) {
     }
 
     public render(drawer: Drawer) {

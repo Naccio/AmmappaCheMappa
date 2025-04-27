@@ -4,7 +4,7 @@ class RoadsTool implements Tool {
 
     private startPosition?: Point;
 
-    constructor(private ui: UILayer, private mapAccessor: MapAccessor, private renderer: CellRenderer) {
+    constructor(private ui: DrawingUI, private mapAccessor: MapAccessor, private renderer: CellRenderer) {
     }
 
     start(position: Point): void {
@@ -21,7 +21,7 @@ class RoadsTool implements Tool {
 
     move(position?: Point): void {
         const cell = this.mapAccessor.getIndex(position);
-        
+
         this.ui.drawer.clear();
 
         if (this.startPosition === undefined || position === undefined || cell === undefined) {
@@ -41,7 +41,7 @@ class RoadsTool implements Tool {
     stop(position?: Point): void {
         const firstCell = this.mapAccessor.getIndex(this.startPosition),
             lastCell = this.mapAccessor.getIndex(position);
-        
+
         this.ui.drawer.clear();
 
         if (this.startPosition === undefined || firstCell === undefined || position === undefined || lastCell === undefined) {

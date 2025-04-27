@@ -1,8 +1,8 @@
+/// <reference path="../Layers/DrawingLayer.ts"/>
 /// <reference path="../MapAccessor.ts"/>
-/// <reference path="../UI/CanvasProvider.ts"/>
-/// <reference path="DrawingLayer.ts"/>
+/// <reference path="CanvasProvider.ts"/>
 
-class UILayer implements DrawingLayer {
+class DrawingUI implements DrawingLayer {
     private readonly id = 'ui';
 
     private _drawer?: Drawer;

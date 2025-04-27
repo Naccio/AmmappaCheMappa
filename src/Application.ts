@@ -16,7 +16,6 @@
 /// <reference path='Contents/Trees/TreesTool.ts'/>
 /// <reference path='Layers/GridLayer.ts'/>
 /// <reference path='Layers/LayersPanel.ts'/>
-/// <reference path='Layers/UILayer.ts'/>
 /// <reference path='Layers/TextLayerFactory.ts'/>
 /// <reference path='Layers/TerrainLayerFactory.ts'/>
 /// <reference path='Localization/Localizer.ts'/>
@@ -64,7 +63,7 @@ class Application {
         const modalLauncher = new ModalLauncher(localizer);
         const terrainLayer = new TerrainLayerFactory(mapAccessor, canvasProvider, cellRenderer);
         const textLayer = new TextLayerFactory(mapAccessor, canvasProvider, cellRenderer);
-        const uiLayer = new UILayer(mapAccessor, canvasProvider);
+        const uiLayer = new DrawingUI(mapAccessor, canvasProvider);
         const layers = [
             terrainLayer,
             textLayer,
@@ -89,7 +88,7 @@ class Application {
             eraser
         ], localizer);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layersManager, toolActivator);
+        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator);
         const layersPanel = new LayersPanel(layersManager);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);

@@ -1,5 +1,6 @@
 /// <reference path="../Layers/LayersManager.ts" />
 /// <reference path="../Model/Point.ts" />
+/// <reference path="DrawingUI.ts" />
 /// <reference path="MapDrawer.ts" />
 /// <reference path="UIElement.ts" />
 
@@ -15,7 +16,7 @@ class DrawingArea implements UIElement {
     private lastShift: Point = VectorMath.zero;
     private lastWheelClick = 0;
 
-    constructor(private layers: LayersManager, private tool: ToolActivator) {
+    constructor(private layers: LayersManager, private ui: DrawingUI, private tool: ToolActivator) {
     }
 
     public build() {
@@ -51,6 +52,7 @@ class DrawingArea implements UIElement {
             const layer = this.layers.add(l);
             layer.drawing.setup(container)
         });
+        this.ui.setup(container);
         this.drawer.center();
     }
 
@@ -78,7 +80,6 @@ class DrawingArea implements UIElement {
     }
 
     private startDraw(coordinates: Vector) {
-        ;
         this.isDrawing = true;
         this.tool.start(coordinates);
     }
@@ -106,6 +107,7 @@ class DrawingArea implements UIElement {
     public zoom(direction: number) {
         this.drawer.resize(direction);
         this.layers.layers.forEach(l => l.drawing.zoom());
+        this.ui.zoom();
     }
 
 
