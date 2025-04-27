@@ -1,12 +1,11 @@
 /// <reference path="CanvasDrawer.ts" />
-/// <reference path="LayerRenderer.ts" />
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {
-    constructor(private mapAccessor: MapAccessor, private layers: LayerRenderer[]) {
+    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
     }
 
-    render() : RenderedMap {
+    render(): RenderedMap {
         const map = this.mapAccessor.map,
             canvas = document.createElement('canvas');
 
@@ -19,8 +18,8 @@ class MapRenderer {
 
         const drawer = new CanvasDrawer(canvas);
 
-        for (let layer of this.layers) {
-            layer.render(drawer);
+        for (let layer of this.layers.layers) {
+            layer.renderer.render(drawer);
         }
 
         return canvas;

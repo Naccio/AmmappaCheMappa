@@ -1,4 +1,4 @@
-class TerrainLayer implements DrawingLayer, LayerRenderer {
+class DefaultLayer implements DrawingLayer, LayerRenderer {
     private readonly id = 'terrain';
 
     private drawer?: Drawer;
@@ -10,7 +10,7 @@ class TerrainLayer implements DrawingLayer, LayerRenderer {
         if (this.drawer === undefined) {
             return;
         }
-        
+
         this.draw();
         drawer.image(this.drawer);
     }

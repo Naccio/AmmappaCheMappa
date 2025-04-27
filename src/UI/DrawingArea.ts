@@ -1,6 +1,7 @@
-/// <reference path="./MapDrawer.ts" />
-/// <reference path="./UIElement.ts" />
+/// <reference path="../Layers/LayersManager.ts" />
 /// <reference path="../Model/Point.ts" />
+/// <reference path="MapDrawer.ts" />
+/// <reference path="UIElement.ts" />
 
 class DrawingArea implements UIElement {
     private readonly id = 'drawing-area';
@@ -14,7 +15,7 @@ class DrawingArea implements UIElement {
     private lastShift: Point = VectorMath.zero;
     private lastWheelClick = 0;
 
-    constructor(private layers: DrawingLayer[], private tool: ToolActivator) {
+    constructor(private layers: LayersManager, private tool: ToolActivator) {
     }
 
     public build() {
@@ -28,7 +29,7 @@ class DrawingArea implements UIElement {
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
-        
+
         document.body.append(wrapper);
 
         this._wrapper = wrapper;
@@ -45,7 +46,11 @@ class DrawingArea implements UIElement {
         this._drawer = new MapDrawer(map, container);
 
         this.drawer.resize(0);
-        this.layers.forEach(l => l.setup(container));
+        this.layers.clear();
+        map.layers.forEach(l => {
+            const layer = this.layers.add(l);
+            layer.drawing.setup(container)
+        });
         this.drawer.center();
     }
 
@@ -72,7 +77,8 @@ class DrawingArea implements UIElement {
         return this.drawer.getMapPoint(point);
     }
 
-    private startDraw(coordinates: Vector) {;
+    private startDraw(coordinates: Vector) {
+        ;
         this.isDrawing = true;
         this.tool.start(coordinates);
     }
@@ -99,7 +105,7 @@ class DrawingArea implements UIElement {
 
     public zoom(direction: number) {
         this.drawer.resize(direction);
-        this.layers.forEach(l => l.zoom());
+        this.layers.layers.forEach(l => l.drawing.zoom());
     }
 
 

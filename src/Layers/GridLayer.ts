@@ -12,7 +12,7 @@ class GridLayer implements DrawingLayer, LayerRenderer {
         const drawer = this.canvasProvider.create('grid', container.clientWidth, container.clientHeight),
             map = this.mapAccessor.map,
             spacing = map.pixelsPerCell / map.zoom;
-            
+
         this.renderAtScale(drawer, spacing);
 
         this.container = container;
@@ -23,7 +23,7 @@ class GridLayer implements DrawingLayer, LayerRenderer {
         if (this.container === undefined) {
             return;
         }
-        
+
         this.setup(this.container);
     }
 
@@ -48,5 +48,21 @@ class GridLayer implements DrawingLayer, LayerRenderer {
 
             drawer.line([{ x: x1, y }, { x: x2, y }], style);
         }
+    }
+}
+
+class GridLayerFactory implements LayerAbstractFactory {
+
+    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
+    }
+
+    public type = 'grid';
+
+    createRenderer(): LayerRenderer {
+        return new GridLayer(this.mapAccessor, this.canvasProvider);
+    }
+
+    createDrawing(): DrawingLayer {
+        return new GridLayer(this.mapAccessor, this.canvasProvider);
     }
 }

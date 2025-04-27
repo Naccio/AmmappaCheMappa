@@ -14,13 +14,15 @@
 /// <reference path='Contents/Text/TextTool.ts'/>
 /// <reference path='Contents/Trees/TreeRenderer.ts'/>
 /// <reference path='Contents/Trees/TreesTool.ts'/>
+/// <reference path='Layers/GridLayer.ts'/>
+/// <reference path='Layers/LayersPanel.ts'/>
+/// <reference path='Layers/UILayer.ts'/>
+/// <reference path='Layers/TextLayerFactory.ts'/>
+/// <reference path='Layers/TerrainLayerFactory.ts'/>
 /// <reference path='Localization/Localizer.ts'/>
 /// <reference path='UI/ApplicationUI.ts'/>
+/// <reference path='UI/CanvasProvider.ts'/>
 /// <reference path='UI/DrawingArea.ts'/>
-/// <reference path='UI/Layers/GridLayer.ts'/>
-/// <reference path='UI/Layers/UILayer.ts'/>
-/// <reference path='UI/Layers/TextLayer.ts'/>
-/// <reference path='UI/Layers/TerrainLayer.ts'/>
 /// <reference path='UI/Menu/CommandMenuEntry.ts'/>
 /// <reference path='UI/Menu/LanguageMenu.ts'/>
 /// <reference path='UI/Menu/Menu.ts'/>
@@ -37,10 +39,10 @@ class Application {
         document.documentElement.lang = locale;
         const resource = await LocalizationHelper.loadResource(locale);
         const localizer = new Localizer(resource);
-        const mapFactory = new MapFactory();
+        const mapFactory = new MapFactory(localizer);
         const mapAccessor = new MapAccessor();
         const canvasProvider = new CanvasProvider();
-        const grid = new GridLayer(mapAccessor, canvasProvider);
+        const grid = new GridLayerFactory(mapAccessor, canvasProvider);
         const drawerFactory = new CellDrawerFactory(mapAccessor, canvasProvider);
         const mountainFactory = new MountainFactory();
         const mountainsRenderer = new MountainsRenderer();
@@ -60,21 +62,17 @@ class Application {
         const cellRenderer = new CellRenderer(drawerFactory, renderingStrategies);
         const eraser = new Eraser(mapAccessor, cellRenderer);
         const modalLauncher = new ModalLauncher(localizer);
-        const terrainLayer = new TerrainLayer(mapAccessor, canvasProvider, cellRenderer);
-        const textLayer = new TextLayer(mapAccessor, canvasProvider, cellRenderer);
+        const terrainLayer = new TerrainLayerFactory(mapAccessor, canvasProvider, cellRenderer);
+        const textLayer = new TextLayerFactory(mapAccessor, canvasProvider, cellRenderer);
         const uiLayer = new UILayer(mapAccessor, canvasProvider);
-        const drawingLayers = [
-            terrainLayer,
-            textLayer,
-            grid,
-            uiLayer
-        ];
-        const layerRenderers = [
+        const layers = [
             terrainLayer,
             textLayer,
             grid
         ];
-        const mapRenderer = new MapRenderer(mapAccessor, layerRenderers);
+        const layerFactory = new LayerFactory(layers);
+        const layersManager = new LayersManager(layerFactory);
+        const mapRenderer = new MapRenderer(mapAccessor, layersManager);
         const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, cellRenderer);
         const placesTool = new PlacesTool(mapAccessor, cellRenderer);
         const riversTool = new RiversTool(mapAccessor, cellRenderer);
@@ -91,7 +89,8 @@ class Application {
             eraser
         ], localizer);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(drawingLayers, toolActivator);
+        const drawingArea = new DrawingArea(layersManager, toolActivator);
+        const layersPanel = new LayersPanel(layersManager);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
@@ -116,9 +115,10 @@ class Application {
         const ui = new ApplicationUI([
             menu,
             toolbar,
-            drawingArea
+            drawingArea,
+            layersPanel
         ]);
-    
+
         return new Application(ui, mapFactory, mapLoader);
     }
 
@@ -139,6 +139,6 @@ class Application {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const app = await Application.build();
-    
+
     app.run();
 });

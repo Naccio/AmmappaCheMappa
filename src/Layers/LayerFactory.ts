@@ -1,14 +1,19 @@
 /// <reference path="LayerAbstractFactory.ts" />
+/// <reference path="LayersHelper.ts" />
 
 class LayerFactory {
 
     public constructor(private factories: LayerAbstractFactory[]) {
     }
 
-    public create(type: string) {
-        const factory = this.getFactory(type);
+    public create(layer: MapLayer): LayerAccessor {
+        const factory = this.getFactory(layer.type);
 
-        return factory.create();
+        return {
+            data: layer,
+            renderer: factory.createRenderer(),
+            drawing: factory.createDrawing()
+        };
     }
 
     private getFactory(type: string) {

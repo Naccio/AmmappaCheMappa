@@ -1,5 +1,5 @@
-/// <reference path="../../MapAccessor.ts"/>
-/// <reference path="../CanvasProvider.ts"/>
+/// <reference path="../MapAccessor.ts"/>
+/// <reference path="../UI/CanvasProvider.ts"/>
 /// <reference path="DrawingLayer.ts"/>
 
 class UILayer implements DrawingLayer {
@@ -10,7 +10,7 @@ class UILayer implements DrawingLayer {
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }
 
-    public get drawer() : Drawer {
+    public get drawer(): Drawer {
         if (this._drawer === undefined) {
             throw new Error('UI not initialized.');
         }

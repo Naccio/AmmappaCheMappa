@@ -38,7 +38,8 @@ class Toolbar implements UIElement {
         document.body.append(container);
 
         this._activeTool = this.tools[0];
-        this.selectTool(this.tools[0].id);}
+        this.selectTool(this.tools[0].id);
+    }
 
     public selectTool(id: string) {
         document.getElementById(id)?.click();
