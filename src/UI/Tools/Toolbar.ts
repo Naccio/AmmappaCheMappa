@@ -24,6 +24,7 @@ class Toolbar implements UIElement {
             radio.name = 'active-tool';
             radio.value = id;
             radio.id = id;
+            radio.className = 'label-radio';
 
             label.htmlFor = id;
             label.innerText = tool.id[0].toLocaleUpperCase();

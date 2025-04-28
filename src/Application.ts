@@ -89,7 +89,7 @@ class Application {
         ], localizer);
         const toolActivator = new ToolActivator(toolbar);
         const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator);
-        const layersPanel = new LayersPanel(layersManager);
+        const layersPanel = new LayersPanel(layersManager, localizer);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);

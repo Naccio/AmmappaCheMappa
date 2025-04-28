@@ -86,6 +86,18 @@ dialog label {
     display: none !important;
 }
 
+.label-radio {
+    display: none;
+}
+
+.label-radio+label:hover {
+    background: var(--bg-hover);
+}
+
+.label-radio:checked+label {
+    background-color: var(--bg-active);
+}
+
 #drawing-area {
     grid-area: main;
     position: relative;
@@ -94,9 +106,30 @@ dialog label {
 
 #layers {
     grid-area: right;
-    padding: var(--spacing);
     background: var(--bg);
     border: var(--border);
+}
+
+#layers div {
+    position: relative;
+    height: 2rem;
+}
+
+#layers label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: var(--spacing);
+    position: absolute;
+    inset: 0;
+}
+
+#layers input[type="checkbox"] {
+    position: absolute;
+    left: var(--spacing);
+    top: var(--spacing);
+    z-index: 1;
 }
 
 #menu {
@@ -170,20 +203,8 @@ dialog label {
     border: var(--border);
 }
 
-#toolbar input {
-    display: none;
-}
-
 #toolbar label {
     font-size: 3rem;
     display: block;
     text-align: center;
-}
-
-#toolbar label:hover {
-    background: var(--bg-hover);
-}
-
-#toolbar input:checked+label {
-    background-color: var(--bg-active);
 }
