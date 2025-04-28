@@ -5,11 +5,11 @@ class TextLayerFactory implements LayerAbstractFactory {
 
     public type = 'text';
 
-    createRenderer(): LayerRenderer {
-        return new DefaultLayer(this.type, this.mapAccessor, this.canvasProvider, this.renderer);
+    createRenderer(id: string): LayerRenderer {
+        return new DefaultLayer(id, this.mapAccessor, this.canvasProvider, this.renderer);
     }
 
-    createDrawing(): DrawingLayer {
-        return new DefaultLayer(this.type, this.mapAccessor, this.canvasProvider, this.renderer);
+    createDrawing(id: string): DrawingLayer {
+        return new DefaultLayer(id, this.mapAccessor, this.canvasProvider, this.renderer);
     }
 }

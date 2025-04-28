@@ -7,7 +7,7 @@ class RiversTool implements Tool {
     private startPosition?: Point;
     private activeCell?: CellIndex;
 
-    constructor(private mapAccessor: MapAccessor, private renderer: CellRenderer) {
+    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
     }
 
     start(position: Point): void {
@@ -30,13 +30,10 @@ class RiversTool implements Tool {
         }
 
         if (!GridHelper.cellIsEqual(activeCell, cell)) {
-            const cells = this.createRivers(activeCell, this.startPosition, cell, position),
-                river = this.getRiver(cell)!,
+            const river = this.getRiver(cell)!,
                 cellPosition = this.mapAccessor.getPosition(cell);
-    
-            for (let cell of cells) {
-                this.renderer.render(cell, 'terrain');
-            }
+
+            this.createRivers(activeCell, this.startPosition, cell, position)
 
             this.startPosition = VectorMath.startOperation(river.from)
                 .multiply(this.mapAccessor.map.pixelsPerCell)
@@ -53,12 +50,10 @@ class RiversTool implements Tool {
                 this.createRiver(cell, from, to);
             } else {
                 river.to = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
-                this.mapAccessor.setObjects(cell, [river]);
+                this.layers.setObjects(cell, [river]);
 
                 this.startPosition = this.mapAccessor.absolutePosition(cell, river.from);
             }
-
-            this.renderer.render(cell, 'terrain');
         }
     }
 
@@ -102,7 +97,7 @@ class RiversTool implements Tool {
                 .multiply(MathHelper.random(.2, .5))
                 .add(from);
         }
-        
+
         const river: River = {
             type: RiversHelper.objectType,
             layer: 'terrain',
@@ -114,12 +109,12 @@ class RiversTool implements Tool {
                 y: MathHelper.round(MathHelper.random(.2, .8), 2)
             }
         };
-        this.mapAccessor.setObjects(cell, [river]);
+        this.layers.setObjects(cell, [river]);
 
         return river;
     }
 
-    private getRiver(cell: CellIndex) : River | undefined {
+    private getRiver(cell: CellIndex): River | undefined {
         return this.mapAccessor.getCell(cell).objects[0] as River;
     }
 }

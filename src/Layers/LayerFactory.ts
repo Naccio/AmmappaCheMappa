@@ -11,8 +11,8 @@ class LayerFactory {
 
         return {
             data: layer,
-            renderer: factory.createRenderer(),
-            drawing: factory.createDrawing()
+            renderer: factory.createRenderer(layer.id),
+            drawing: factory.createDrawing(layer.id)
         };
     }
 

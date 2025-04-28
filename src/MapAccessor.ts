@@ -2,6 +2,9 @@ class MapAccessor {
     private _map?: GridMap;
     private _cells: GridCell[][] = [];
 
+    constructor() {
+    }
+
     public get map() {
         if (this._map === undefined) {
             throw new Error('No map active');
@@ -14,7 +17,7 @@ class MapAccessor {
         this._map = map;
         this.save();
 
-        for(let column = 0; column < map.columns; column++) {
+        for (let column = 0; column < map.columns; column++) {
             this._cells[column] = [];
             for (let row = 0; row < map.rows; row++) {
                 this._cells[column][row] = {
@@ -36,7 +39,7 @@ class MapAccessor {
         return this.map.zoom / this.map.pixelsPerCell;
     }
 
-    public absolutePosition(cell: CellIndex, normalizedPosition: Point) : Point {
+    public absolutePosition(cell: CellIndex, normalizedPosition: Point): Point {
         const cellPosition = {
             x: cell.column,
             y: cell.row
@@ -61,7 +64,7 @@ class MapAccessor {
             cell = VectorMath.multiply(position, this.scale),
             column = Math.floor(cell.x),
             row = Math.floor(cell.y);
-        
+
         if (row < 0 || row >= map.rows || column < 0 || column >= map.columns) {
             return undefined;
         }
@@ -75,8 +78,8 @@ class MapAccessor {
 
         if (fromCell === undefined || toCell === undefined) {
             return [];
-        } 
-        
+        }
+
         if (fromCell.column == toCell.column && fromCell.row === toCell.row) {
             return [fromCell];
         }
@@ -84,7 +87,7 @@ class MapAccessor {
         return this.getConnectingCells(fromCell, toCell);
     }
 
-    public getPosition(index: CellIndex) : Point  {
+    public getPosition(index: CellIndex): Point {
         const shift = {
             x: index.column,
             y: index.row
@@ -125,7 +128,7 @@ class MapAccessor {
         return cells;
     }
 
-    public normalizedPosition(cell: CellIndex, absolutePosition: Point) : Point {
+    public normalizedPosition(cell: CellIndex, absolutePosition: Point): Point {
         const cellPosition = {
             x: cell.column,
             y: cell.row

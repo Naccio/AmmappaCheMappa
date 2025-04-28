@@ -4,7 +4,7 @@ class Eraser extends CellTool {
     public readonly id = 'eraser';
     public readonly labelResourceId: string;
 
-    constructor(mapAccessor: MapAccessor, private renderer: CellRenderer) {
+    constructor(mapAccessor: MapAccessor, private layers: LayersManager) {
         super(mapAccessor);
 
         this.labelResourceId = 'tool_label_eraser';
@@ -12,6 +12,5 @@ class Eraser extends CellTool {
 
     public useOnCell(cell: CellIndex) {
         this.mapAccessor.setObjects(cell, []);
-        this.renderer.render(cell, 'terrain');
     }
 }

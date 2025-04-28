@@ -1,7 +1,7 @@
 class GridLayer implements DrawingLayer, LayerRenderer {
     private container?: HTMLElement;
 
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
+    constructor(private id: string, private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }
 
     public render(drawer: Drawer) {
@@ -9,7 +9,7 @@ class GridLayer implements DrawingLayer, LayerRenderer {
     }
 
     public setup(container: HTMLElement) {
-        const drawer = this.canvasProvider.create('grid', container.clientWidth, container.clientHeight),
+        const drawer = this.canvasProvider.create(this.id, container.clientWidth, container.clientHeight),
             map = this.mapAccessor.map,
             spacing = map.pixelsPerCell / map.zoom;
 
@@ -17,6 +17,10 @@ class GridLayer implements DrawingLayer, LayerRenderer {
 
         this.container = container;
         container.append(drawer.canvas);
+    }
+
+    public update(cell: CellIndex) {
+
     }
 
     public zoom() {
@@ -58,11 +62,11 @@ class GridLayerFactory implements LayerAbstractFactory {
 
     public type = 'grid';
 
-    createRenderer(): LayerRenderer {
-        return new GridLayer(this.mapAccessor, this.canvasProvider);
+    createRenderer(id: string): LayerRenderer {
+        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
     }
 
-    createDrawing(): DrawingLayer {
-        return new GridLayer(this.mapAccessor, this.canvasProvider);
+    createDrawing(id: string): DrawingLayer {
+        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
     }
 }

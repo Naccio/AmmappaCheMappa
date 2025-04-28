@@ -1,6 +1,6 @@
 class LayersPanel implements UIElement {
     public constructor(private layers: LayersManager, private localizer: Localizer) {
-        layers.onChange(() => this.build());
+        layers.onNewLayer(() => this.build());
     }
 
     build(): void {

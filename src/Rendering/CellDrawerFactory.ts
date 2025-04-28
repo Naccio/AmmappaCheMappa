@@ -2,12 +2,10 @@
 /// <reference path="CellDrawer.ts" />
 
 class CellDrawerFactory {
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
+    constructor(private mapAccessor: MapAccessor) {
     }
 
-    public create(cell: CellIndex, layer: string) {
-        const canvas = this.canvasProvider.get(layer);
-
-        return new CellDrawer(cell, this.mapAccessor, canvas);
+    public create(cell: CellIndex, drawer: Drawer) {
+        return new CellDrawer(cell, this.mapAccessor, drawer);
     }
 }

@@ -42,7 +42,7 @@ class Application {
         const mapAccessor = new MapAccessor();
         const canvasProvider = new CanvasProvider();
         const grid = new GridLayerFactory(mapAccessor, canvasProvider);
-        const drawerFactory = new CellDrawerFactory(mapAccessor, canvasProvider);
+        const drawerFactory = new CellDrawerFactory(mapAccessor);
         const mountainFactory = new MountainFactory();
         const mountainsRenderer = new MountainsRenderer();
         const placeRenderer = new PlaceRenderer();
@@ -59,7 +59,6 @@ class Application {
             treeRenderer
         ];
         const cellRenderer = new CellRenderer(drawerFactory, renderingStrategies);
-        const eraser = new Eraser(mapAccessor, cellRenderer);
         const modalLauncher = new ModalLauncher(localizer);
         const terrainLayer = new TerrainLayerFactory(mapAccessor, canvasProvider, cellRenderer);
         const textLayer = new TextLayerFactory(mapAccessor, canvasProvider, cellRenderer);
@@ -70,14 +69,15 @@ class Application {
             grid
         ];
         const layerFactory = new LayerFactory(layers);
-        const layersManager = new LayersManager(layerFactory);
+        const layersManager = new LayersManager(layerFactory, mapAccessor);
+        const eraser = new Eraser(mapAccessor, layersManager);
         const mapRenderer = new MapRenderer(mapAccessor, layersManager);
-        const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, cellRenderer);
-        const placesTool = new PlacesTool(mapAccessor, cellRenderer);
-        const riversTool = new RiversTool(mapAccessor, cellRenderer);
-        const roadsTool = new RoadsTool(uiLayer, mapAccessor, cellRenderer);
-        const textTool = new TextTool(mapAccessor, cellRenderer, modalLauncher, localizer);
-        const treesTool = new TreesTool(mapAccessor, cellRenderer);
+        const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, layersManager);
+        const placesTool = new PlacesTool(mapAccessor, layersManager);
+        const riversTool = new RiversTool(mapAccessor, layersManager);
+        const roadsTool = new RoadsTool(uiLayer, mapAccessor, layersManager);
+        const textTool = new TextTool(mapAccessor, layersManager, modalLauncher, localizer);
+        const treesTool = new TreesTool(mapAccessor, layersManager);
         const toolbar = new Toolbar([
             mountainsTool,
             placesTool,

@@ -30,6 +30,7 @@ class DrawingArea implements UIElement {
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
+        this.layers.onCellUpdate(this.cellUpdateHandler)
 
         document.body.append(wrapper);
 
@@ -173,5 +174,9 @@ class DrawingArea implements UIElement {
         const direction = Math.sign(e.deltaY);
 
         this.zoom(direction);
+    }
+
+    private cellUpdateHandler = (c: CellIndex) => {
+        this.layers.activeLayer?.drawing.update(c);
     }
 }

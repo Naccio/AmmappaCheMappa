@@ -1,13 +1,15 @@
+/// <reference path="../Events/EventManager.ts" />
 /// <reference path="LayerAccessor.ts" />
 /// <reference path="LayerFactory.ts" />
 
 class LayersManager {
-    private listeners: { (): void; }[] = [];
+    private readonly newLayerEvent = new InternalEvent<LayerAccessor>();
+    private readonly cellUpdateEvent = new InternalEvent<CellIndex>();
 
     public layers: LayerAccessor[] = [];
     public activeLayer?: LayerAccessor;
 
-    public constructor(private factory: LayerFactory) {
+    public constructor(private factory: LayerFactory, private mapAccessor: MapAccessor) {
     }
 
     public add(layer: MapLayer) {
@@ -18,8 +20,7 @@ class LayersManager {
         }
 
         this.layers.push(accessor);
-
-        this.listeners.forEach(l => l());
+        this.newLayerEvent.trigger(accessor);
 
         return accessor;
     }
@@ -28,7 +29,23 @@ class LayersManager {
         this.layers = [];
     }
 
-    public onChange(handler: () => void) {
-        this.listeners.push(handler);
+    public setObjects(index: CellIndex, objects: MapObject[]) {
+        if (this.activeLayer === undefined) {
+            return;
+        }
+
+        objects.forEach(o => o.layer = this.activeLayer!.data.id);
+
+        this.mapAccessor.setObjects(index, objects);
+
+        this.cellUpdateEvent.trigger(index);
+    }
+
+    public onCellUpdate(handler: EventHandler<CellIndex>) {
+        this.cellUpdateEvent.subscribe(handler);
+    }
+
+    public onNewLayer(handler: EventHandler<LayerAccessor>) {
+        this.newLayerEvent.subscribe(handler);
     }
 }

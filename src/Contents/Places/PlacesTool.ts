@@ -1,5 +1,4 @@
 /// <reference path='../../MapAccessor.ts'/>
-/// <reference path='../../Rendering/CellRenderer.ts'/>
 /// <reference path='../../UI/Tools/Tool.ts'/>
 /// <reference path='PlacesHelper.ts'/>
 
@@ -7,7 +6,7 @@ class PlacesTool implements Tool {
     public readonly id = 'places';
     public readonly labelResourceId = 'tool_label_places';
 
-    constructor(private mapAccessor: MapAccessor, private renderer: CellRenderer) {
+    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
     }
 
     public start(point: Point) {
@@ -26,11 +25,9 @@ class PlacesTool implements Tool {
                 position
             };
 
-        this.mapAccessor.setObjects(cell, [place]);
-
-        this.renderer.render(cell, layer);
+        this.layers.setObjects(cell, [place]);
     }
-    
+
     public move() {
     }
 

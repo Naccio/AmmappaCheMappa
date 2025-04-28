@@ -26,6 +26,10 @@ class DrawingUI implements DrawingLayer {
         this._drawer = drawer;
     }
 
+    public update(cell: CellIndex) {
+
+    }
+
     public zoom() {
         this._drawer?.scale(1 / this.mapAccessor.map.zoom);
     }
