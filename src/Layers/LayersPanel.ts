@@ -30,6 +30,9 @@ class LayersPanel implements UIElement {
         check.name = 'visible-layers';
         check.value = id;
         check.id = id + '-visible';
+        check.checked = !data.hidden;
+
+        check.onchange = () => this.layers.update(id, l => l.hidden = !check.checked);
 
         radio.type = 'radio';
         radio.name = 'active-layer';

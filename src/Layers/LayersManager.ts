@@ -36,11 +36,7 @@ class LayersManager {
     }
 
     public select(id: string) {
-        const layer = this.layers.find(l => l.data.id === id);
-
-        if (layer === undefined) {
-            throw new Error(`Layer '${id}' does not exist.`);
-        }
+        const layer = this.getLayer(id);
 
         this._activeLayer = layer;
 
@@ -59,6 +55,13 @@ class LayersManager {
         this.cellUpdateEvent.trigger(index);
     }
 
+    public update(id: string, action: (layer: MapLayer) => void) {
+        const layer = this.getLayer(id);
+
+        action(layer.data);
+        this.mapAccessor.save();
+    }
+
     public onCellUpdate(handler: EventHandler<CellIndex>) {
         this.cellUpdateEvent.subscribe(handler);
     }
@@ -69,5 +72,15 @@ class LayersManager {
 
     public onNewLayer(handler: EventHandler<LayerAccessor>) {
         this.newLayerEvent.subscribe(handler);
+    }
+
+    private getLayer(id: string) {
+        const layer = this.layers.find(l => l.data.id === id);
+
+        if (layer === undefined) {
+            throw new Error(`Layer '${id}' does not exist.`);
+        }
+
+        return layer;
     }
 }

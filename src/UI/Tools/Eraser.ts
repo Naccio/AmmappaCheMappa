@@ -11,6 +11,6 @@ class Eraser extends CellTool {
     }
 
     public useOnCell(cell: CellIndex) {
-        this.mapAccessor.setObjects(cell, []);
+        this.layers.setObjects(cell, []);
     }
 }
