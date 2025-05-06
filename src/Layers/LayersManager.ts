@@ -4,23 +4,29 @@
 
 class LayersManager {
     private readonly newLayerEvent = new InternalEvent<LayerAccessor>();
+    private readonly layerSelectedEvent = new InternalEvent<LayerAccessor>();
     private readonly cellUpdateEvent = new InternalEvent<CellIndex>();
 
+    private _activeLayer?: LayerAccessor;
+
     public layers: LayerAccessor[] = [];
-    public activeLayer?: LayerAccessor;
 
     public constructor(private factory: LayerFactory, private mapAccessor: MapAccessor) {
+    }
+
+    public get activeLayer() {
+        return this._activeLayer;
     }
 
     public add(layer: MapLayer) {
         const accessor = this.factory.create(layer);
 
-        if (this.activeLayer === undefined) {
-            this.activeLayer = accessor;
-        }
-
         this.layers.push(accessor);
         this.newLayerEvent.trigger(accessor);
+
+        if (this._activeLayer === undefined) {
+            this.select(layer.id);
+        }
 
         return accessor;
     }
@@ -29,12 +35,24 @@ class LayersManager {
         this.layers = [];
     }
 
+    public select(id: string) {
+        const layer = this.layers.find(l => l.data.id === id);
+
+        if (layer === undefined) {
+            throw new Error(`Layer '${id}' does not exist.`);
+        }
+
+        this._activeLayer = layer;
+
+        this.layerSelectedEvent.trigger(layer);
+    }
+
     public setObjects(index: CellIndex, objects: MapObject[]) {
-        if (this.activeLayer === undefined) {
+        if (this._activeLayer === undefined) {
             return;
         }
 
-        objects.forEach(o => o.layer = this.activeLayer!.data.id);
+        objects.forEach(o => o.layer = this._activeLayer!.data.id);
 
         this.mapAccessor.setObjects(index, objects);
 
@@ -43,6 +61,10 @@ class LayersManager {
 
     public onCellUpdate(handler: EventHandler<CellIndex>) {
         this.cellUpdateEvent.subscribe(handler);
+    }
+
+    public onLayerSelected(handler: EventHandler<LayerAccessor>) {
+        this.layerSelectedEvent.subscribe(handler);
     }
 
     public onNewLayer(handler: EventHandler<LayerAccessor>) {

@@ -1,63 +1,63 @@
 class LayersPanel implements UIElement {
+    private container: HTMLDivElement;
+
     public constructor(private layers: LayersManager, private localizer: Localizer) {
-        layers.onNewLayer(() => this.build());
+        this.container = document.createElement('div');
+
+        this.container.id = 'layers';
+
+        layers.onNewLayer(l => this.buildLayer(l));
+        layers.onLayerSelected(l => this.selectLayer(l));
     }
 
     build(): void {
         document.getElementById('layers')?.remove();
+        document.body.append(this.container);
+    }
 
-        const container = document.createElement('div');
+    private buildLayer(layer: LayerAccessor) {
+        const data = layer.data,
+            id = data.id,
+            //HACK: Magic string layer_type_
+            type = this.localizer[`layer_type_${data.type}`],
+            wrapper = document.createElement('div'),
+            check = document.createElement('input'),
+            radio = document.createElement('input'),
+            label = document.createElement('label'),
+            typeLabel = document.createElement('small');
 
-        container.id = 'layers';
+        check.type = 'checkbox';
+        check.name = 'visible-layers';
+        check.value = id;
+        check.id = id + '-visible';
 
-        for (let layer of this.layers.layers) {
-            const data = layer.data,
-                id = data.id,
-                //HACK: Magic string layer_type_
-                type = this.localizer[`layer_type_${data.type}`],
-                wrapper = document.createElement('div'),
-                check = document.createElement('input'),
-                radio = document.createElement('input'),
-                label = document.createElement('label'),
-                typeLabel = document.createElement('small');
+        radio.type = 'radio';
+        radio.name = 'active-layer';
+        radio.value = id;
+        radio.id = this.getRadioId(id);
+        radio.className = 'label-radio';
 
-            check.type = 'checkbox';
-            check.name = 'visible-layers';
-            check.value = id;
-            check.id = id + '-visible';
+        radio.onchange = () => this.layers.select(id);
 
-            radio.type = 'radio';
-            radio.name = 'active-layer';
-            radio.value = id;
-            radio.id = this.getRadioId(id);
-            radio.className = 'label-radio';
+        typeLabel.innerText = `(${type})`;
 
-            typeLabel.innerText = ` (${type})`;
+        label.htmlFor = radio.id;
+        label.innerText = data.name;
+        label.title = data.name;
+        label.append(typeLabel);
 
-            label.htmlFor = radio.id;
-            label.innerText = data.name;
-            label.title = data.name;
-            label.append(typeLabel);
-
-            wrapper.append(check);
-            wrapper.append(radio);
-            wrapper.append(label);
-            container.append(wrapper);
-
-            if (this.layers.activeLayer?.data.id === id) {
-                radio.checked = true;
-            }
-        }
-
-        document.body.append(container);
+        wrapper.append(check);
+        wrapper.append(radio);
+        wrapper.append(label);
+        this.container.append(wrapper);
     }
 
     private getRadioId(id: string) {
         return id + '-active';
     }
 
-    private selectLayer(id: string) {
-        id = this.getRadioId(id);
+    private selectLayer(layer: LayerAccessor) {
+        const id = this.getRadioId(layer.data.id);
         document.getElementById(id)?.click();
     }
 }
