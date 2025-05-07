@@ -6,8 +6,8 @@ class LayersPanel implements UIElement {
 
         this.container.id = 'layers';
 
-        layers.onNewLayer(l => this.buildLayer(l));
-        layers.onLayerSelected(l => this.selectLayer(l));
+        layers.onCreate(l => this.buildLayer(l));
+        layers.onSelect(l => this.selectLayer(l));
     }
 
     build(): void {

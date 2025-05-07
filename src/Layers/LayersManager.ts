@@ -3,9 +3,9 @@
 /// <reference path="LayerFactory.ts" />
 
 class LayersManager {
-    private readonly newLayerEvent = new InternalEvent<LayerAccessor>();
-    private readonly layerSelectedEvent = new InternalEvent<LayerAccessor>();
-    private readonly cellUpdateEvent = new InternalEvent<CellIndex>();
+    private readonly createEvent = new InternalEvent<LayerAccessor>();
+    private readonly selectEvent = new InternalEvent<LayerAccessor>();
+    private readonly updateEvent = new InternalEvent<CellIndex | MapLayer>();
 
     private _activeLayer?: LayerAccessor;
 
@@ -22,7 +22,7 @@ class LayersManager {
         const accessor = this.factory.create(layer);
 
         this.layers.push(accessor);
-        this.newLayerEvent.trigger(accessor);
+        this.createEvent.trigger(accessor);
 
         if (this._activeLayer === undefined) {
             this.select(layer.id);
@@ -40,7 +40,7 @@ class LayersManager {
 
         this._activeLayer = layer;
 
-        this.layerSelectedEvent.trigger(layer);
+        this.selectEvent.trigger(layer);
     }
 
     public setObjects(index: CellIndex, objects: MapObject[]) {
@@ -52,7 +52,7 @@ class LayersManager {
 
         this.mapAccessor.setObjects(index, objects);
 
-        this.cellUpdateEvent.trigger(index);
+        this.updateEvent.trigger(index);
     }
 
     public update(id: string, action: (layer: MapLayer) => void) {
@@ -60,18 +60,19 @@ class LayersManager {
 
         action(layer.data);
         this.mapAccessor.save();
+        this.updateEvent.trigger(layer.data);
     }
 
-    public onCellUpdate(handler: EventHandler<CellIndex>) {
-        this.cellUpdateEvent.subscribe(handler);
+    public onUpdate(handler: EventHandler<CellIndex | MapLayer>) {
+        this.updateEvent.subscribe(handler);
     }
 
-    public onLayerSelected(handler: EventHandler<LayerAccessor>) {
-        this.layerSelectedEvent.subscribe(handler);
+    public onSelect(handler: EventHandler<LayerAccessor>) {
+        this.selectEvent.subscribe(handler);
     }
 
-    public onNewLayer(handler: EventHandler<LayerAccessor>) {
-        this.newLayerEvent.subscribe(handler);
+    public onCreate(handler: EventHandler<LayerAccessor>) {
+        this.createEvent.subscribe(handler);
     }
 
     private getLayer(id: string) {

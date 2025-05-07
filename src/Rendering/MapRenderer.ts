@@ -7,7 +7,8 @@ class MapRenderer {
 
     render(): RenderedMap {
         const map = this.mapAccessor.map,
-            canvas = document.createElement('canvas');
+            canvas = document.createElement('canvas'),
+            layers = this.layers.layers.filter(l => !l.data.hidden);
 
         canvas.width = map.columns * map.pixelsPerCell;
         canvas.height = map.rows * map.pixelsPerCell;
@@ -18,7 +19,7 @@ class MapRenderer {
 
         const drawer = new CanvasDrawer(canvas);
 
-        for (let layer of this.layers.layers) {
+        for (let layer of layers) {
             layer.renderer.render(drawer);
         }
 

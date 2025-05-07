@@ -30,7 +30,7 @@ class DrawingArea implements UIElement {
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
-        this.layers.onCellUpdate(this.cellUpdateHandler)
+        this.layers.onUpdate(this.layerUpdateHandler)
 
         document.body.append(wrapper);
 
@@ -48,10 +48,13 @@ class DrawingArea implements UIElement {
         this._drawer = new MapDrawer(map, container);
 
         this.drawer.resize(0);
+        //TODO: Probably the drawing area should not setup the layers
+        //      manager. The other way around seems more appropriate.
         this.layers.clear();
         map.layers.forEach(l => {
             const layer = this.layers.add(l);
-            layer.drawing.setup(container)
+            layer.drawing.setup(container);
+            this.layerDataUpdateHandler(l);
         });
         this.ui.setup(container);
         this.drawer.center();
@@ -118,6 +121,22 @@ class DrawingArea implements UIElement {
         this.stop(undefined);
     }
 
+    private layerDataUpdateHandler = (c: MapLayer) => {
+        const element = document.getElementById(c.id);
+
+        if (element) {
+            element.style.display = c.hidden ? 'none' : 'block';
+        }
+    }
+
+    private layerUpdateHandler = (c: CellIndex | MapLayer) => {
+        if ('id' in c) {
+            this.layerDataUpdateHandler(c);
+        } else {
+            this.layers.activeLayer?.drawing.update(c);
+        }
+    }
+
     private mouseDownHandler = (e: MouseEvent) => {
         const coordinates = {
             x: e.clientX,
@@ -174,9 +193,5 @@ class DrawingArea implements UIElement {
         const direction = Math.sign(e.deltaY);
 
         this.zoom(direction);
-    }
-
-    private cellUpdateHandler = (c: CellIndex) => {
-        this.layers.activeLayer?.drawing.update(c);
     }
 }
