@@ -1,5 +1,5 @@
 class GridLayer implements DrawingLayer, LayerRenderer {
-    private container?: HTMLElement;
+    private wrapper?: HTMLElement;
 
     constructor(private id: string, private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }
@@ -9,14 +9,14 @@ class GridLayer implements DrawingLayer, LayerRenderer {
     }
 
     public setup(container: HTMLElement) {
-        const drawer = this.canvasProvider.create(this.id, container.clientWidth, container.clientHeight),
-            map = this.mapAccessor.map,
-            spacing = map.pixelsPerCell / map.zoom;
+        const wrapper = document.createElement('div');
 
-        this.renderAtScale(drawer, spacing);
+        wrapper.id = this.id;
 
-        this.container = container;
-        container.append(drawer.canvas);
+        this.wrapper = wrapper;
+
+        container.append(wrapper);
+        this.setupCanvas();
     }
 
     public update(cell: CellIndex) {
@@ -24,11 +24,7 @@ class GridLayer implements DrawingLayer, LayerRenderer {
     }
 
     public zoom() {
-        if (this.container === undefined) {
-            return;
-        }
-
-        this.setup(this.container);
+        this.setupCanvas();
     }
 
     private renderAtScale(drawer: Drawer, spacing: number) {
@@ -52,6 +48,23 @@ class GridLayer implements DrawingLayer, LayerRenderer {
 
             drawer.line([{ x: x1, y }, { x: x2, y }], style);
         }
+    }
+
+    public setupCanvas() {
+        const container = this.wrapper?.parentElement;
+
+        if (!this.wrapper || !container) {
+            return;
+        }
+
+        const drawer = this.canvasProvider.create(this.id + 'canvas', container.clientWidth, container.clientHeight),
+            map = this.mapAccessor.map,
+            spacing = map.pixelsPerCell / map.zoom;
+
+        this.renderAtScale(drawer, spacing);
+
+        this.wrapper.innerHTML = '';
+        this.wrapper.append(drawer.canvas);
     }
 }
 
