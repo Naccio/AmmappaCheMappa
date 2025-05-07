@@ -1,18 +1,16 @@
 /// <reference path="../Rendering/CellRenderer.ts" />
 
 class DefaultLayer implements DrawingLayer, LayerRenderer {
-    private drawer?: Drawer;
 
     constructor(private id: string, private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider, private renderer: CellRenderer) {
     }
 
     public render(drawer: Drawer) {
-        if (this.drawer === undefined) {
-            return;
-        }
+        const map = this.mapAccessor.map,
+            tmpDrawer = this.canvasProvider.create(this.id + '-tmp', map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
 
-        this.draw(this.drawer);
-        drawer.image(this.drawer);
+        this.draw(tmpDrawer);
+        drawer.image(tmpDrawer);
     }
 
     public setup(container: HTMLElement) {
@@ -20,21 +18,20 @@ class DefaultLayer implements DrawingLayer, LayerRenderer {
             drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
 
         container.append(drawer.canvas);
-        this.drawer = drawer;
 
         this.draw(drawer);
     }
 
     public update(cell: CellIndex) {
-        if (this.drawer === undefined) {
-            return;
-        }
+        const drawer = this.canvasProvider.get(this.id);
 
-        this.renderer.render(cell, this.drawer, this.id);
+        this.renderer.render(cell, drawer, this.id);
     }
 
     public zoom() {
-        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
+        const drawer = this.canvasProvider.get(this.id);
+
+        drawer?.scale(1 / this.mapAccessor.map.zoom);
     }
 
     private draw(drawer: Drawer) {
