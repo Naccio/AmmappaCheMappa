@@ -4,6 +4,7 @@
 
 class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
+    private readonly deleteEvent = new InternalEvent<MapLayer>();
     private readonly selectEvent = new InternalEvent<LayerAccessor>();
     private readonly updateEvent = new InternalEvent<CellIndex | MapLayer>();
 
@@ -32,7 +33,15 @@ class LayersManager {
     }
 
     public clear() {
-        this.layers = [];
+        const layers = [...this.layers];
+        layers.forEach(l => this.delete(l.data.id));
+    }
+
+    public delete(id: string) {
+        const layer = this.getLayer(id);
+
+        this.layers = this.layers.filter(l => l.data.id !== id);
+        this.deleteEvent.trigger(layer.data);
     }
 
     public select(id: string) {
@@ -73,6 +82,10 @@ class LayersManager {
 
     public onCreate(handler: EventHandler<LayerAccessor>) {
         this.createEvent.subscribe(handler);
+    }
+
+    public onDelete(handler: EventHandler<MapLayer>) {
+        this.deleteEvent.subscribe(handler);
     }
 
     private getLayer(id: string) {

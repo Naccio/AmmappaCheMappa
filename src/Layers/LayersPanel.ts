@@ -7,6 +7,7 @@ class LayersPanel implements UIElement {
         this.container.id = 'layers';
 
         layers.onCreate(l => this.buildLayer(l));
+        layers.onDelete(l => this.removeLayer(l.id));
         layers.onSelect(l => this.selectLayer(l));
     }
 
@@ -49,6 +50,8 @@ class LayersPanel implements UIElement {
         label.title = data.name;
         label.append(typeLabel);
 
+        wrapper.id = this.getWrapperId(id);
+
         wrapper.append(check);
         wrapper.append(radio);
         wrapper.append(label);
@@ -57,6 +60,15 @@ class LayersPanel implements UIElement {
 
     private getRadioId(id: string) {
         return id + '-active';
+    }
+
+    private getWrapperId(id: string) {
+        return id + '-panel-controls';
+    }
+
+    private removeLayer(id: string) {
+        id = this.getWrapperId(id);
+        document.getElementById(id)?.remove();
     }
 
     private selectLayer(layer: LayerAccessor) {
