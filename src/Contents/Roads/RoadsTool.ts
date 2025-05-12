@@ -1,6 +1,9 @@
 class RoadsTool implements Tool {
-    id = 'roads';
-    labelResourceId = 'tool_label_roads';
+    public readonly configuration = {
+        id: 'roads',
+        labelResourceId: 'tool_label_roads',
+        layerTypes: ['terrain']
+    };
 
     private startPosition?: Point;
 

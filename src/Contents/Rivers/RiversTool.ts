@@ -1,8 +1,11 @@
 /// <reference path="River.ts" />
 
 class RiversTool implements Tool {
-    id = 'rivers';
-    labelResourceId = 'tool_label_rivers';
+    public readonly configuration = {
+        id: 'rivers',
+        labelResourceId: 'tool_label_rivers',
+        layerTypes: ['terrain']
+    };
 
     private startPosition?: Point;
     private activeCell?: CellIndex;

@@ -7,8 +7,11 @@
 /// <reference path='TextHelper.ts'/>
 
 class TextTool implements Tool {
-    public readonly id = 'text';
-    public readonly labelResourceId = 'tool_label_text';
+    public readonly configuration = {
+        id: 'text',
+        labelResourceId: 'tool_label_text',
+        layerTypes: ['text']
+    };
 
     constructor(private mapAccessor: MapAccessor, private layers: LayersManager, private modal: ModalLauncher, private localizer: Localizer) {
     }

@@ -90,7 +90,11 @@ dialog label {
     display: none;
 }
 
-.label-radio+label:hover {
+.label-radio:disabled+label {
+    display: none;
+}
+
+.label-radio:not(:disabled)+label:hover {
     background: var(--bg-hover);
 }
 
@@ -203,7 +207,7 @@ dialog label {
     border: var(--border);
 }
 
-#toolbar label {
+#toolbar :not(:disabled)+label {
     font-size: 3rem;
     display: block;
     text-align: center;

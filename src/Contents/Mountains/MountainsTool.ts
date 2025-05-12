@@ -3,8 +3,11 @@
 /// <reference path='MountainsHelper.ts'/>
 
 class MountainsTool extends CellTool {
-    public readonly id = 'mountains';
-    public readonly labelResourceId = 'tool_label_mountains';
+    public readonly configuration = {
+        id: 'mountains',
+        labelResourceId: 'tool_label_mountains',
+        layerTypes: ['terrain']
+    };
 
     constructor(mapAccessor: MapAccessor, private mountainFactory: MountainFactory, private layers: LayersManager) {
         super(mapAccessor);

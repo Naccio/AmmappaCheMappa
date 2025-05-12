@@ -3,8 +3,11 @@
 /// <reference path='PlacesHelper.ts'/>
 
 class PlacesTool implements Tool {
-    public readonly id = 'places';
-    public readonly labelResourceId = 'tool_label_places';
+    public readonly configuration = {
+        id: 'places',
+        labelResourceId: 'tool_label_places',
+        layerTypes: ['terrain']
+    };
 
     constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
     }

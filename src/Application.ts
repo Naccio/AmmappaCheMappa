@@ -86,7 +86,7 @@ class Application {
             textTool,
             treesTool,
             eraser
-        ], localizer);
+        ], localizer, layersManager);
         const toolActivator = new ToolActivator(toolbar);
         const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator);
         const layersPanel = new LayersPanel(layersManager, localizer);

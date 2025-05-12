@@ -3,8 +3,11 @@
 /// <reference path='TreesHelper.ts'/>
 
 class TreesTool extends CellTool {
-    public readonly id = 'trees';
-    public readonly labelResourceId = 'tool_label_trees';
+    public readonly configuration = {
+        id: 'trees',
+        labelResourceId: 'tool_label_trees',
+        layerTypes: ['terrain']
+    };
 
     constructor(mapAccessor: MapAccessor, private layers: LayersManager) {
         super(mapAccessor);

@@ -41,6 +41,9 @@ class LayersManager {
         const layer = this.getLayer(id);
 
         this.layers = this.layers.filter(l => l.data.id !== id);
+        if (this.activeLayer?.data.id === id) {
+            this._activeLayer = undefined;
+        }
         this.deleteEvent.trigger(layer.data);
     }
 

@@ -1,13 +1,14 @@
 /// <reference path="./CellTool.ts" />
 
 class Eraser extends CellTool {
-    public readonly id = 'eraser';
-    public readonly labelResourceId: string;
+    public readonly configuration = {
+        id: 'eraser',
+        labelResourceId: 'tool_label_eraser',
+        layerTypes: ['terrain', 'text']
+    };
 
     constructor(mapAccessor: MapAccessor, private layers: LayersManager) {
         super(mapAccessor);
-
-        this.labelResourceId = 'tool_label_eraser';
     }
 
     public useOnCell(cell: CellIndex) {

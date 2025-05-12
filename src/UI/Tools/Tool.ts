@@ -1,10 +1,12 @@
+/// <reference path="../../Model/Point.ts" />
+/// <reference path="ToolConfiguration.ts" />
+
 interface Tool {
-    readonly id: string;
-    readonly labelResourceId: string;
+    readonly configuration: ToolConfiguration;
 
-    start(position: Point) : void;
+    start(position: Point): void;
 
-    move(position?: Point) : void;
+    move(position?: Point): void;
 
-    stop(position?: Point) : void;
+    stop(position?: Point): void;
 }
