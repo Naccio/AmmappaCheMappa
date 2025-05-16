@@ -1,3 +1,4 @@
+/// <reference path='Commands/About.ts'/>
 /// <reference path='Commands/Export.ts'/>
 /// <reference path='Commands/Open.ts'/>
 /// <reference path='Commands/New.ts'/>
@@ -105,9 +106,15 @@ class Application {
             saveCommandMenuEntry,
             exportCommandMenuEntry
         ]);
+        const aboutCommand = new About(modalLauncher, localizer);
+        const aboutCommandMenuEntry = new CommandMenuEntry(aboutCommand);
+        const helpMenu = new SubmenuMenuEntry(localizer['menu_label_help'], [
+            aboutCommandMenuEntry
+        ]);
         const languageMenu = new LanguageMenu(localizer);
         const mainMenu = new SubmenuMenuEntry('Menu', [
             fileMenu,
+            helpMenu,
             languageMenu
         ], { alwaysVisible: true });
         const menu = new Menu(mainMenu);

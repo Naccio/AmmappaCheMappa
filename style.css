@@ -34,6 +34,19 @@ body {
     margin: 0;
 }
 
+blockquote {
+    margin: var(--spacing);
+    font-style: italic;
+}
+
+blockquote::before {
+    content: '“';
+}
+
+blockquote::after {
+    content: '”';
+}
+
 button {
     background: var(--btn-bg);
     border: var(--btn-border);
@@ -68,6 +81,7 @@ dialog header {
 dialog header h1 {
     font-size: 1.1rem;
     margin: 0;
+    margin-right: var(--spacing);
 }
 
 dialog footer {
@@ -80,6 +94,10 @@ dialog footer {
 dialog input,
 dialog label {
     margin: var(--spacing);
+}
+
+.dialog-body {
+    padding: var(--spacing);
 }
 
 .hidden {

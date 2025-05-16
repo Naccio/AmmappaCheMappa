@@ -9,12 +9,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ### Added
 
+- Commands:
+  - **About**: opens a dialog containing the application's current
+    version and a link to its repository
 - UI:
   - **Layers panel**: allows to toggle a layer's visibility and to
     choose which layer is active
     - Layers can have different types: *terrain*, *text*, *grid*
     - At the moment one layer per type is generated
     - Layers management (CRUD operations) will be added in the future
+  - **Main menu**:
+    - *Help* menu
 - Architecture:
   - Changelog
   - HTML checkbox inputs are used for multiple selection (*e.g.*

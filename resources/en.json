@@ -1,6 +1,7 @@
 {
     "button_label_cancel": "Cancel",
     "button_label_confirm": "Confirm",
+    "command_label_about": "About",
     "command_label_export": "Export map",
     "command_label_new": "New map...",
     "command_label_open": "Open map...",
@@ -14,7 +15,9 @@
     "layer_type_grid": "Grid",
     "layer_type_terrain": "Terrain",
     "layer_type_text": "Text",
+    "menu_label_help": "Help",
     "menu_label_language": "Language",
+    "paragraph_about": "Welcome to 'Leo Caboto's Mapping Challenge'. I am Caboto. Now, draw a map.",
     "tool_label_eraser": "Eraser",
     "tool_label_mountains": "Mountains",
     "tool_label_places": "Place",
