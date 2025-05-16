@@ -12,7 +12,9 @@
     --spacing-wide: .5rem;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: border-box;
 }
 
@@ -24,12 +26,25 @@ html {
 
 body {
     display: grid;
-    grid-template: 
-        "top  top"  2rem
-        "left main" 1fr
-       / 4rem 1fr;
+    grid-template:
+        "top  top  top" 2rem
+        "left main right" 1fr
+        / 4rem 1fr 200px;
     height: 100%;
     margin: 0;
+}
+
+blockquote {
+    margin: var(--spacing);
+    font-style: italic;
+}
+
+blockquote::before {
+    content: '“';
+}
+
+blockquote::after {
+    content: '”';
 }
 
 button {
@@ -66,6 +81,7 @@ dialog header {
 dialog header h1 {
     font-size: 1.1rem;
     margin: 0;
+    margin-right: var(--spacing);
 }
 
 dialog footer {
@@ -80,14 +96,62 @@ dialog label {
     margin: var(--spacing);
 }
 
+.dialog-body {
+    padding: var(--spacing);
+}
+
 .hidden {
-    display: none!important;
+    display: none !important;
+}
+
+.label-radio {
+    display: none;
+}
+
+.label-radio:disabled+label {
+    display: none;
+}
+
+.label-radio:not(:disabled)+label:hover {
+    background: var(--bg-hover);
+}
+
+.label-radio:checked+label {
+    background-color: var(--bg-active);
 }
 
 #drawing-area {
     grid-area: main;
     position: relative;
     overflow: hidden;
+}
+
+#layers {
+    grid-area: right;
+    background: var(--bg);
+    border: var(--border);
+}
+
+#layers div {
+    position: relative;
+    height: 2rem;
+}
+
+#layers label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: var(--spacing);
+    position: absolute;
+    inset: 0;
+}
+
+#layers input[type="checkbox"] {
+    position: absolute;
+    left: var(--spacing);
+    top: var(--spacing);
+    z-index: 1;
 }
 
 #menu {
@@ -145,11 +209,11 @@ dialog label {
     text-align: start;
 }
 
-#menu > menu {
+#menu>menu {
     width: 100%;
 }
 
-#menu > menu > li:last-child {
+#menu>menu>li:last-child {
     /* this is the language menu */
     margin-left: auto;
 }
@@ -161,20 +225,8 @@ dialog label {
     border: var(--border);
 }
 
-#toolbar input {
-    display: none;
-}
-
-#toolbar label {
+#toolbar :not(:disabled)+label {
     font-size: 3rem;
     display: block;
     text-align: center;
-}
-
-#toolbar label:hover {
-    background: var(--bg-hover);
-}
-
-#toolbar input:checked + label {
-    background-color: var(--bg-active);
 }

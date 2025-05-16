@@ -1,23 +1,21 @@
-/// <reference path="../../MapAccessor.ts"/>
-/// <reference path="../CanvasProvider.ts"/>
+/// <reference path="../Layers/DrawingLayer.ts"/>
+/// <reference path="../MapAccessor.ts"/>
+/// <reference path="CanvasProvider.ts"/>
 
-class UILayer implements DrawingLayer {
+class DrawingUI implements DrawingLayer {
     private readonly id = 'ui';
 
-    private _drawer?: CanvasDrawer;
+    private _drawer?: Drawer;
 
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
     }
 
-    public get drawer() : CanvasDrawer {
+    public get drawer(): Drawer {
         if (this._drawer === undefined) {
             throw new Error('UI not initialized.');
         }
 
         return this._drawer;
-    }
-
-    public render() {
     }
 
     public setup(container: HTMLElement) {
@@ -26,6 +24,10 @@ class UILayer implements DrawingLayer {
 
         container.append(drawer.canvas);
         this._drawer = drawer;
+    }
+
+    public update(cell: CellIndex) {
+
     }
 
     public zoom() {

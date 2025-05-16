@@ -1,3 +1,4 @@
+/// <reference path='Commands/About.ts'/>
 /// <reference path='Commands/Export.ts'/>
 /// <reference path='Commands/Open.ts'/>
 /// <reference path='Commands/New.ts'/>
@@ -14,13 +15,14 @@
 /// <reference path='Contents/Text/TextTool.ts'/>
 /// <reference path='Contents/Trees/TreeRenderer.ts'/>
 /// <reference path='Contents/Trees/TreesTool.ts'/>
+/// <reference path='Layers/GridLayer.ts'/>
+/// <reference path='Layers/LayersPanel.ts'/>
+/// <reference path='Layers/TextLayerFactory.ts'/>
+/// <reference path='Layers/TerrainLayerFactory.ts'/>
 /// <reference path='Localization/Localizer.ts'/>
 /// <reference path='UI/ApplicationUI.ts'/>
+/// <reference path='UI/CanvasProvider.ts'/>
 /// <reference path='UI/DrawingArea.ts'/>
-/// <reference path='UI/Layers/GridLayer.ts'/>
-/// <reference path='UI/Layers/UILayer.ts'/>
-/// <reference path='UI/Layers/TextLayer.ts'/>
-/// <reference path='UI/Layers/TerrainLayer.ts'/>
 /// <reference path='UI/Menu/CommandMenuEntry.ts'/>
 /// <reference path='UI/Menu/LanguageMenu.ts'/>
 /// <reference path='UI/Menu/Menu.ts'/>
@@ -37,11 +39,11 @@ class Application {
         document.documentElement.lang = locale;
         const resource = await LocalizationHelper.loadResource(locale);
         const localizer = new Localizer(resource);
-        const mapFactory = new MapFactory();
+        const mapFactory = new MapFactory(localizer);
         const mapAccessor = new MapAccessor();
         const canvasProvider = new CanvasProvider();
-        const grid = new GridLayer(mapAccessor, canvasProvider);
-        const drawerFactory = new CellDrawerFactory(mapAccessor, canvasProvider);
+        const grid = new GridLayerFactory(mapAccessor, canvasProvider);
+        const drawerFactory = new CellDrawerFactory(mapAccessor);
         const mountainFactory = new MountainFactory();
         const mountainsRenderer = new MountainsRenderer();
         const placeRenderer = new PlaceRenderer();
@@ -58,24 +60,25 @@ class Application {
             treeRenderer
         ];
         const cellRenderer = new CellRenderer(drawerFactory, renderingStrategies);
-        const eraser = new Eraser(mapAccessor, cellRenderer);
         const modalLauncher = new ModalLauncher(localizer);
-        const terrainLayer = new TerrainLayer(mapAccessor, canvasProvider, cellRenderer);
-        const textLayer = new TextLayer(mapAccessor, canvasProvider, cellRenderer);
-        const uiLayer = new UILayer(mapAccessor, canvasProvider);
+        const terrainLayer = new TerrainLayerFactory(mapAccessor, canvasProvider, cellRenderer);
+        const textLayer = new TextLayerFactory(mapAccessor, canvasProvider, cellRenderer);
+        const uiLayer = new DrawingUI(mapAccessor, canvasProvider);
         const layers = [
             terrainLayer,
             textLayer,
-            grid,
-            uiLayer
+            grid
         ];
-        const mapRenderer = new MapRenderer(mapAccessor, layers);
-        const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, cellRenderer);
-        const placesTool = new PlacesTool(mapAccessor, cellRenderer);
-        const riversTool = new RiversTool(mapAccessor, cellRenderer);
-        const roadsTool = new RoadsTool(uiLayer, mapAccessor, cellRenderer);
-        const textTool = new TextTool(mapAccessor, cellRenderer, modalLauncher, localizer);
-        const treesTool = new TreesTool(mapAccessor, cellRenderer);
+        const layerFactory = new LayerFactory(layers);
+        const layersManager = new LayersManager(layerFactory, mapAccessor);
+        const eraser = new Eraser(mapAccessor, layersManager);
+        const mapRenderer = new MapRenderer(mapAccessor, layersManager);
+        const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, layersManager);
+        const placesTool = new PlacesTool(mapAccessor, layersManager);
+        const riversTool = new RiversTool(mapAccessor, layersManager);
+        const roadsTool = new RoadsTool(uiLayer, mapAccessor, layersManager);
+        const textTool = new TextTool(mapAccessor, layersManager, modalLauncher, localizer);
+        const treesTool = new TreesTool(mapAccessor, layersManager);
         const toolbar = new Toolbar([
             mountainsTool,
             placesTool,
@@ -84,9 +87,10 @@ class Application {
             textTool,
             treesTool,
             eraser
-        ], localizer);
+        ], localizer, layersManager);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layers, toolActivator);
+        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator);
+        const layersPanel = new LayersPanel(layersManager, localizer);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
@@ -102,18 +106,25 @@ class Application {
             saveCommandMenuEntry,
             exportCommandMenuEntry
         ]);
+        const aboutCommand = new About(modalLauncher, localizer);
+        const aboutCommandMenuEntry = new CommandMenuEntry(aboutCommand);
+        const helpMenu = new SubmenuMenuEntry(localizer['menu_label_help'], [
+            aboutCommandMenuEntry
+        ]);
         const languageMenu = new LanguageMenu(localizer);
         const mainMenu = new SubmenuMenuEntry('Menu', [
             fileMenu,
+            helpMenu,
             languageMenu
         ], { alwaysVisible: true });
         const menu = new Menu(mainMenu);
         const ui = new ApplicationUI([
             menu,
             toolbar,
-            drawingArea
+            drawingArea,
+            layersPanel
         ]);
-    
+
         return new Application(ui, mapFactory, mapLoader);
     }
 
@@ -134,6 +145,6 @@ class Application {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const app = await Application.build();
-    
+
     app.run();
 });

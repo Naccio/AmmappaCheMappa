@@ -2,5 +2,6 @@
 
 interface LayerAbstractFactory {
     type: string;
-    create(): DrawingLayer;
+    createRenderer(id: string): LayerRenderer;
+    createDrawing(id: string): DrawingLayer;
 }

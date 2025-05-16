@@ -1,50 +1,7 @@
 "use strict";
-class MapRenderer {
-    mapAccessor;
-    layers;
-    constructor(mapAccessor, layers) {
-        this.mapAccessor = mapAccessor;
-        this.layers = layers;
-    }
-    render() {
-        const map = this.mapAccessor.map, canvas = document.createElement('canvas');
-        canvas.width = map.columns * map.pixelsPerCell;
-        canvas.height = map.rows * map.pixelsPerCell;
-        var ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#FFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        const drawer = new CanvasDrawer(canvas);
-        for (let layer of this.layers) {
-            layer.render(drawer);
-        }
-        return canvas;
-    }
-}
-class Export {
-    renderer;
-    label;
-    constructor(renderer, localizer) {
-        this.renderer = renderer;
-        this.label = localizer['command_label_export'];
-    }
-    execute() {
-        const map = this.renderer.render();
-        Utilities.download('map.png', map.toDataURL());
-    }
-}
-class Open {
-    mapLoader;
-    label;
-    constructor(mapLoader, localizer) {
-        this.mapLoader = mapLoader;
-        this.label = localizer['command_label_open'];
-    }
-    execute() {
-        Utilities.loadFile((f) => this.readFile(f));
-    }
-    readFile(file) {
-        const map = Utilities.parseMap(file);
-        this.mapLoader.load(map);
+class Localizer {
+    constructor(resource) {
+        Object.assign(this, resource);
     }
 }
 class ModalLauncher {
@@ -52,6 +9,28 @@ class ModalLauncher {
     confirmValue = 'confirm';
     constructor(localizer) {
         this.localizer = localizer;
+    }
+    launch(title, content) {
+        const dialog = document.createElement('dialog'), header = document.createElement('header'), body = document.createElement('div'), footer = document.createElement('footer'), h1 = document.createElement('h1'), close = document.createElement('button');
+        h1.innerText = title;
+        close.type = 'button';
+        close.innerText = 'x';
+        close.tabIndex = -1;
+        close.onclick = (e) => {
+            e.preventDefault();
+            dialog.close();
+        };
+        header.append(h1);
+        header.append(close);
+        body.className = 'dialog-body';
+        for (let element of content) {
+            body.append(element);
+        }
+        dialog.append(header);
+        dialog.append(body);
+        dialog.append(footer);
+        document.body.append(dialog);
+        dialog.showModal();
     }
     launchForm(title, content, confirmCallback, cancelCallback) {
         const dialog = document.createElement('dialog'), header = document.createElement('header'), body = document.createElement('div'), footer = document.createElement('footer'), form = document.createElement('form'), h1 = document.createElement('h1'), close = document.createElement('button'), cancel = document.createElement('button'), confirm = document.createElement('button');
@@ -93,53 +72,24 @@ class ModalLauncher {
         dialog.showModal();
     }
 }
-class New {
-    mapFactory;
-    mapLoader;
+class About {
     modal;
     localizer;
     label;
-    constructor(mapFactory, mapLoader, modal, localizer) {
-        this.mapFactory = mapFactory;
-        this.mapLoader = mapLoader;
+    constructor(modal, localizer) {
         this.modal = modal;
         this.localizer = localizer;
-        this.label = localizer['command_label_new'];
+        this.label = localizer['command_label_about'];
     }
     execute() {
-        const columnsInput = document.createElement('input'), columnsLabel = document.createElement('label'), rowsInput = document.createElement('input'), rowsLabel = document.createElement('label'), title = this.localizer['form_title_new_map'];
-        columnsInput.id = 'columns';
-        columnsInput.type = 'number';
-        columnsInput.min = '5';
-        columnsInput.max = '100';
-        columnsInput.value = '20';
-        columnsInput.required = true;
-        columnsLabel.htmlFor = columnsInput.id;
-        columnsLabel.innerText = this.localizer['input_label_columns'];
-        rowsInput.id = 'rows';
-        rowsInput.type = 'number';
-        rowsInput.min = '5';
-        rowsInput.max = '100';
-        rowsInput.value = '20';
-        columnsInput.required = true;
-        rowsLabel.htmlFor = rowsInput.id;
-        rowsLabel.innerText = this.localizer['input_label_rows'];
-        this.modal.launchForm(title, [columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
-            const columns = parseInt(columnsInput.value), rows = parseInt(rowsInput.value), map = this.mapFactory.create(columns, rows);
-            this.mapLoader.load(map);
-        });
-    }
-}
-class Save {
-    mapAccessor;
-    label;
-    constructor(mapAccessor, localizer) {
-        this.mapAccessor = mapAccessor;
-        this.label = localizer['command_label_save'];
-    }
-    execute() {
-        const json = JSON.stringify(this.mapAccessor.map), content = 'data:text/plain;charset=utf-8,' + encodeURIComponent(json);
-        Utilities.download('map.json', content);
+        const quote = document.createElement('blockquote'), version = document.createElement('div'), versionLink = document.createElement('a');
+        quote.innerText = this.localizer['paragraph_about'];
+        versionLink.innerText = 'alpha.1';
+        versionLink.href = 'https://github.com/Naccio/AmmappaCheMappa';
+        versionLink.target = '_blank';
+        version.innerText = 'v ';
+        version.append(versionLink);
+        this.modal.launch('Ammappa che mappa!', [quote, version]);
     }
 }
 class CanvasDrawer {
@@ -232,6 +182,103 @@ class CanvasDrawer {
         this.context.lineJoin = lineJoin;
         this.context.lineWidth = lineWidth;
         this.context.strokeStyle = color;
+    }
+}
+class MapRenderer {
+    mapAccessor;
+    layers;
+    constructor(mapAccessor, layers) {
+        this.mapAccessor = mapAccessor;
+        this.layers = layers;
+    }
+    render() {
+        const map = this.mapAccessor.map, canvas = document.createElement('canvas'), layers = this.layers.layers.filter(l => !l.data.hidden);
+        canvas.width = map.columns * map.pixelsPerCell;
+        canvas.height = map.rows * map.pixelsPerCell;
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const drawer = new CanvasDrawer(canvas);
+        for (let layer of layers) {
+            layer.renderer.render(drawer);
+        }
+        return canvas;
+    }
+}
+class Export {
+    renderer;
+    label;
+    constructor(renderer, localizer) {
+        this.renderer = renderer;
+        this.label = localizer['command_label_export'];
+    }
+    execute() {
+        const map = this.renderer.render();
+        Utilities.download('map.png', map.toDataURL());
+    }
+}
+class Open {
+    mapLoader;
+    label;
+    constructor(mapLoader, localizer) {
+        this.mapLoader = mapLoader;
+        this.label = localizer['command_label_open'];
+    }
+    execute() {
+        Utilities.loadFile((f) => this.readFile(f));
+    }
+    readFile(file) {
+        const map = Utilities.parseMap(file);
+        this.mapLoader.load(map);
+    }
+}
+class New {
+    mapFactory;
+    mapLoader;
+    modal;
+    localizer;
+    label;
+    constructor(mapFactory, mapLoader, modal, localizer) {
+        this.mapFactory = mapFactory;
+        this.mapLoader = mapLoader;
+        this.modal = modal;
+        this.localizer = localizer;
+        this.label = localizer['command_label_new'];
+    }
+    execute() {
+        const columnsInput = document.createElement('input'), columnsLabel = document.createElement('label'), rowsInput = document.createElement('input'), rowsLabel = document.createElement('label'), title = this.localizer['form_title_new_map'];
+        columnsInput.id = 'columns';
+        columnsInput.type = 'number';
+        columnsInput.min = '5';
+        columnsInput.max = '100';
+        columnsInput.value = '20';
+        columnsInput.required = true;
+        columnsLabel.htmlFor = columnsInput.id;
+        columnsLabel.innerText = this.localizer['input_label_columns'];
+        rowsInput.id = 'rows';
+        rowsInput.type = 'number';
+        rowsInput.min = '5';
+        rowsInput.max = '100';
+        rowsInput.value = '20';
+        columnsInput.required = true;
+        rowsLabel.htmlFor = rowsInput.id;
+        rowsLabel.innerText = this.localizer['input_label_rows'];
+        this.modal.launchForm(title, [columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
+            const columns = parseInt(columnsInput.value), rows = parseInt(rowsInput.value), map = this.mapFactory.create(columns, rows);
+            this.mapLoader.load(map);
+        });
+    }
+}
+class Save {
+    mapAccessor;
+    label;
+    constructor(mapAccessor, localizer) {
+        this.mapAccessor = mapAccessor;
+        this.label = localizer['command_label_save'];
+    }
+    execute() {
+        const json = JSON.stringify(this.mapAccessor.map), content = 'data:text/plain;charset=utf-8,' + encodeURIComponent(json);
+        Utilities.download('map.json', content);
     }
 }
 class CellDrawer {
@@ -345,41 +392,10 @@ class MountainsRenderer extends GenericObjectRenderer {
         });
     }
 }
-class CellDrawerFactory {
-    mapAccessor;
-    canvasProvider;
-    constructor(mapAccessor, canvasProvider) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-    }
-    create(cell, layer) {
-        const canvas = this.canvasProvider.get(layer);
-        return new CellDrawer(cell, this.mapAccessor, canvas);
-    }
-}
-class CellRenderer {
-    drawerFactory;
-    renderers;
-    constructor(drawerFactory, renderers) {
-        this.drawerFactory = drawerFactory;
-        this.renderers = renderers;
-    }
-    render(cell, layer) {
-        const drawer = this.drawerFactory.create(cell, layer), objects = drawer.cell.objects.filter(o => o.layer === layer);
-        drawer.clear();
-        for (let object of objects) {
-            this.renderObject(object, drawer);
-        }
-    }
-    renderObject(object, drawer) {
-        for (let strategy of this.renderers) {
-            strategy.render(object, drawer);
-        }
-    }
-}
 class MapAccessor {
     _map;
-    _cells = [];
+    constructor() {
+    }
     get map() {
         if (this._map === undefined) {
             throw new Error('No map active');
@@ -389,19 +405,6 @@ class MapAccessor {
     set map(map) {
         this._map = map;
         this.save();
-        for (let column = 0; column < map.columns; column++) {
-            this._cells[column] = [];
-            for (let row = 0; row < map.rows; row++) {
-                this._cells[column][row] = {
-                    coordinates: { column, row },
-                    objects: []
-                };
-            }
-        }
-        for (let key in map.objects) {
-            const index = GridHelper.cellNameToIndex(key), cell = this._cells[index.column][index.row];
-            cell.objects = map.objects[key];
-        }
     }
     get scale() {
         return this.map.zoom / this.map.pixelsPerCell;
@@ -417,7 +420,11 @@ class MapAccessor {
             .divide(this.scale);
     }
     getCell(index) {
-        return this._cells[index.column][index.row];
+        const name = GridHelper.cellIndexToName(index), objects = this.map.objects[name] ?? [];
+        return {
+            index,
+            objects
+        };
     }
     getIndex(position) {
         if (position === undefined) {
@@ -477,19 +484,18 @@ class MapAccessor {
             .multiply(this.scale)
             .subtract(cellPosition);
     }
+    save() {
+        localStorage.setItem('map', JSON.stringify(this._map));
+    }
     setObjects(index, objects) {
-        const cell = this._cells[index.column][index.row], cellName = GridHelper.cellIndexToName(index);
+        const cellName = GridHelper.cellIndexToName(index);
         if (objects.length === 0) {
             delete this.map.objects[cellName];
         }
         else {
             this.map.objects[cellName] = objects;
         }
-        cell.objects = objects;
         this.save();
-    }
-    save() {
-        localStorage.setItem('map', JSON.stringify(this._map));
     }
     splitActionsEvenly(numerator, denominator, splitAction, mainAction) {
         const quotient = Math.floor(numerator / denominator);
@@ -740,22 +746,22 @@ class MountainFactory {
 }
 class MountainsHelper {
     static objectType = 'mountain';
-    static getMountains(cell) {
-        return cell.objects.filter(o => this.isMountain(o));
-    }
     static isMountain(object) {
         return object.type === this.objectType;
     }
 }
 class MountainsTool extends CellTool {
     mountainFactory;
-    renderer;
-    id = 'mountains';
-    labelResourceId = 'tool_label_mountains';
-    constructor(mapAccessor, mountainFactory, renderer) {
+    layers;
+    configuration = {
+        id: 'mountains',
+        labelResourceId: 'tool_label_mountains',
+        layerTypes: ['terrain']
+    };
+    constructor(mapAccessor, mountainFactory, layers) {
         super(mapAccessor);
         this.mountainFactory = mountainFactory;
-        this.renderer = renderer;
+        this.layers = layers;
     }
     useOnCell(cell) {
         const mountains = [];
@@ -763,16 +769,12 @@ class MountainsTool extends CellTool {
             const mountain = this.mountainFactory.create(quadrant);
             mountains.push(mountain);
         }
-        this.mapAccessor.setObjects(cell, mountains);
-        this.renderer.render(cell, 'terrain');
+        this.layers.setObjects(cell, mountains);
     }
 }
 class PlacesHelper {
     static layer = 'terrain';
     static objectType = 'place';
-    static getPlaces(cell) {
-        return cell.objects.filter(o => this.isPlace(o));
-    }
     static isPlace(object) {
         return object.type === this.objectType;
     }
@@ -790,12 +792,15 @@ class PlaceRenderer extends GenericObjectRenderer {
 }
 class PlacesTool {
     mapAccessor;
-    renderer;
-    id = 'places';
-    labelResourceId = 'tool_label_places';
-    constructor(mapAccessor, renderer) {
+    layers;
+    configuration = {
+        id: 'places',
+        labelResourceId: 'tool_label_places',
+        layerTypes: ['terrain']
+    };
+    constructor(mapAccessor, layers) {
         this.mapAccessor = mapAccessor;
-        this.renderer = renderer;
+        this.layers = layers;
     }
     start(point) {
         const cell = this.mapAccessor.getIndex(point);
@@ -807,8 +812,7 @@ class PlacesTool {
             layer,
             position
         };
-        this.mapAccessor.setObjects(cell, [place]);
-        this.renderer.render(cell, layer);
+        this.layers.setObjects(cell, [place]);
     }
     move() {
     }
@@ -837,14 +841,17 @@ class RiverRenderer extends GenericObjectRenderer {
 }
 class RiversTool {
     mapAccessor;
-    renderer;
-    id = 'rivers';
-    labelResourceId = 'tool_label_rivers';
+    layers;
+    configuration = {
+        id: 'rivers',
+        labelResourceId: 'tool_label_rivers',
+        layerTypes: ['terrain']
+    };
     startPosition;
     activeCell;
-    constructor(mapAccessor, renderer) {
+    constructor(mapAccessor, layers) {
         this.mapAccessor = mapAccessor;
-        this.renderer = renderer;
+        this.layers = layers;
     }
     start(position) {
         const cell = this.mapAccessor.getIndex(position);
@@ -860,10 +867,8 @@ class RiversTool {
             return;
         }
         if (!GridHelper.cellIsEqual(activeCell, cell)) {
-            const cells = this.createRivers(activeCell, this.startPosition, cell, position), river = this.getRiver(cell), cellPosition = this.mapAccessor.getPosition(cell);
-            for (let cell of cells) {
-                this.renderer.render(cell, 'terrain');
-            }
+            const river = this.getRiver(cell), cellPosition = this.mapAccessor.getPosition(cell);
+            this.createRivers(activeCell, this.startPosition, cell, position);
             this.startPosition = VectorMath.startOperation(river.from)
                 .multiply(this.mapAccessor.map.pixelsPerCell)
                 .add(cellPosition)
@@ -878,10 +883,9 @@ class RiversTool {
             }
             else {
                 river.to = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
-                this.mapAccessor.setObjects(cell, [river]);
+                this.layers.setObjects(cell, [river]);
                 this.startPosition = this.mapAccessor.absolutePosition(cell, river.from);
             }
-            this.renderer.render(cell, 'terrain');
         }
     }
     stop() {
@@ -922,7 +926,7 @@ class RiversTool {
                 y: MathHelper.round(MathHelper.random(.2, .8), 2)
             }
         };
-        this.mapAccessor.setObjects(cell, [river]);
+        this.layers.setObjects(cell, [river]);
         return river;
     }
     getRiver(cell) {
@@ -946,14 +950,17 @@ class RoadRenderer extends GenericObjectRenderer {
 class RoadsTool {
     ui;
     mapAccessor;
-    renderer;
-    id = 'roads';
-    labelResourceId = 'tool_label_roads';
+    layers;
+    configuration = {
+        id: 'roads',
+        labelResourceId: 'tool_label_roads',
+        layerTypes: ['terrain']
+    };
     startPosition;
-    constructor(ui, mapAccessor, renderer) {
+    constructor(ui, mapAccessor, layers) {
         this.ui = ui;
         this.mapAccessor = mapAccessor;
-        this.renderer = renderer;
+        this.layers = layers;
     }
     start(position) {
         const cell = this.mapAccessor.getIndex(position);
@@ -981,10 +988,7 @@ class RoadsTool {
         if (this.startPosition === undefined || firstCell === undefined || position === undefined || lastCell === undefined) {
             return;
         }
-        const cells = this.createRoads(firstCell, this.startPosition, lastCell, position);
-        for (let cell of cells) {
-            this.renderer.render(cell, 'terrain');
-        }
+        this.createRoads(firstCell, this.startPosition, lastCell, position);
         this.startPosition = undefined;
     }
     createRoads(firstCell, start, lastCell, end) {
@@ -1007,7 +1011,7 @@ class RoadsTool {
             from: VectorMath.round(from, 4),
             to: VectorMath.round(to, 4)
         };
-        this.mapAccessor.setObjects(cell, [road]);
+        this.layers.setObjects(cell, [road]);
     }
 }
 class TextRenderer extends GenericObjectRenderer {
@@ -1019,11 +1023,6 @@ class TextRenderer extends GenericObjectRenderer {
         drawer.text(text.position, text.value, text.fontSize);
     }
 }
-class Localizer {
-    constructor(resource) {
-        Object.assign(this, resource);
-    }
-}
 class TextHelper {
     static layer = 'text';
     static objectType = 'text';
@@ -1033,14 +1032,17 @@ class TextHelper {
 }
 class TextTool {
     mapAccessor;
-    renderer;
+    layers;
     modal;
     localizer;
-    id = 'text';
-    labelResourceId = 'tool_label_text';
-    constructor(mapAccessor, renderer, modal, localizer) {
+    configuration = {
+        id: 'text',
+        labelResourceId: 'tool_label_text',
+        layerTypes: ['text']
+    };
+    constructor(mapAccessor, layers, modal, localizer) {
         this.mapAccessor = mapAccessor;
-        this.renderer = renderer;
+        this.layers = layers;
         this.modal = modal;
         this.localizer = localizer;
     }
@@ -1071,8 +1073,7 @@ class TextTool {
                 value: textInput.value,
                 fontSize
             };
-            this.mapAccessor.setObjects(cell, [text]);
-            this.renderer.render(cell, layer);
+            this.layers.setObjects(cell, [text]);
         });
     }
     move() {
@@ -1124,12 +1125,15 @@ class TreesHelper {
     }
 }
 class TreesTool extends CellTool {
-    renderer;
-    id = 'trees';
-    labelResourceId = 'tool_label_trees';
-    constructor(mapAccessor, renderer) {
+    layers;
+    configuration = {
+        id: 'trees',
+        labelResourceId: 'tool_label_trees',
+        layerTypes: ['terrain']
+    };
+    constructor(mapAccessor, layers) {
         super(mapAccessor);
-        this.renderer = renderer;
+        this.layers = layers;
     }
     useOnCell(cell) {
         const trees = [], perColumn = 6, perRow = 4, xScale = 1 / perColumn, yScale = 1 / perRow;
@@ -1146,8 +1150,230 @@ class TreesTool extends CellTool {
                 trees.push(tree);
             }
         }
-        this.mapAccessor.setObjects(cell, trees);
-        this.renderer.render(cell, 'terrain');
+        this.layers.setObjects(cell, trees);
+    }
+}
+class GridLayer {
+    id;
+    mapAccessor;
+    canvasProvider;
+    wrapper;
+    constructor(id, mapAccessor, canvasProvider) {
+        this.id = id;
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+    }
+    render(drawer) {
+        this.renderAtScale(drawer, this.mapAccessor.map.pixelsPerCell);
+    }
+    setup(container) {
+        const wrapper = document.createElement('div');
+        wrapper.id = this.id;
+        this.wrapper = wrapper;
+        container.append(wrapper);
+        this.setupCanvas();
+    }
+    update(cell) {
+    }
+    zoom() {
+        this.setupCanvas();
+    }
+    renderAtScale(drawer, spacing) {
+        const map = this.mapAccessor.map, style = {
+            color: '#999',
+            lineWidth: 2
+        };
+        for (let i = 0; i < map.columns + 1; i++) {
+            const x = i * spacing, y1 = 0, y2 = drawer.height;
+            drawer.line([{ x, y: y1 }, { x, y: y2 }], style);
+        }
+        for (let i = 0; i < map.rows + 1; i++) {
+            const y = i * spacing, x1 = 0, x2 = drawer.width;
+            drawer.line([{ x: x1, y }, { x: x2, y }], style);
+        }
+    }
+    setupCanvas() {
+        const container = this.wrapper?.parentElement;
+        if (!this.wrapper || !container) {
+            return;
+        }
+        const drawer = this.canvasProvider.create(this.id + 'canvas', container.clientWidth, container.clientHeight), map = this.mapAccessor.map, spacing = map.pixelsPerCell / map.zoom;
+        this.renderAtScale(drawer, spacing);
+        this.wrapper.innerHTML = '';
+        this.wrapper.append(drawer.canvas);
+    }
+}
+class GridLayerFactory {
+    mapAccessor;
+    canvasProvider;
+    constructor(mapAccessor, canvasProvider) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+    }
+    type = 'grid';
+    createRenderer(id) {
+        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
+    }
+    createDrawing(id) {
+        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
+    }
+}
+class LayersPanel {
+    layers;
+    localizer;
+    container;
+    constructor(layers, localizer) {
+        this.layers = layers;
+        this.localizer = localizer;
+        this.container = document.createElement('div');
+        this.container.id = 'layers';
+        layers.onCreate(l => this.buildLayer(l));
+        layers.onDelete(l => this.removeLayer(l.id));
+        layers.onSelect(l => this.selectLayer(l));
+    }
+    build() {
+        document.getElementById('layers')?.remove();
+        document.body.append(this.container);
+    }
+    buildLayer(layer) {
+        const data = layer.data, id = data.id, type = this.localizer[`layer_type_${data.type}`], wrapper = document.createElement('div'), check = document.createElement('input'), radio = document.createElement('input'), label = document.createElement('label'), typeLabel = document.createElement('small');
+        check.type = 'checkbox';
+        check.name = 'visible-layers';
+        check.value = id;
+        check.id = id + '-visible';
+        check.checked = !data.hidden;
+        check.onchange = () => this.layers.update(id, l => l.hidden = !check.checked);
+        radio.type = 'radio';
+        radio.name = 'active-layer';
+        radio.value = id;
+        radio.id = this.getRadioId(id);
+        radio.className = 'label-radio';
+        radio.onchange = () => this.layers.select(id);
+        typeLabel.innerText = `(${type})`;
+        label.htmlFor = radio.id;
+        label.innerText = data.name;
+        label.title = data.name;
+        label.append(typeLabel);
+        wrapper.id = this.getWrapperId(id);
+        wrapper.append(check);
+        wrapper.append(radio);
+        wrapper.append(label);
+        this.container.append(wrapper);
+    }
+    getRadioId(id) {
+        return id + '-active';
+    }
+    getWrapperId(id) {
+        return id + '-panel-controls';
+    }
+    removeLayer(id) {
+        id = this.getWrapperId(id);
+        document.getElementById(id)?.remove();
+    }
+    selectLayer(layer) {
+        const id = this.getRadioId(layer.data.id);
+        document.getElementById(id)?.click();
+    }
+}
+class TextLayerFactory {
+    mapAccessor;
+    canvasProvider;
+    renderer;
+    constructor(mapAccessor, canvasProvider, renderer) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+        this.renderer = renderer;
+    }
+    type = 'text';
+    createRenderer(id) {
+        return new DefaultLayer(id, this.mapAccessor, this.canvasProvider, this.renderer);
+    }
+    createDrawing(id) {
+        return new DefaultLayer(id, this.mapAccessor, this.canvasProvider, this.renderer);
+    }
+}
+class CellDrawerFactory {
+    mapAccessor;
+    constructor(mapAccessor) {
+        this.mapAccessor = mapAccessor;
+    }
+    create(cell, drawer) {
+        return new CellDrawer(cell, this.mapAccessor, drawer);
+    }
+}
+class CellRenderer {
+    drawerFactory;
+    renderers;
+    constructor(drawerFactory, renderers) {
+        this.drawerFactory = drawerFactory;
+        this.renderers = renderers;
+    }
+    render(cell, drawer, layer) {
+        const cellDrawer = this.drawerFactory.create(cell, drawer), objects = cellDrawer.cell.objects.filter(o => o.layer === layer);
+        cellDrawer.clear();
+        for (let object of objects) {
+            this.renderObject(object, cellDrawer);
+        }
+    }
+    renderObject(object, drawer) {
+        for (let strategy of this.renderers) {
+            strategy.render(object, drawer);
+        }
+    }
+}
+class DefaultLayer {
+    id;
+    mapAccessor;
+    canvasProvider;
+    renderer;
+    constructor(id, mapAccessor, canvasProvider, renderer) {
+        this.id = id;
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+        this.renderer = renderer;
+    }
+    render(drawer) {
+        const map = this.mapAccessor.map, tmpDrawer = this.canvasProvider.create(this.id + '-tmp', map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        this.draw(tmpDrawer);
+        drawer.image(tmpDrawer);
+    }
+    setup(container) {
+        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        container.append(drawer.canvas);
+        this.draw(drawer);
+    }
+    update(cell) {
+        const drawer = this.canvasProvider.get(this.id);
+        this.renderer.render(cell, drawer, this.id);
+    }
+    zoom() {
+        const drawer = this.canvasProvider.get(this.id);
+        drawer?.scale(1 / this.mapAccessor.map.zoom);
+    }
+    draw(drawer) {
+        const map = this.mapAccessor.map;
+        for (let column = 0; column < map.columns; column++) {
+            for (let row = 0; row < map.rows; row++) {
+                this.renderer.render({ column, row }, drawer, this.id);
+            }
+        }
+    }
+}
+class TerrainLayerFactory {
+    mapAccessor;
+    canvasProvider;
+    renderer;
+    constructor(mapAccessor, canvasProvider, renderer) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+        this.renderer = renderer;
+    }
+    type = 'terrain';
+    createRenderer(id) {
+        return new DefaultLayer(id, this.mapAccessor, this.canvasProvider, this.renderer);
+    }
+    createDrawing(id) {
+        return new DefaultLayer(id, this.mapAccessor, this.canvasProvider, this.renderer);
     }
 }
 class ApplicationUI {
@@ -1159,6 +1385,250 @@ class ApplicationUI {
         for (let element of this.elements) {
             element.build();
         }
+    }
+}
+class CanvasProvider {
+    canvases = {};
+    create(id, width, height, scale) {
+        const canvas = document.createElement('canvas'), drawer = new CanvasDrawer(canvas);
+        scale ??= 1;
+        document.getElementById(id)?.remove();
+        canvas.id = id;
+        canvas.width = width;
+        canvas.height = height;
+        this.canvases[id] = drawer;
+        this.scale(id, scale);
+        return drawer;
+    }
+    scale(id, scale) {
+        this.canvases[id]?.scale(scale);
+    }
+    get(id) {
+        return this.canvases[id];
+    }
+}
+class InternalEvent {
+    handlers = [];
+    subscribe(handler) {
+        this.handlers.push(handler);
+    }
+    unsubscribe(handler) {
+        this.handlers = this.handlers.filter(item => item !== handler);
+    }
+    trigger(data) {
+        for (const handler of this.handlers) {
+            handler(data);
+        }
+    }
+}
+class EventManager {
+    subscriptions = {};
+    subscribe(type, handler) {
+        this.getEvent(type).subscribe(handler);
+    }
+    unsubscribe(type, handler) {
+        this.getEvent(type).unsubscribe(handler);
+    }
+    trigger(type, data) {
+        this.getEvent(type).trigger(data);
+    }
+    getEvent(type) {
+        let event = this.subscriptions[type];
+        if (event === undefined) {
+            event = new InternalEvent();
+            this.subscriptions[type] = event;
+        }
+        return event;
+    }
+}
+class LayerAccessor {
+    data;
+    drawing;
+    renderer;
+    constructor(data, drawing, renderer) {
+        this.data = data;
+        this.drawing = drawing;
+        this.renderer = renderer;
+    }
+}
+class Utilities {
+    static download(filename, content) {
+        const element = document.createElement('a');
+        element.href = content;
+        element.download = filename;
+        element.click();
+    }
+    static generateId(slug) {
+        const connector = '_', date = Date.now().toString(36), random = Math.random().toString(36).substring(2);
+        return [slug, date, random].join(connector);
+    }
+    static hasFlag(value, flag) {
+        return (value & flag) === flag;
+    }
+    static loadFile(callback) {
+        const input = document.createElement("input");
+        input.type = 'file';
+        input.style.display = 'none';
+        input.onchange = (e) => this.readFile(e, (f) => {
+            callback(f);
+            input.remove();
+        });
+        input.oncancel = () => input.remove();
+        document.body.appendChild(input);
+        input.click();
+    }
+    static parseMap(input) {
+        const data = JSON.parse(input);
+        return data;
+    }
+    static readFile(e, callback) {
+        const input = e.target;
+        if (!(input instanceof HTMLInputElement) || input.files === null) {
+            throw new Error('Event must be triggered from file input.');
+        }
+        const file = input.files[0], reader = new FileReader();
+        reader.onload = function (e) {
+            const contents = e.target?.result;
+            if (typeof contents === 'string') {
+                callback(contents);
+            }
+            else {
+                throw new Error('File must be text');
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+class LayersHelper {
+    static create(type, name) {
+        return {
+            id: Utilities.generateId('layer'),
+            name,
+            type
+        };
+    }
+}
+class LayerFactory {
+    factories;
+    constructor(factories) {
+        this.factories = factories;
+    }
+    create(layer) {
+        const factory = this.getFactory(layer.type);
+        return {
+            data: layer,
+            renderer: factory.createRenderer(layer.id),
+            drawing: factory.createDrawing(layer.id)
+        };
+    }
+    getFactory(type) {
+        const factory = this.factories.find(f => f.type === type);
+        if (factory === undefined) {
+            throw new Error('Could not find layer factory for type ' + type);
+        }
+        return factory;
+    }
+}
+class LayersManager {
+    factory;
+    mapAccessor;
+    createEvent = new InternalEvent();
+    deleteEvent = new InternalEvent();
+    selectEvent = new InternalEvent();
+    updateEvent = new InternalEvent();
+    _activeLayer;
+    layers = [];
+    constructor(factory, mapAccessor) {
+        this.factory = factory;
+        this.mapAccessor = mapAccessor;
+    }
+    get activeLayer() {
+        return this._activeLayer;
+    }
+    add(layer) {
+        const accessor = this.factory.create(layer);
+        this.layers.push(accessor);
+        this.createEvent.trigger(accessor);
+        if (this._activeLayer === undefined) {
+            this.select(layer.id);
+        }
+        return accessor;
+    }
+    clear() {
+        const layers = [...this.layers];
+        layers.forEach(l => this.delete(l.data.id));
+    }
+    delete(id) {
+        const layer = this.getLayer(id);
+        this.layers = this.layers.filter(l => l.data.id !== id);
+        if (this.activeLayer?.data.id === id) {
+            this._activeLayer = undefined;
+        }
+        this.deleteEvent.trigger(layer.data);
+    }
+    select(id) {
+        const layer = this.getLayer(id);
+        this._activeLayer = layer;
+        this.selectEvent.trigger(layer);
+    }
+    setObjects(index, objects) {
+        if (this._activeLayer === undefined) {
+            return;
+        }
+        objects.forEach(o => o.layer = this._activeLayer.data.id);
+        this.mapAccessor.setObjects(index, objects);
+        this.updateEvent.trigger(index);
+    }
+    update(id, action) {
+        const layer = this.getLayer(id);
+        action(layer.data);
+        this.mapAccessor.save();
+        this.updateEvent.trigger(layer.data);
+    }
+    onUpdate(handler) {
+        this.updateEvent.subscribe(handler);
+    }
+    onSelect(handler) {
+        this.selectEvent.subscribe(handler);
+    }
+    onCreate(handler) {
+        this.createEvent.subscribe(handler);
+    }
+    onDelete(handler) {
+        this.deleteEvent.subscribe(handler);
+    }
+    getLayer(id) {
+        const layer = this.layers.find(l => l.data.id === id);
+        if (layer === undefined) {
+            throw new Error(`Layer '${id}' does not exist.`);
+        }
+        return layer;
+    }
+}
+class DrawingUI {
+    mapAccessor;
+    canvasProvider;
+    id = 'ui';
+    _drawer;
+    constructor(mapAccessor, canvasProvider) {
+        this.mapAccessor = mapAccessor;
+        this.canvasProvider = canvasProvider;
+    }
+    get drawer() {
+        if (this._drawer === undefined) {
+            throw new Error('UI not initialized.');
+        }
+        return this._drawer;
+    }
+    setup(container) {
+        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        container.append(drawer.canvas);
+        this._drawer = drawer;
+    }
+    update(cell) {
+    }
+    zoom() {
+        this._drawer?.scale(1 / this.mapAccessor.map.zoom);
     }
 }
 class MapDrawer {
@@ -1205,6 +1675,7 @@ class MapDrawer {
 }
 class DrawingArea {
     layers;
+    ui;
     tool;
     id = 'drawing-area';
     doubleClickThreshold = 250;
@@ -1214,8 +1685,9 @@ class DrawingArea {
     isDrawing = false;
     lastShift = VectorMath.zero;
     lastWheelClick = 0;
-    constructor(layers, tool) {
+    constructor(layers, ui, tool) {
         this.layers = layers;
+        this.ui = ui;
         this.tool = tool;
     }
     build() {
@@ -1227,6 +1699,7 @@ class DrawingArea {
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
+        this.layers.onUpdate(this.layerUpdateHandler);
         document.body.append(wrapper);
         this._wrapper = wrapper;
     }
@@ -1237,7 +1710,13 @@ class DrawingArea {
         this.wrapper.append(container);
         this._drawer = new MapDrawer(map, container);
         this.drawer.resize(0);
-        this.layers.forEach(l => l.setup(container));
+        this.layers.clear();
+        map.layers.forEach(l => {
+            const layer = this.layers.add(l);
+            layer.drawing.setup(container);
+            this.layerDataUpdateHandler(l);
+        });
+        this.ui.setup(container);
         this.drawer.center();
     }
     get drawer() {
@@ -1256,7 +1735,6 @@ class DrawingArea {
         return this.drawer.getMapPoint(point);
     }
     startDraw(coordinates) {
-        ;
         this.isDrawing = true;
         this.tool.start(coordinates);
     }
@@ -1278,10 +1756,25 @@ class DrawingArea {
     }
     zoom(direction) {
         this.drawer.resize(direction);
-        this.layers.forEach(l => l.zoom());
+        this.layers.layers.forEach(l => l.drawing.zoom());
+        this.ui.zoom();
     }
     blurHandler = () => {
         this.stop(undefined);
+    };
+    layerDataUpdateHandler = (c) => {
+        const element = document.getElementById(c.id);
+        if (element) {
+            element.style.display = c.hidden ? 'none' : 'block';
+        }
+    };
+    layerUpdateHandler = (c) => {
+        if ('id' in c) {
+            this.layerDataUpdateHandler(c);
+        }
+        else {
+            this.layers.activeLayer?.drawing.update(c);
+        }
     };
     mouseDownHandler = (e) => {
         const coordinates = {
@@ -1328,163 +1821,6 @@ class DrawingArea {
         const direction = Math.sign(e.deltaY);
         this.zoom(direction);
     };
-}
-class GridLayer {
-    mapAccessor;
-    canvasProvider;
-    container;
-    constructor(mapAccessor, canvasProvider) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-    }
-    render(drawer) {
-        this.renderAtScale(drawer, this.mapAccessor.map.pixelsPerCell);
-    }
-    setup(container) {
-        const drawer = this.canvasProvider.create('grid', container.clientWidth, container.clientHeight), map = this.mapAccessor.map, spacing = map.pixelsPerCell / map.zoom;
-        this.renderAtScale(drawer, spacing);
-        this.container = container;
-        container.append(drawer.canvas);
-    }
-    zoom() {
-        if (this.container === undefined) {
-            return;
-        }
-        this.setup(this.container);
-    }
-    renderAtScale(drawer, spacing) {
-        const map = this.mapAccessor.map, style = {
-            color: '#999',
-            lineWidth: 2
-        };
-        for (let i = 0; i < map.columns + 1; i++) {
-            const x = i * spacing, y1 = 0, y2 = drawer.height;
-            drawer.line([{ x, y: y1 }, { x, y: y2 }], style);
-        }
-        for (let i = 0; i < map.rows + 1; i++) {
-            const y = i * spacing, x1 = 0, x2 = drawer.width;
-            drawer.line([{ x: x1, y }, { x: x2, y }], style);
-        }
-    }
-}
-class CanvasProvider {
-    canvases = {};
-    create(id, width, height, scale) {
-        const canvas = document.createElement('canvas'), drawer = new CanvasDrawer(canvas);
-        scale ??= 1;
-        document.getElementById(id)?.remove();
-        canvas.id = id;
-        canvas.width = width;
-        canvas.height = height;
-        this.canvases[id] = drawer;
-        this.scale(id, scale);
-        document.body.append(canvas);
-        return drawer;
-    }
-    scale(id, scale) {
-        this.canvases[id]?.scale(scale);
-    }
-    get(id) {
-        return this.canvases[id];
-    }
-}
-class UILayer {
-    mapAccessor;
-    canvasProvider;
-    id = 'ui';
-    _drawer;
-    constructor(mapAccessor, canvasProvider) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-    }
-    get drawer() {
-        if (this._drawer === undefined) {
-            throw new Error('UI not initialized.');
-        }
-        return this._drawer;
-    }
-    render() {
-    }
-    setup(container) {
-        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
-        container.append(drawer.canvas);
-        this._drawer = drawer;
-    }
-    zoom() {
-        this._drawer?.scale(1 / this.mapAccessor.map.zoom);
-    }
-}
-class TextLayer {
-    mapAccessor;
-    canvasProvider;
-    renderer;
-    id = 'text';
-    drawer;
-    constructor(mapAccessor, canvasProvider, renderer) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-        this.renderer = renderer;
-    }
-    render(drawer) {
-        if (this.drawer === undefined) {
-            return;
-        }
-        this.draw();
-        drawer.image(this.drawer);
-    }
-    setup(container) {
-        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
-        container.append(drawer.canvas);
-        this.drawer = drawer;
-        this.draw();
-    }
-    zoom() {
-        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
-    }
-    draw() {
-        const map = this.mapAccessor.map;
-        for (let column = 0; column < map.columns; column++) {
-            for (let row = 0; row < map.rows; row++) {
-                this.renderer.render({ column, row }, this.id);
-            }
-        }
-    }
-}
-class TerrainLayer {
-    mapAccessor;
-    canvasProvider;
-    renderer;
-    id = 'terrain';
-    drawer;
-    constructor(mapAccessor, canvasProvider, renderer) {
-        this.mapAccessor = mapAccessor;
-        this.canvasProvider = canvasProvider;
-        this.renderer = renderer;
-    }
-    render(drawer) {
-        if (this.drawer === undefined) {
-            return;
-        }
-        this.draw();
-        drawer.image(this.drawer);
-    }
-    setup(container) {
-        const map = this.mapAccessor.map, drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
-        container.append(drawer.canvas);
-        this.drawer = drawer;
-        this.draw();
-    }
-    zoom() {
-        this.drawer?.scale(1 / this.mapAccessor.map.zoom);
-    }
-    draw() {
-        const map = this.mapAccessor.map;
-        for (let column = 0; column < map.columns; column++) {
-            for (let row = 0; row < map.rows; row++) {
-                this.renderer.render({ column, row }, this.id);
-            }
-        }
-    }
 }
 class ButtonMenuEntry {
     label;
@@ -1625,26 +1961,30 @@ class Menu {
     }
 }
 class Eraser extends CellTool {
-    renderer;
-    id = 'eraser';
-    labelResourceId;
-    constructor(mapAccessor, renderer) {
+    layers;
+    configuration = {
+        id: 'eraser',
+        labelResourceId: 'tool_label_eraser',
+        layerTypes: ['terrain', 'text']
+    };
+    constructor(mapAccessor, layers) {
         super(mapAccessor);
-        this.renderer = renderer;
-        this.labelResourceId = 'tool_label_eraser';
+        this.layers = layers;
     }
     useOnCell(cell) {
-        this.mapAccessor.setObjects(cell, []);
-        this.renderer.render(cell, 'terrain');
+        this.layers.setObjects(cell, []);
     }
 }
 class Toolbar {
     tools;
     localizer;
+    layers;
     _activeTool;
-    constructor(tools, localizer) {
+    constructor(tools, localizer, layers) {
         this.tools = tools;
         this.localizer = localizer;
+        this.layers = layers;
+        layers.onSelect(this.layerSelectHandle);
     }
     get activeTool() {
         return this._activeTool;
@@ -1653,25 +1993,58 @@ class Toolbar {
         const container = document.createElement('div');
         container.id = 'toolbar';
         for (let tool of this.tools) {
-            const id = 'tool-' + tool.id, radio = document.createElement('input'), label = document.createElement('label');
+            const configuration = tool.configuration, id = configuration.id, radioId = this.getRadioId(configuration.id), radio = document.createElement('input'), label = document.createElement('label');
             radio.type = 'radio';
             radio.name = 'active-tool';
             radio.value = id;
-            radio.id = id;
-            label.htmlFor = id;
-            label.innerText = tool.id[0].toLocaleUpperCase();
-            label.title = this.localizer[tool.labelResourceId];
+            radio.id = radioId;
+            radio.className = 'label-radio';
+            label.htmlFor = radioId;
+            label.innerText = id[0].toLocaleUpperCase();
+            label.title = this.localizer[configuration.labelResourceId];
             radio.addEventListener('change', () => this._activeTool = tool);
             container.append(radio);
             container.append(label);
         }
         document.body.append(container);
-        this._activeTool = this.tools[0];
-        this.selectTool(this.tools[0].id);
+    }
+    getRadio(id) {
+        id = this.getRadioId(id);
+        return document.getElementById(id);
+    }
+    getRadioId(id) {
+        return 'tool-' + id;
+    }
+    selectFirstTool() {
+        for (let tool of this.tools) {
+            if (this.isCompatibleWith(tool, this.layers.activeLayer)) {
+                this.selectTool(tool.configuration.id);
+                this._activeTool = tool;
+                return;
+            }
+        }
+        this._activeTool = undefined;
     }
     selectTool(id) {
+        id = this.getRadioId(id);
         document.getElementById(id)?.click();
     }
+    isCompatibleWith(tool, layer) {
+        if (!tool || !layer) {
+            return false;
+        }
+        const layerTypes = tool.configuration.layerTypes;
+        return layerTypes.length === 0 || layerTypes.includes(layer.data.type);
+    }
+    layerSelectHandle = (layer) => {
+        for (let tool of this.tools) {
+            const radio = this.getRadio(tool.configuration.id);
+            radio.disabled = !this.isCompatibleWith(tool, layer);
+        }
+        if (!this.isCompatibleWith(this.activeTool, layer)) {
+            this.selectFirstTool();
+        }
+    };
 }
 class ToolActivator {
     toolbar;
@@ -1702,11 +2075,11 @@ class Application {
         document.documentElement.lang = locale;
         const resource = await LocalizationHelper.loadResource(locale);
         const localizer = new Localizer(resource);
-        const mapFactory = new MapFactory();
+        const mapFactory = new MapFactory(localizer);
         const mapAccessor = new MapAccessor();
         const canvasProvider = new CanvasProvider();
-        const grid = new GridLayer(mapAccessor, canvasProvider);
-        const drawerFactory = new CellDrawerFactory(mapAccessor, canvasProvider);
+        const grid = new GridLayerFactory(mapAccessor, canvasProvider);
+        const drawerFactory = new CellDrawerFactory(mapAccessor);
         const mountainFactory = new MountainFactory();
         const mountainsRenderer = new MountainsRenderer();
         const placeRenderer = new PlaceRenderer();
@@ -1723,24 +2096,25 @@ class Application {
             treeRenderer
         ];
         const cellRenderer = new CellRenderer(drawerFactory, renderingStrategies);
-        const eraser = new Eraser(mapAccessor, cellRenderer);
         const modalLauncher = new ModalLauncher(localizer);
-        const terrainLayer = new TerrainLayer(mapAccessor, canvasProvider, cellRenderer);
-        const textLayer = new TextLayer(mapAccessor, canvasProvider, cellRenderer);
-        const uiLayer = new UILayer(mapAccessor, canvasProvider);
+        const terrainLayer = new TerrainLayerFactory(mapAccessor, canvasProvider, cellRenderer);
+        const textLayer = new TextLayerFactory(mapAccessor, canvasProvider, cellRenderer);
+        const uiLayer = new DrawingUI(mapAccessor, canvasProvider);
         const layers = [
             terrainLayer,
             textLayer,
-            grid,
-            uiLayer
+            grid
         ];
-        const mapRenderer = new MapRenderer(mapAccessor, layers);
-        const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, cellRenderer);
-        const placesTool = new PlacesTool(mapAccessor, cellRenderer);
-        const riversTool = new RiversTool(mapAccessor, cellRenderer);
-        const roadsTool = new RoadsTool(uiLayer, mapAccessor, cellRenderer);
-        const textTool = new TextTool(mapAccessor, cellRenderer, modalLauncher, localizer);
-        const treesTool = new TreesTool(mapAccessor, cellRenderer);
+        const layerFactory = new LayerFactory(layers);
+        const layersManager = new LayersManager(layerFactory, mapAccessor);
+        const eraser = new Eraser(mapAccessor, layersManager);
+        const mapRenderer = new MapRenderer(mapAccessor, layersManager);
+        const mountainsTool = new MountainsTool(mapAccessor, mountainFactory, layersManager);
+        const placesTool = new PlacesTool(mapAccessor, layersManager);
+        const riversTool = new RiversTool(mapAccessor, layersManager);
+        const roadsTool = new RoadsTool(uiLayer, mapAccessor, layersManager);
+        const textTool = new TextTool(mapAccessor, layersManager, modalLauncher, localizer);
+        const treesTool = new TreesTool(mapAccessor, layersManager);
         const toolbar = new Toolbar([
             mountainsTool,
             placesTool,
@@ -1749,9 +2123,10 @@ class Application {
             textTool,
             treesTool,
             eraser
-        ], localizer);
+        ], localizer, layersManager);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layers, toolActivator);
+        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator);
+        const layersPanel = new LayersPanel(layersManager, localizer);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
@@ -1767,16 +2142,23 @@ class Application {
             saveCommandMenuEntry,
             exportCommandMenuEntry
         ]);
+        const aboutCommand = new About(modalLauncher, localizer);
+        const aboutCommandMenuEntry = new CommandMenuEntry(aboutCommand);
+        const helpMenu = new SubmenuMenuEntry(localizer['menu_label_help'], [
+            aboutCommandMenuEntry
+        ]);
         const languageMenu = new LanguageMenu(localizer);
         const mainMenu = new SubmenuMenuEntry('Menu', [
             fileMenu,
+            helpMenu,
             languageMenu
         ], { alwaysVisible: true });
         const menu = new Menu(mainMenu);
         const ui = new ApplicationUI([
             menu,
             toolbar,
-            drawingArea
+            drawingArea,
+            layersPanel
         ]);
         return new Application(ui, mapFactory, mapLoader);
     }
@@ -1798,13 +2180,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     app.run();
 });
 class MapFactory {
+    localizer;
+    constructor(localizer) {
+        this.localizer = localizer;
+    }
     create(width, height) {
         return {
+            id: Utilities.generateId('map'),
             columns: width,
             rows: height,
             pixelsPerCell: 100,
             zoom: 2,
-            objects: {}
+            objects: {},
+            layers: [
+                LayersHelper.create('text', this.localizer['layer_type_text']),
+                LayersHelper.create('grid', this.localizer['layer_type_grid']),
+                LayersHelper.create('terrain', this.localizer['layer_type_terrain'])
+            ]
         };
     }
 }
@@ -1818,54 +2210,6 @@ class MapLoader {
     load(map) {
         this.mapAccessor.map = map;
         this.drawingArea.setup(map);
-    }
-}
-class Utilities {
-    static download(filename, content) {
-        const element = document.createElement('a');
-        element.href = content;
-        element.download = filename;
-        element.click();
-    }
-    static generateId(slug) {
-        const connector = '_', date = Date.now().toString(36), random = Math.random().toString(36).substring(2);
-        return [slug, date, random].join(connector);
-    }
-    static hasFlag(value, flag) {
-        return (value & flag) === flag;
-    }
-    static loadFile(callback) {
-        const input = document.createElement("input");
-        input.type = 'file';
-        input.style.display = 'none';
-        input.onchange = (e) => this.readFile(e, (f) => {
-            callback(f);
-            input.remove();
-        });
-        input.oncancel = () => input.remove();
-        document.body.appendChild(input);
-        input.click();
-    }
-    static parseMap(input) {
-        const data = JSON.parse(input);
-        return data;
-    }
-    static readFile(e, callback) {
-        const input = e.target;
-        if (!(input instanceof HTMLInputElement) || input.files === null) {
-            throw new Error('Event must be triggered from file input.');
-        }
-        const file = input.files[0], reader = new FileReader();
-        reader.onload = function (e) {
-            const contents = e.target?.result;
-            if (typeof contents === 'string') {
-                callback(contents);
-            }
-            else {
-                throw new Error('File must be text');
-            }
-        };
-        reader.readAsText(file);
     }
 }
 class VectorCalculator {

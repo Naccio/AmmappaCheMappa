@@ -7,7 +7,7 @@ class Utilities {
 
         element.href = content;
         element.download = filename;
-      
+
         element.click();
     }
 
@@ -56,7 +56,7 @@ class Utilities {
         const file = input.files[0],
             reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const contents = e.target?.result;
 
             if (typeof contents === 'string') {

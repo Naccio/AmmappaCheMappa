@@ -1,6 +1,8 @@
 class MapAccessor {
     private _map?: GridMap;
-    private _cells: GridCell[][] = [];
+
+    constructor() {
+    }
 
     public get map() {
         if (this._map === undefined) {
@@ -13,30 +15,13 @@ class MapAccessor {
     public set map(map: GridMap) {
         this._map = map;
         this.save();
-
-        for(let column = 0; column < map.columns; column++) {
-            this._cells[column] = [];
-            for (let row = 0; row < map.rows; row++) {
-                this._cells[column][row] = {
-                    coordinates: { column, row },
-                    objects: []
-                }
-            }
-        }
-
-        for (let key in map.objects) {
-            const index = GridHelper.cellNameToIndex(key),
-                cell = this._cells[index.column][index.row];
-
-            cell.objects = map.objects[key];
-        }
     }
 
     public get scale() {
         return this.map.zoom / this.map.pixelsPerCell;
     }
 
-    public absolutePosition(cell: CellIndex, normalizedPosition: Point) : Point {
+    public absolutePosition(cell: CellIndex, normalizedPosition: Point): Point {
         const cellPosition = {
             x: cell.column,
             y: cell.row
@@ -48,8 +33,14 @@ class MapAccessor {
             .divide(this.scale);
     }
 
-    public getCell(index: CellIndex) {
-        return this._cells[index.column][index.row];
+    public getCell(index: CellIndex): GridCell {
+        const name = GridHelper.cellIndexToName(index),
+            objects = this.map.objects[name] ?? [];
+
+        return {
+            index,
+            objects
+        };
     }
 
     public getIndex(position?: Point) {
@@ -61,7 +52,7 @@ class MapAccessor {
             cell = VectorMath.multiply(position, this.scale),
             column = Math.floor(cell.x),
             row = Math.floor(cell.y);
-        
+
         if (row < 0 || row >= map.rows || column < 0 || column >= map.columns) {
             return undefined;
         }
@@ -75,8 +66,8 @@ class MapAccessor {
 
         if (fromCell === undefined || toCell === undefined) {
             return [];
-        } 
-        
+        }
+
         if (fromCell.column == toCell.column && fromCell.row === toCell.row) {
             return [fromCell];
         }
@@ -84,7 +75,7 @@ class MapAccessor {
         return this.getConnectingCells(fromCell, toCell);
     }
 
-    public getPosition(index: CellIndex) : Point  {
+    public getPosition(index: CellIndex): Point {
         const shift = {
             x: index.column,
             y: index.row
@@ -125,7 +116,7 @@ class MapAccessor {
         return cells;
     }
 
-    public normalizedPosition(cell: CellIndex, absolutePosition: Point) : Point {
+    public normalizedPosition(cell: CellIndex, absolutePosition: Point): Point {
         const cellPosition = {
             x: cell.column,
             y: cell.row
@@ -137,9 +128,12 @@ class MapAccessor {
             .subtract(cellPosition);
     }
 
+    public save() {
+        localStorage.setItem('map', JSON.stringify(this._map));
+    }
+
     public setObjects(index: CellIndex, objects: MapObject[]) {
-        const cell = this._cells[index.column][index.row],
-            cellName = GridHelper.cellIndexToName(index);
+        const cellName = GridHelper.cellIndexToName(index);
 
         if (objects.length === 0) {
             delete this.map.objects[cellName];
@@ -147,13 +141,7 @@ class MapAccessor {
             this.map.objects[cellName] = objects;
         }
 
-        cell.objects = objects;
-
         this.save();
-    }
-
-    private save() {
-        localStorage.setItem('map', JSON.stringify(this._map));
     }
 
     private splitActionsEvenly(numerator: number, denominator: number, splitAction: () => void, mainAction: () => void) {

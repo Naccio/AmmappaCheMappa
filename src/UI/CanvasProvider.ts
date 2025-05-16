@@ -14,10 +14,8 @@ class CanvasProvider {
         canvas.height = height;
 
         this.canvases[id] = drawer;
-        
-        this.scale(id, scale);
 
-        document.body.append(canvas);
+        this.scale(id, scale);
 
         return drawer;
     }

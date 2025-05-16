@@ -1,6 +1,4 @@
-/// <reference path='CellIndex.ts'/>
-
 interface GridCell {
-    coordinates: CellIndex;
+    index: CellIndex;
     objects: MapObject[];
 }

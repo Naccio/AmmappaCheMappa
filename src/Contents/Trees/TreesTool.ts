@@ -1,13 +1,15 @@
-/// <reference path='../../Rendering/CellRenderer.ts'/>
 /// <reference path='../../UI/Tools/CellTool.ts'/>
 /// <reference path='Tree.ts'/>
 /// <reference path='TreesHelper.ts'/>
 
 class TreesTool extends CellTool {
-    public readonly id = 'trees';
-    public readonly labelResourceId = 'tool_label_trees';
+    public readonly configuration = {
+        id: 'trees',
+        labelResourceId: 'tool_label_trees',
+        layerTypes: ['terrain']
+    };
 
-    constructor(mapAccessor: MapAccessor, private renderer: CellRenderer) {
+    constructor(mapAccessor: MapAccessor, private layers: LayersManager) {
         super(mapAccessor);
     }
 
@@ -17,7 +19,7 @@ class TreesTool extends CellTool {
             perRow = 4,
             xScale = 1 / perColumn,
             yScale = 1 / perRow;
-        
+
         for (let x = 0; x < perColumn; x++) {
             for (let y = 0; y < perRow; y++) {
                 const tree = TreesHelper.create(),
@@ -35,7 +37,6 @@ class TreesTool extends CellTool {
             }
         }
 
-        this.mapAccessor.setObjects(cell, trees);
-        this.renderer.render(cell, 'terrain');
+        this.layers.setObjects(cell, trees);
     }
 }

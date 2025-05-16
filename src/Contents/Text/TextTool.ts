@@ -1,6 +1,5 @@
 /// <reference path='../../Localization/Localizer.ts'/>
 /// <reference path='../../MapAccessor.ts'/>
-/// <reference path='../../Rendering/CellRenderer.ts'/>
 /// <reference path='../../UI/ModalLauncher.ts'/>
 /// <reference path='../../UI/Tools/Tool.ts'/>
 /// <reference path='../../VectorMath.ts'/>
@@ -8,10 +7,13 @@
 /// <reference path='TextHelper.ts'/>
 
 class TextTool implements Tool {
-    public readonly id = 'text';
-    public readonly labelResourceId = 'tool_label_text';
+    public readonly configuration = {
+        id: 'text',
+        labelResourceId: 'tool_label_text',
+        layerTypes: ['text']
+    };
 
-    constructor(private mapAccessor: MapAccessor, private renderer: CellRenderer, private modal: ModalLauncher, private localizer: Localizer) {
+    constructor(private mapAccessor: MapAccessor, private layers: LayersManager, private modal: ModalLauncher, private localizer: Localizer) {
     }
 
     public start(point: Point) {
@@ -21,7 +23,7 @@ class TextTool implements Tool {
             return;
         }
 
-        
+
         const textInput = document.createElement('input'),
             textLabel = document.createElement('label'),
             sizeInput = document.createElement('input'),
@@ -34,7 +36,7 @@ class TextTool implements Tool {
 
         textLabel.htmlFor = textInput.id;
         textLabel.innerText = this.localizer['input_label_text'];
-        
+
         sizeInput.id = 'size';
         sizeInput.type = 'number';
         sizeInput.min = '5';
@@ -57,13 +59,11 @@ class TextTool implements Tool {
                     value: textInput.value,
                     fontSize
                 };
-        
-                this.mapAccessor.setObjects(cell, [text]);
-        
-                this.renderer.render(cell, layer);
+
+            this.layers.setObjects(cell, [text]);
         });
     }
-    
+
     public move() {
     }
 

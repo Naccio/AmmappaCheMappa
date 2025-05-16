@@ -4,8 +4,43 @@ class ModalLauncher {
     public constructor(private localizer: Localizer) {
     }
 
-    public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void) : void;
-    public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void, cancelCallback: () => void) : void;
+    public launch(title: string, content: HTMLElement[]) {
+        const dialog = document.createElement('dialog'),
+            header = document.createElement('header'),
+            body = document.createElement('div'),
+            footer = document.createElement('footer'),
+            h1 = document.createElement('h1'),
+            close = document.createElement('button');
+
+        h1.innerText = title;
+
+        close.type = 'button';
+        close.innerText = 'x';
+        close.tabIndex = -1;
+        close.onclick = (e) => {
+            e.preventDefault();
+            dialog.close();
+        };
+
+        header.append(h1);
+        header.append(close);
+
+        body.className = 'dialog-body';
+        for (let element of content) {
+            body.append(element);
+        }
+
+        dialog.append(header);
+        dialog.append(body);
+        dialog.append(footer);
+
+        document.body.append(dialog);
+
+        dialog.showModal();
+    }
+
+    public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void): void;
+    public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void, cancelCallback: () => void): void;
     public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void, cancelCallback?: () => void) {
         const dialog = document.createElement('dialog'),
             header = document.createElement('header'),

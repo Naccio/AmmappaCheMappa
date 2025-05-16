@@ -7,13 +7,12 @@ abstract class CellTool implements Tool {
     private lastCell?: CellIndex;
     private lastPosition?: Point;
 
-    public abstract id: string;
-    public abstract labelResourceId: string;
-    
+    public abstract readonly configuration: ToolConfiguration;
+
     public constructor(protected mapAccessor: MapAccessor) {
     }
 
-    protected abstract useOnCell(cell: CellIndex) : void;
+    protected abstract useOnCell(cell: CellIndex): void;
 
     public start(position: Point) {
         this.guardedUse(position);

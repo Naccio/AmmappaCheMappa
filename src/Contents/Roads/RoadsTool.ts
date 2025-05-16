@@ -1,10 +1,13 @@
 class RoadsTool implements Tool {
-    id = 'roads';
-    labelResourceId = 'tool_label_roads';
+    public readonly configuration = {
+        id: 'roads',
+        labelResourceId: 'tool_label_roads',
+        layerTypes: ['terrain']
+    };
 
     private startPosition?: Point;
 
-    constructor(private ui: UILayer, private mapAccessor: MapAccessor, private renderer: CellRenderer) {
+    constructor(private ui: DrawingUI, private mapAccessor: MapAccessor, private layers: LayersManager) {
     }
 
     start(position: Point): void {
@@ -21,7 +24,7 @@ class RoadsTool implements Tool {
 
     move(position?: Point): void {
         const cell = this.mapAccessor.getIndex(position);
-        
+
         this.ui.drawer.clear();
 
         if (this.startPosition === undefined || position === undefined || cell === undefined) {
@@ -41,18 +44,14 @@ class RoadsTool implements Tool {
     stop(position?: Point): void {
         const firstCell = this.mapAccessor.getIndex(this.startPosition),
             lastCell = this.mapAccessor.getIndex(position);
-        
+
         this.ui.drawer.clear();
 
         if (this.startPosition === undefined || firstCell === undefined || position === undefined || lastCell === undefined) {
             return
         }
 
-        const cells = this.createRoads(firstCell, this.startPosition, lastCell, position);
-
-        for (let cell of cells) {
-            this.renderer.render(cell, 'terrain');
-        }
+        this.createRoads(firstCell, this.startPosition, lastCell, position);
 
         this.startPosition = undefined;
     }
@@ -91,6 +90,6 @@ class RoadsTool implements Tool {
             from: VectorMath.round(from, 4),
             to: VectorMath.round(to, 4)
         };
-        this.mapAccessor.setObjects(cell, [road]);
+        this.layers.setObjects(cell, [road]);
     }
 }

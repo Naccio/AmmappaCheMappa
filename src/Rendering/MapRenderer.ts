@@ -1,13 +1,14 @@
-/// <reference path="../UI/Layers/DrawingLayer.ts" />
+/// <reference path="CanvasDrawer.ts" />
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {
-    constructor(private mapAccessor: MapAccessor, private layers: DrawingLayer[]) {
+    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
     }
 
-    render() : RenderedMap {
+    render(): RenderedMap {
         const map = this.mapAccessor.map,
-            canvas = document.createElement('canvas');
+            canvas = document.createElement('canvas'),
+            layers = this.layers.layers.filter(l => !l.data.hidden);
 
         canvas.width = map.columns * map.pixelsPerCell;
         canvas.height = map.rows * map.pixelsPerCell;
@@ -18,8 +19,8 @@ class MapRenderer {
 
         const drawer = new CanvasDrawer(canvas);
 
-        for (let layer of this.layers) {
-            layer.render(drawer);
+        for (let layer of layers) {
+            layer.renderer.render(drawer);
         }
 
         return canvas;
