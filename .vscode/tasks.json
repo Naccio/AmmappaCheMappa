@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "typescript",
-			"tsconfig": "src/tsconfig.json",
+			"tsconfig": "source/tsconfig.json",
 			"problemMatcher": [
 				"$tsc"
 			],
@@ -11,17 +11,17 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"label": "tsc: build - src/tsconfig.json"
+			"label": "tsc: build - source/tsconfig.json"
 		},
 		{
 			"type": "typescript",
-			"tsconfig": "src/tsconfig.json",
+			"tsconfig": "source/tsconfig.json",
 			"option": "watch",
 			"problemMatcher": [
 				"$tsc-watch"
 			],
 			"group": "build",
-			"label": "tsc: watch - src/tsconfig.json"
+			"label": "tsc: watch - source/tsconfig.json"
 		}
 	]
 }

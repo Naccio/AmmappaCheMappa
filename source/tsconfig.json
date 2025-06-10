@@ -2,9 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "sourceMap": false,
-    "outFile": "../script.js",
+    "outFile": "../release/script.js",
     "removeComments": true,
     "strict": true
   },
-  "include": ["*.ts"]
+  "include": [
+    "*.ts"
+  ]
 }
