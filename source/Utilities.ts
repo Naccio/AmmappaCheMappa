@@ -1,4 +1,4 @@
-/// <reference path="Model/MapData.ts" />
+/// <reference path="Model/EditorMap.ts" />
 
 class Utilities {
 
@@ -43,7 +43,7 @@ class Utilities {
         const data = JSON.parse(input);
 
         //TODO: Validate input
-        return data as MapData;
+        return data as EditorMap;
     }
 
     public static readFile(e: Event, callback: (file: string) => void) {

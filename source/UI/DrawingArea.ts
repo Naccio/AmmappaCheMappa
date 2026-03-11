@@ -1,4 +1,5 @@
 /// <reference path="../Layers/LayersManager.ts" />
+/// <reference path="../Model/EditorMap.ts" />
 /// <reference path="../Model/Point.ts" />
 /// <reference path="DrawingUI.ts" />
 /// <reference path="MapDrawer.ts" />
@@ -37,7 +38,7 @@ class DrawingArea implements UIElement {
         this._wrapper = wrapper;
     }
 
-    public setup(map: MapData) {
+    public setup(map: EditorMap) {
         const container = document.createElement('div');
 
         container.style.position = 'absolute';
@@ -51,7 +52,7 @@ class DrawingArea implements UIElement {
         //TODO: Probably the drawing area should not setup the layers
         //      manager. The other way around seems more appropriate.
         this.layers.clear();
-        map.layers.forEach(l => {
+        map.data.layers.forEach(l => {
             const layer = this.layers.add(l);
             layer.drawing.setup(container);
             this.layerDataUpdateHandler(l);

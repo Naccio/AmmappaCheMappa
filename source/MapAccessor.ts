@@ -1,5 +1,7 @@
+/// <reference path="Model/EditorMap.ts" />
+
 class MapAccessor {
-    private _map?: MapData;
+    private _map?: EditorMap;
 
     constructor() {
     }
@@ -12,13 +14,13 @@ class MapAccessor {
         return this._map;
     }
 
-    public set map(map: MapData) {
+    public set map(map: EditorMap) {
         this._map = map;
         this.save();
     }
 
     public get scale() {
-        return this.map.zoom / this.map.pixelsPerCell;
+        return this.map.zoom / this.map.data.pixelsPerCell;
     }
 
     public absolutePosition(cell: CellIndex, normalizedPosition: Point): Point {
@@ -35,7 +37,7 @@ class MapAccessor {
 
     public getCell(index: CellIndex): GridCell {
         const name = GridHelper.cellIndexToName(index),
-            objects = this.map.objects[name] ?? [];
+            objects = this.map.data.objects[name] ?? [];
 
         return {
             index,
@@ -48,7 +50,7 @@ class MapAccessor {
             return undefined;
         }
 
-        const map = this.map,
+        const map = this.map.data,
             cell = VectorMath.multiply(position, this.scale),
             column = Math.floor(cell.x),
             row = Math.floor(cell.y);
@@ -81,7 +83,7 @@ class MapAccessor {
             y: index.row
         };
 
-        return VectorMath.multiply(shift, this.map.pixelsPerCell);
+        return VectorMath.multiply(shift, this.map.data.pixelsPerCell);
     }
 
     private getConnectingCells(from: CellIndex, to: CellIndex) {
@@ -136,9 +138,9 @@ class MapAccessor {
         const cellName = GridHelper.cellIndexToName(index);
 
         if (objects.length === 0) {
-            delete this.map.objects[cellName];
+            delete this.map.data.objects[cellName];
         } else {
-            this.map.objects[cellName] = objects;
+            this.map.data.objects[cellName] = objects;
         }
 
         this.save();

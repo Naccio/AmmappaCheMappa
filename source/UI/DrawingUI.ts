@@ -20,7 +20,8 @@ class DrawingUI implements DrawingLayer {
 
     public setup(container: HTMLElement) {
         const map = this.mapAccessor.map,
-            drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+            mapData = map.data,
+            drawer = this.canvasProvider.create(this.id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell, 1 / map.zoom);
 
         container.append(drawer.canvas);
         this._drawer = drawer;

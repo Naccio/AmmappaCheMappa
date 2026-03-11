@@ -6,16 +6,16 @@ class DefaultLayer implements DrawingLayer, LayerRenderer {
     }
 
     public render(drawer: Drawer) {
-        const map = this.mapAccessor.map,
-            tmpDrawer = this.canvasProvider.create(this.id + '-tmp', map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        const map = this.mapAccessor.map.data,
+            tmpDrawer = this.createDrawer(this.id + '-tmp');
 
         this.draw(tmpDrawer);
         drawer.image(tmpDrawer);
     }
 
     public setup(container: HTMLElement) {
-        const map = this.mapAccessor.map,
-            drawer = this.canvasProvider.create(this.id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell, 1 / map.zoom);
+        const map = this.mapAccessor.map.data,
+            drawer = this.createDrawer(this.id);
 
         container.append(drawer.canvas);
 
@@ -34,8 +34,15 @@ class DefaultLayer implements DrawingLayer, LayerRenderer {
         drawer?.scale(1 / this.mapAccessor.map.zoom);
     }
 
+    private createDrawer(id: string) {
+        const map = this.mapAccessor.map,
+            mapData = map.data;
+
+        return this.canvasProvider.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell, 1 / map.zoom);
+    }
+
     private draw(drawer: Drawer) {
-        const map = this.mapAccessor.map;
+        const map = this.mapAccessor.map.data;
 
         for (let column = 0; column < map.columns; column++) {
             for (let row = 0; row < map.rows; row++) {

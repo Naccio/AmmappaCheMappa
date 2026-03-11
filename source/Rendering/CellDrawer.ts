@@ -8,7 +8,7 @@ class CellDrawer {
         return this.mapAccessor.getCell(this.index);
     }
 
-    public get index() : CellIndex {
+    public get index(): CellIndex {
         return this.cellIndex;
     }
 
@@ -17,7 +17,7 @@ class CellDrawer {
     }
 
     public get pixelsPerCell() {
-        return this.map.pixelsPerCell;
+        return this.map.data.pixelsPerCell;
     }
 
     public bezier(from: Point, to: Point, control1: Point, control2: Point, style: LineStyle) {
@@ -76,7 +76,7 @@ class CellDrawer {
     public text(point: Point, text: string, fontSize: number) {
         point = this.cellPointToMapPoint(point, undefined);
         fontSize *= this.pixelsPerCell;
-        
+
         this.drawer.text(point, text, fontSize);
     }
 
@@ -86,7 +86,7 @@ class CellDrawer {
     private cellPointToMapPoint = (point: Point, padding?: number | Vector) => {
         const pixels = this.pixelsPerCell,
             cellShift = this.mapAccessor.getPosition(this.index);
-            
+
         point = VectorMath.multiply(point, pixels);
 
         if (padding !== undefined) {

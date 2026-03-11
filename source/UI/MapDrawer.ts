@@ -1,4 +1,4 @@
-/// <reference path="../Model/MapData.ts" />
+/// <reference path="../Model/EditorMap.ts" />
 /// <reference path="../VectorMath.ts" />
 
 class MapDrawer {
@@ -7,7 +7,7 @@ class MapDrawer {
     private actualShift: Vector = VectorMath.zero;
     private currentShift: Vector = VectorMath.zero;
 
-    constructor(public map: MapData, private container: HTMLElement) {
+    constructor(public map: EditorMap, private container: HTMLElement) {
         const parentShift = container.parentElement?.getBoundingClientRect();
 
         this.parentShift = parentShift === undefined
@@ -25,16 +25,17 @@ class MapDrawer {
 
     public resize(direction: number) {
         const map = this.map,
+            mapData = map.data,
             min = 1,
             max = 5,
             currentZoom = map.zoom,
             newZoom = MathHelper.clamp(currentZoom + direction, min, max),
-            multiplier = map.pixelsPerCell / newZoom;
+            multiplier = mapData.pixelsPerCell / newZoom;
 
         map.zoom = newZoom;
 
-        this.container.style.width = map.columns * multiplier + 'px';
-        this.container.style.height = map.rows * multiplier + 'px';
+        this.container.style.width = mapData.columns * multiplier + 'px';
+        this.container.style.height = mapData.rows * multiplier + 'px';
 
         //TODO: Adapt shift to zoom
         this.shift(VectorMath.zero);

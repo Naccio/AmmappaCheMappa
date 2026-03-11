@@ -6,7 +6,7 @@ class MapRenderer {
     }
 
     render(): RenderedMap {
-        const map = this.mapAccessor.map,
+        const map = this.mapAccessor.map.data,
             canvas = document.createElement('canvas'),
             layers = this.layers.layers.filter(l => !l.data.hidden);
 
