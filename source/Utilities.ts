@@ -1,4 +1,4 @@
-/// <reference path="Model/GridMap.ts" />
+/// <reference path="Model/MapData.ts" />
 
 class Utilities {
 
@@ -43,7 +43,7 @@ class Utilities {
         const data = JSON.parse(input);
 
         //TODO: Validate input
-        return data as GridMap;
+        return data as MapData;
     }
 
     public static readFile(e: Event, callback: (file: string) => void) {

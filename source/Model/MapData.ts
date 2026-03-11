@@ -1,6 +1,6 @@
 /// <reference path="MapLayer.ts" />
 
-interface GridMap {
+interface MapData {
     id: string,
     columns: number,
     rows: number,

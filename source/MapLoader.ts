@@ -1,8 +1,8 @@
 class MapLoader {
-    constructor (private mapAccessor: MapAccessor, private drawingArea: DrawingArea) {
+    constructor(private mapAccessor: MapAccessor, private drawingArea: DrawingArea) {
     }
 
-    public load(map: GridMap) {
+    public load(map: MapData) {
         this.mapAccessor.map = map;
         this.drawingArea.setup(map);
     }

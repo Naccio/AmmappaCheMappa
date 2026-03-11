@@ -1,5 +1,5 @@
 class MapAccessor {
-    private _map?: GridMap;
+    private _map?: MapData;
 
     constructor() {
     }
@@ -12,7 +12,7 @@ class MapAccessor {
         return this._map;
     }
 
-    public set map(map: GridMap) {
+    public set map(map: MapData) {
         this._map = map;
         this.save();
     }

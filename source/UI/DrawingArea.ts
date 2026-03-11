@@ -37,7 +37,7 @@ class DrawingArea implements UIElement {
         this._wrapper = wrapper;
     }
 
-    public setup(map: GridMap) {
+    public setup(map: MapData) {
         const container = document.createElement('div');
 
         container.style.position = 'absolute';

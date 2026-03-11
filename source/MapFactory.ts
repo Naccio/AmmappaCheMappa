@@ -4,7 +4,7 @@ class MapFactory {
     public constructor(private localizer: Localizer) {
     }
 
-    public create(width: number, height: number): GridMap {
+    public create(width: number, height: number): MapData {
         return {
             id: Utilities.generateId('map'),
             columns: width,

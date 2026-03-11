@@ -1,4 +1,4 @@
-/// <reference path="../Model/GridMap.ts" />
+/// <reference path="../Model/MapData.ts" />
 /// <reference path="../VectorMath.ts" />
 
 class MapDrawer {
@@ -7,8 +7,8 @@ class MapDrawer {
     private actualShift: Vector = VectorMath.zero;
     private currentShift: Vector = VectorMath.zero;
 
-    constructor(public map: GridMap, private container: HTMLElement) {
-        const parentShift = container.parentElement?.getBoundingClientRect(); 
+    constructor(public map: MapData, private container: HTMLElement) {
+        const parentShift = container.parentElement?.getBoundingClientRect();
 
         this.parentShift = parentShift === undefined
             ? VectorMath.zero
@@ -19,7 +19,7 @@ class MapDrawer {
         this.shift(VectorMath.multiply(this.currentShift, -1));
     }
 
-    public getMapPoint(viewportPoint: Point) : Point {
+    public getMapPoint(viewportPoint: Point): Point {
         return VectorMath.subtract(viewportPoint, this.actualShift);
     }
 
@@ -45,17 +45,17 @@ class MapDrawer {
         this.actualShift = this.computeActualShift();
 
         const containerShift = VectorMath.subtract(this.actualShift, this.parentShift);
-        
+
         this.container.style.left = containerShift.x + 'px';
         this.container.style.top = containerShift.y + 'px';
     }
 
     private computeActualShift() {
         const shiftToCenter = {
-                x: (window.innerWidth - this.container.clientWidth) / 2,
-                y: (window.innerHeight - this.container.clientHeight) / 2
-            };
-            
+            x: (window.innerWidth - this.container.clientWidth) / 2,
+            y: (window.innerHeight - this.container.clientHeight) / 2
+        };
+
         return VectorMath.add(this.currentShift, shiftToCenter);
     }
 }
