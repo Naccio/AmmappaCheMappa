@@ -2,17 +2,10 @@
 /// <reference path="../VectorMath.ts" />
 
 class MapDrawer {
-
-    private readonly parentShift: Vector
     private actualShift: Vector = VectorMath.zero;
     private currentShift: Vector = VectorMath.zero;
 
     constructor(public map: EditorMap, private container: HTMLElement) {
-        const parentShift = container.parentElement?.getBoundingClientRect();
-
-        this.parentShift = parentShift === undefined
-            ? VectorMath.zero
-            : parentShift;
     }
 
     public center() {
@@ -45,16 +38,17 @@ class MapDrawer {
         this.currentShift = VectorMath.add(this.currentShift, vector);
         this.actualShift = this.computeActualShift();
 
-        const containerShift = VectorMath.subtract(this.actualShift, this.parentShift);
-
-        this.container.style.left = containerShift.x + 'px';
-        this.container.style.top = containerShift.y + 'px';
+        this.container.style.left = this.actualShift.x + 'px';
+        this.container.style.top = this.actualShift.y + 'px';
     }
 
     private computeActualShift() {
+        const container = this.container,
+            parent = container.parentElement ?? container;
+
         const shiftToCenter = {
-            x: (window.innerWidth - this.container.clientWidth) / 2,
-            y: (window.innerHeight - this.container.clientHeight) / 2
+            x: (parent.clientWidth - container.clientWidth) / 2,
+            y: (parent.clientHeight - container.clientHeight) / 2
         };
 
         return VectorMath.add(this.currentShift, shiftToCenter);
