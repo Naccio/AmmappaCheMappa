@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 - BREAKING: Model changed, maps generated with previous versions will no longer work
 
+- UI:
+  - **Layers panel**: Active layer is remembered between sessions
+
 
 ## [alpha.1] - 2025-05-16
 

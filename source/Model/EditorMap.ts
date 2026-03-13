@@ -4,5 +4,6 @@
 interface EditorMap {
     data: MapData,
     zoom: number,
-    position: Point
+    position: Point,
+    activeLayer: string
 }

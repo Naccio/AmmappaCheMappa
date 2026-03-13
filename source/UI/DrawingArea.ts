@@ -57,6 +57,7 @@ class DrawingArea implements UIElement {
             layer.drawing.setup(container);
             this.layerDataUpdateHandler(l);
         });
+        this.layers.select(map.activeLayer);
         this.ui.setup(container);
         this.drawer.center();
     }

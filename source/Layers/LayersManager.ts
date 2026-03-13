@@ -25,10 +25,6 @@ class LayersManager {
         this.layers.push(accessor);
         this.createEvent.trigger(accessor);
 
-        if (this._activeLayer === undefined) {
-            this.select(layer.id);
-        }
-
         return accessor;
     }
 
@@ -51,7 +47,9 @@ class LayersManager {
         const layer = this.getLayer(id);
 
         this._activeLayer = layer;
+        this.mapAccessor.map.activeLayer = id;
 
+        this.mapAccessor.save();
         this.selectEvent.trigger(layer);
     }
 
