@@ -81,7 +81,10 @@ class DrawingArea implements UIElement {
         return this._wrapper;
     }
 
-    private getMapPoint(point: Point) {
+    private getMapPoint(viewPortPoint: Point) {
+        const boundingRectangle = this.wrapper.getBoundingClientRect(),
+            point = VectorMath.subtract(viewPortPoint, boundingRectangle);
+
         return this.drawer.getMapPoint(point);
     }
 
