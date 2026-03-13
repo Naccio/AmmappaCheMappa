@@ -17,7 +17,7 @@ class DrawingArea implements UIElement {
     private lastShift: Point = VectorMath.zero;
     private lastWheelClick = 0;
 
-    constructor(private layers: LayersManager, private ui: DrawingUI, private tool: ToolActivator) {
+    constructor(private layers: LayersManager, private ui: DrawingUI, private tool: ToolActivator, private store: Store) {
     }
 
     public build() {
@@ -46,7 +46,7 @@ class DrawingArea implements UIElement {
         this.wrapper.innerHTML = '';
         this.wrapper.append(container);
 
-        this._drawer = new MapDrawer(map, container);
+        this._drawer = new MapDrawer(map, container, this.store);
 
         this.drawer.resize(0);
         //TODO: Probably the drawing area should not setup the layers
@@ -59,7 +59,6 @@ class DrawingArea implements UIElement {
         });
         this.layers.select(map.activeLayer);
         this.ui.setup(container);
-        this.drawer.center();
     }
 
 

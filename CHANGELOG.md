@@ -13,9 +13,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   no longer work
 
 - UI:
-  - **Drawing area**: Map default position is centered on main UI
-    area instead of whole window
-  - **Layers panel**: Active layer is remembered between sessions
+  - **Drawing area**: 
+      - Map zoom and position are remembered between sessions
+      - Map default position is centered on main UI area instead of
+        whole window
+  - **Layers panel**:
+      - Active layer is remembered between sessions
 
 
 ## [alpha.1] - 2025-05-16

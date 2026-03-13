@@ -3,9 +3,13 @@
 
 class MapDrawer {
     private actualShift: Vector = VectorMath.zero;
-    private currentShift: Vector = VectorMath.zero;
 
-    constructor(public map: EditorMap, private container: HTMLElement) {
+    constructor(private map: EditorMap, private container: HTMLElement, private store: Store) {
+        this.computeSize();
+    }
+
+    private get currentShift() {
+        return this.map.position;
     }
 
     public center() {
@@ -18,28 +22,25 @@ class MapDrawer {
 
     public resize(direction: number) {
         const map = this.map,
-            mapData = map.data,
             min = 1,
             max = 5,
             currentZoom = map.zoom,
-            newZoom = MathHelper.clamp(currentZoom + direction, min, max),
-            multiplier = mapData.pixelsPerCell / newZoom;
+            newZoom = MathHelper.clamp(currentZoom + direction, min, max);
 
         map.zoom = newZoom;
 
-        this.container.style.width = mapData.columns * multiplier + 'px';
-        this.container.style.height = mapData.rows * multiplier + 'px';
-
-        //TODO: Adapt shift to zoom
-        this.shift(VectorMath.zero);
+        this.computeSize();
+        this.store.saveMap(map);
     }
 
     public shift(vector: Vector) {
-        this.currentShift = VectorMath.add(this.currentShift, vector);
+        this.map.position = VectorMath.add(this.currentShift, vector);
         this.actualShift = this.computeActualShift();
 
         this.container.style.left = this.actualShift.x + 'px';
         this.container.style.top = this.actualShift.y + 'px';
+
+        this.store.saveMap(this.map);
     }
 
     private computeActualShift() {
@@ -52,5 +53,17 @@ class MapDrawer {
         };
 
         return VectorMath.add(this.currentShift, shiftToCenter);
+    }
+
+    private computeSize() {
+        const map = this.map,
+            mapData = map.data,
+            multiplier = mapData.pixelsPerCell / map.zoom;
+
+        this.container.style.width = mapData.columns * multiplier + 'px';
+        this.container.style.height = mapData.rows * multiplier + 'px';
+
+        //TODO: Adapt shift to zoom
+        this.shift(VectorMath.zero);
     }
 }

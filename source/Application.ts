@@ -91,7 +91,7 @@ class Application {
             eraser
         ], localizer, layersManager);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator);
+        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator, store);
         const layersPanel = new LayersPanel(layersManager, localizer);
         const mapLoader = new MapLoader(mapAccessor, drawingArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
