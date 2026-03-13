@@ -1,9 +1,10 @@
 /// <reference path="Model/EditorMap.ts" />
+/// <reference path="Store.ts" />
 
 class MapAccessor {
     private _map?: EditorMap;
 
-    constructor() {
+    constructor(private store: Store) {
     }
 
     public get map() {
@@ -131,7 +132,9 @@ class MapAccessor {
     }
 
     public save() {
-        localStorage.setItem('map', JSON.stringify(this._map));
+        if (this._map) {
+            this.store.saveMap(this._map);
+        }
     }
 
     public setObjects(index: CellIndex, objects: MapObject[]) {

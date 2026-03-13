@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [alpha.2] - UNRELEASED
 
+### Changed
+
+- BREAKING: Model changed, maps generated with previous versions will no longer work
+
 
 ## [alpha.1] - 2025-05-16
 

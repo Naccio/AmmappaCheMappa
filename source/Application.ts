@@ -20,6 +20,7 @@
 /// <reference path='Layers/TextLayerFactory.ts'/>
 /// <reference path='Layers/TerrainLayerFactory.ts'/>
 /// <reference path='Localization/Localizer.ts'/>
+/// <reference path='Store.ts'/>
 /// <reference path='UI/ApplicationUI.ts'/>
 /// <reference path='UI/CanvasProvider.ts'/>
 /// <reference path='UI/DrawingArea.ts'/>
@@ -31,16 +32,17 @@
 /// <reference path='UI/Tools/ToolActivator.ts'/>
 
 class Application {
-    private constructor(private ui: ApplicationUI, private mapFactory: MapFactory, private mapLoader: MapLoader) {
+    private constructor(private ui: ApplicationUI, private mapFactory: MapFactory, private mapLoader: MapLoader, private store: Store) {
     }
 
     public static async build() {
         const locale = LocalizationHelper.getUserLocale();
         document.documentElement.lang = locale;
         const resource = await LocalizationHelper.loadResource(locale);
+        const store = new Store();
         const localizer = new Localizer(resource);
         const mapFactory = new MapFactory(localizer);
-        const mapAccessor = new MapAccessor();
+        const mapAccessor = new MapAccessor(store);
         const canvasProvider = new CanvasProvider();
         const grid = new GridLayerFactory(mapAccessor, canvasProvider);
         const drawerFactory = new CellDrawerFactory(mapAccessor);
@@ -125,18 +127,12 @@ class Application {
             layersPanel
         ]);
 
-        return new Application(ui, mapFactory, mapLoader);
+        return new Application(ui, mapFactory, mapLoader, store);
     }
 
     public run() {
-        const data = localStorage.getItem('map');
-        let map;
-
-        if (data === null) {
-            map = this.mapFactory.create(20, 20);
-        } else {
-            map = Utilities.parseMap(data);
-        }
+        const map = this.store.getMap()
+            ?? this.mapFactory.create(20, 20);
 
         this.ui.build();
         this.mapLoader.load(map);
