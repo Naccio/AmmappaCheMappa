@@ -1,3 +1,3 @@
 interface UIElement {
-    build(): void;
+    build(): HTMLElement;
 }

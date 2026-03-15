@@ -39,7 +39,7 @@ class Toolbar implements UIElement {
             container.append(label);
         }
 
-        document.body.append(container);
+        return container;
     }
 
     public getRadio(id: string): HTMLInputElement {

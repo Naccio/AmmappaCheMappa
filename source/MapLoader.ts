@@ -1,13 +1,13 @@
-/// <reference path="MapAccessor.ts" />
+/// <reference path="MapManagerFactory.ts" />
 /// <reference path="Model/EditorMap.ts" />
-/// <reference path="UI/DrawingArea.ts" />
+/// <reference path="UI/MainArea.ts" />
 
 class MapLoader {
-    constructor(private mapAccessor: MapAccessor, private drawingArea: DrawingArea) {
+    constructor(private mapManagerFactory: MapManagerFactory, private mainArea: MainArea) {
     }
 
     public load(map: EditorMap) {
-        this.mapAccessor.map = map;
-        this.drawingArea.setup(map);
+        const mapManager = this.mapManagerFactory.create(map);
+        this.mainArea.addMap(mapManager);
     }
 }

@@ -14,6 +14,6 @@ class Menu implements UIElement {
             container.append(element);
         }
 
-        document.body.append(container);
+        return container;
     }
 }

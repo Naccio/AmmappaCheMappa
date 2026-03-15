@@ -4,7 +4,8 @@ class ApplicationUI {
 
     public build() {
         for (let element of this.elements) {
-            element.build();
+            const htmlElement = element.build();
+            document.body.appendChild(htmlElement);
         }
     }
 }

@@ -1,3 +1,9 @@
+/// <reference path="../MapAccessor.ts" />
+/// <reference path="../Model/CellIndex.ts" />
+/// <reference path="../Rendering/Drawer.ts" />
+/// <reference path="../Rendering/LayerRenderer.ts" />
+/// <reference path="DrawingLayer.ts" />
+
 class GridLayer implements DrawingLayer, LayerRenderer {
     private wrapper?: HTMLElement;
 
@@ -65,21 +71,5 @@ class GridLayer implements DrawingLayer, LayerRenderer {
 
         this.wrapper.innerHTML = '';
         this.wrapper.append(drawer.canvas);
-    }
-}
-
-class GridLayerFactory implements LayerAbstractFactory {
-
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
-    }
-
-    public type = 'grid';
-
-    createRenderer(id: string): LayerRenderer {
-        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
-    }
-
-    createDrawing(id: string): DrawingLayer {
-        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
     }
 }

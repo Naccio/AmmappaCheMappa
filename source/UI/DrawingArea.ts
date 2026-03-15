@@ -31,11 +31,11 @@ class DrawingArea implements UIElement {
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
-        this.layers.onUpdate(this.layerUpdateHandler)
-
-        document.body.append(wrapper);
+        this.layers.onUpdate(this.layerUpdateHandler);
 
         this._wrapper = wrapper;
+
+        return wrapper;
     }
 
     public setup(map: EditorMap) {

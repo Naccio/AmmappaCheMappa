@@ -1,19 +1,19 @@
 class LayersPanel implements UIElement {
-    private container: HTMLDivElement;
+    private container?: HTMLDivElement;
 
     public constructor(private layers: LayersManager, private localizer: Localizer) {
+    }
+
+    build() {
         this.container = document.createElement('div');
 
         this.container.id = 'layers';
 
-        layers.onCreate(l => this.buildLayer(l));
-        layers.onDelete(l => this.removeLayer(l.id));
-        layers.onSelect(l => this.selectLayer(l));
-    }
+        this.layers.onCreate(l => this.buildLayer(l));
+        this.layers.onDelete(l => this.removeLayer(l.id));
+        this.layers.onSelect(l => this.selectLayer(l));
 
-    build(): void {
-        document.getElementById('layers')?.remove();
-        document.body.append(this.container);
+        return this.container;
     }
 
     private buildLayer(layer: LayerAccessor) {
@@ -55,7 +55,7 @@ class LayersPanel implements UIElement {
         wrapper.append(check);
         wrapper.append(radio);
         wrapper.append(label);
-        this.container.append(wrapper);
+        this.container?.append(wrapper);
     }
 
     private getRadioId(id: string) {

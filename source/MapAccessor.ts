@@ -2,22 +2,11 @@
 /// <reference path="Store.ts" />
 
 class MapAccessor {
-    private _map?: EditorMap;
-
-    constructor(private store: Store) {
+    constructor(private _map: EditorMap, private store: Store) {
     }
 
     public get map() {
-        if (this._map === undefined) {
-            throw new Error('No map active');
-        }
-
         return this._map;
-    }
-
-    public set map(map: EditorMap) {
-        this._map = map;
-        this.save();
     }
 
     public get scale() {

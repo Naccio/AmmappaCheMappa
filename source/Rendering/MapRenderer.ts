@@ -2,13 +2,19 @@
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {
-    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
+    constructor(private mainArea: MainArea) {
     }
 
     render(): RenderedMap {
-        const map = this.mapAccessor.map.data,
+        const mapManager = this.mainArea.mapManager;
+
+        if (mapManager === undefined) {
+            throw new Error('No active map.');
+        }
+
+        const map = mapManager.mapAccessor.map.data,
             canvas = document.createElement('canvas'),
-            layers = this.layers.layers.filter(l => !l.data.hidden);
+            layers = mapManager.layers.layers.filter(l => !l.data.hidden);
 
         canvas.width = map.columns * map.pixelsPerCell;
         canvas.height = map.rows * map.pixelsPerCell;

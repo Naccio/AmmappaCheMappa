@@ -27,9 +27,9 @@ html {
 body {
     display: grid;
     grid-template:
-        "top  top  top" 2rem
-        "left main right" 1fr
-        / 4rem 1fr 200px;
+        "top" 2rem
+        "main" 1fr
+        / 1fr;
     height: 100%;
     margin: 0;
 }
@@ -120,8 +120,16 @@ dialog label {
     background-color: var(--bg-active);
 }
 
-#drawing-area {
+#main-area {
     grid-area: main;
+    display: grid;
+    grid-template:
+        "left center right" 1fr
+        / 4rem 1fr 200px;
+}
+
+#drawing-area {
+    grid-area: center;
     position: relative;
     overflow: hidden;
 }
