@@ -2,12 +2,14 @@
     --bg: #eee;
     --bg-active: #ccc;
     --bg-hover: #ddd;
-    --border: 1px solid var(--bg-active);
+    --border-width: 1px;
+    --border: var(--border-width) solid var(--bg-active);
     --border-radius: 0;
     --btn-bg: var(--bg);
     --btn-bg-hover: var(--bg-hover);
     --btn-border: var(--border);
     --btn-border-radius: var(--border-radius);
+    --spacing-slim: .125rem;
     --spacing: .25rem;
     --spacing-wide: .5rem;
 }
@@ -124,42 +126,9 @@ dialog label {
     grid-area: main;
     display: grid;
     grid-template:
-        "left center right" 1fr
-        / 4rem 1fr 200px;
-}
-
-#drawing-area {
-    grid-area: center;
-    position: relative;
-    overflow: hidden;
-}
-
-#layers {
-    grid-area: right;
-    background: var(--bg);
-    border: var(--border);
-}
-
-#layers div {
-    position: relative;
-    height: 2rem;
-}
-
-#layers label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 2rem;
-    padding-right: var(--spacing);
-    position: absolute;
-    inset: 0;
-}
-
-#layers input[type="checkbox"] {
-    position: absolute;
-    left: var(--spacing);
-    top: var(--spacing);
-    z-index: 1;
+        "tabs" 1.5rem
+        "ui" 1fr
+        / 1fr;
 }
 
 #menu {
@@ -226,14 +195,80 @@ dialog label {
     margin-left: auto;
 }
 
-#toolbar {
+.drawing-area {
+    grid-area: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.layers {
+    grid-area: right;
+    background: var(--bg);
+    border: var(--border);
+}
+
+.layers div {
+    position: relative;
+    height: 2rem;
+}
+
+.layers label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: var(--spacing);
+    position: absolute;
+    inset: 0;
+}
+
+.layers input[type="checkbox"] {
+    position: absolute;
+    left: var(--spacing);
+    top: var(--spacing);
+    z-index: 1;
+}
+
+.map-ui {
+    height: 100%;
+    grid-area: ui;
+    display: grid;
+    grid-template:
+        "left center right" 1fr
+        / 4rem 1fr 200px;
+}
+
+.tabs {
+    display: flex;
+    gap: var(--spacing-wide);
+    padding: 0 var(--spacing-wide);
+    align-items: flex-end;
+    background: var(--bg);
+    margin: calc(var(--border-width) * -1) 0;
+    border: var(--border);
+}
+
+.tab {
+    max-width: 100px;
+    overflow: hidden;
+    font-size: .75rem;
+    padding: var(--spacing-slim) var(--spacing);
+    border: var(--border);
+    margin-bottom: calc(var(--border-width) * -1);
+}
+
+.tab.active {
+    background: var(--bg-active);
+}
+
+.toolbar {
     grid-area: left;
     padding: var(--spacing);
     background: var(--bg);
     border: var(--border);
 }
 
-#toolbar :not(:disabled)+label {
+.toolbar :not(:disabled)+label {
     font-size: 3rem;
     display: block;
     text-align: center;

@@ -3,7 +3,7 @@
 class Toolbar implements UIElement {
     private _activeTool?: Tool;
 
-    constructor(private tools: Tool[], private localizer: Localizer, private layers: LayersManager) {
+    constructor(private tools: Tool[], private localizer: Localizer, private mapAccessor: MapAccessor, private layers: LayersManager) {
         layers.onSelect(this.layerSelectHandle);
     }
 
@@ -14,17 +14,17 @@ class Toolbar implements UIElement {
     public build() {
         const container = document.createElement('div');
 
-        container.id = 'toolbar';
+        container.className = 'toolbar';
 
         for (let tool of this.tools) {
             const configuration = tool.configuration,
                 id = configuration.id,
-                radioId = this.getRadioId(configuration.id),
+                radioId = this.getRadioId(id),
                 radio = document.createElement('input'),
                 label = document.createElement('label');
 
             radio.type = 'radio';
-            radio.name = 'active-tool';
+            radio.name = this.mapAccessor.id + '-active-tool';
             radio.value = id;
             radio.id = radioId;
             radio.className = 'label-radio';
@@ -42,17 +42,17 @@ class Toolbar implements UIElement {
         return container;
     }
 
-    public getRadio(id: string): HTMLInputElement {
+    private getRadio(id: string): HTMLInputElement {
         id = this.getRadioId(id);
         //HACK: Should check if it actually is an input
         return document.getElementById(id) as HTMLInputElement;
     }
 
     private getRadioId(id: string) {
-        return 'tool-' + id
+        return `${this.mapAccessor.id}-${id}-tool`;
     }
 
-    public selectFirstTool() {
+    private selectFirstTool() {
         for (let tool of this.tools) {
             if (this.isCompatibleWith(tool, this.layers.activeLayer)) {
                 this.selectTool(tool.configuration.id);
@@ -63,7 +63,7 @@ class Toolbar implements UIElement {
         this._activeTool = undefined;
     }
 
-    public selectTool(id: string) {
+    private selectTool(id: string) {
         id = this.getRadioId(id);
         document.getElementById(id)?.click();
     }

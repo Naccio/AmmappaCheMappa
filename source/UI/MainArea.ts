@@ -1,50 +1,75 @@
 /// <reference path="../MapManager.ts" />
-/// <reference path="../Layers/LayersPanel.ts" />
-/// <reference path="DrawingArea.ts" />
-/// <reference path="Tools/ToolActivator.ts" />
-/// <reference path="Tools/Toolbar.ts" />
+/// <reference path="MapUI.ts" />
+/// <reference path="MapUIFactory.ts" />
 /// <reference path="UIElement.ts" />
+
+
 
 class MainArea implements UIElement {
     private readonly container: HTMLElement;
+    private readonly tabs: HTMLElement;
 
-    public mapManager?: MapManager;
+    private readonly maps: { id: string, map: MapManager, ui: MapUI, tab: HTMLElement }[] = [];
 
-    constructor(
-        private canvasProvider: CanvasProvider,
-        private toolsFactory: ToolsManagerFactory,
-        private localizer: Localizer,
-        private store: Store
-    ) {
-        const container = document.createElement('div');
+    private _mapManager?: MapManager;
+
+    constructor(private uiFactory: MapUIFactory) {
+        const container = document.createElement('div'),
+            tabs = document.createElement('nav');
 
         container.id = 'main-area';
+        tabs.className = 'tabs';
+
+        container.append(tabs);
 
         this.container = container;
+        this.tabs = tabs;
+    }
+
+    public get mapManager() {
+        return this._mapManager;
     }
 
     public addMap(map: MapManager) {
-        const mapAccessor = map.mapAccessor,
-            layersManager = map.layers;
+        const ui = this.uiFactory.create(map),
+            tab = document.createElement('a');
 
-        const uiLayer = new DrawingUI(mapAccessor, this.canvasProvider);
-        const tools = this.toolsFactory.create(mapAccessor, layersManager, uiLayer);
-        const toolbar = new Toolbar(tools.tools, this.localizer, layersManager);
-        const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator, this.store);
-        const layersPanel = new LayersPanel(layersManager, this.localizer);
+        tab.href = '#' + ui.id;
+        tab.className = 'tab';
+        tab.innerText = map.id;
+        tab.onclick = () => this.activate(map.id);
 
-        this.container.innerHTML = '';
-        this.container.append(toolbar.build());
-        this.container.append(drawingArea.build());
-        this.container.append(layersPanel.build());
+        this._mapManager = map;
 
-        drawingArea.setup(map.mapAccessor.map);
+        this.maps.push({
+            id: map.id,
+            map,
+            ui,
+            tab
+        });
+        this.container.append(ui.build());
+        this.tabs.append(tab);
+        this.activate(map.id);
 
-        this.mapManager = map;
+        ui.drawingArea.setup(map.mapAccessor.map);
     }
 
     public build() {
         return this.container;
+    }
+
+    private activate(id: string) {
+        const map = this.maps.find(m => m.id === id);
+
+        if (map === undefined) {
+            throw Error(`Could not find map with id '${id}'.`);
+        }
+
+        this.maps.forEach(m => {
+            m.ui.hide();
+            m.tab.classList.remove('active');
+        });
+        map.ui.show();
+        map.tab.classList.add('active');
     }
 }

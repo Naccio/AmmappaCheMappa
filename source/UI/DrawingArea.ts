@@ -6,7 +6,6 @@
 /// <reference path="UIElement.ts" />
 
 class DrawingArea implements UIElement {
-    private readonly id = 'drawing-area';
     private readonly doubleClickThreshold = 250;
 
     private _drawer?: MapDrawer;
@@ -23,7 +22,7 @@ class DrawingArea implements UIElement {
     public build() {
         const wrapper = document.createElement('div');
 
-        wrapper.id = this.id;
+        wrapper.className = 'drawing-area';
 
         window.addEventListener('blur', this.blurHandler);
         wrapper.addEventListener('mousedown', this.mouseDownHandler);

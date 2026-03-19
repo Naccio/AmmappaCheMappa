@@ -7,7 +7,7 @@ class LayersPanel implements UIElement {
     build() {
         this.container = document.createElement('div');
 
-        this.container.id = 'layers';
+        this.container.className = 'layers';
 
         this.layers.onCreate(l => this.buildLayer(l));
         this.layers.onDelete(l => this.removeLayer(l.id));
@@ -19,6 +19,7 @@ class LayersPanel implements UIElement {
     private buildLayer(layer: LayerAccessor) {
         const data = layer.data,
             id = data.id,
+            mapId = this.layers.mapId,
             //HACK: Magic string layer_type_
             type = this.localizer[`layer_type_${data.type}`],
             wrapper = document.createElement('div'),
@@ -28,7 +29,7 @@ class LayersPanel implements UIElement {
             typeLabel = document.createElement('small');
 
         check.type = 'checkbox';
-        check.name = 'visible-layers';
+        check.name = mapId + '-visible-layers';
         check.value = id;
         check.id = id + '-visible';
         check.checked = !data.hidden;
@@ -36,7 +37,7 @@ class LayersPanel implements UIElement {
         check.onchange = () => this.layers.update(id, l => l.hidden = !check.checked);
 
         radio.type = 'radio';
-        radio.name = 'active-layer';
+        radio.name = mapId + '-active-layer';
         radio.value = id;
         radio.id = this.getRadioId(id);
         radio.className = 'label-radio';

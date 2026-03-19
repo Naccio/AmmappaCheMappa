@@ -5,6 +5,10 @@ class MapAccessor {
     constructor(private _map: EditorMap, private store: Store) {
     }
 
+    public get id() {
+        return this.map.data.id;
+    }
+
     public get map() {
         return this._map;
     }

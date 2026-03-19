@@ -19,6 +19,10 @@ class LayersManager {
         return this._activeLayer;
     }
 
+    public get mapId() {
+        return this.mapAccessor.id;
+    }
+
     public add(layer: MapLayer) {
         const accessor = this.factory.create(layer);
 
