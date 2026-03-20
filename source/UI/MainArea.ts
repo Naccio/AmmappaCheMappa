@@ -13,9 +13,9 @@ class MainArea implements UIElement {
 
     private _mapManager?: MapManager;
 
-    constructor(private uiFactory: MapUIFactory) {
+    constructor(private mapUIFactory: MapUIFactory, private uiFactory: UIFactory) {
         const container = document.createElement('div'),
-            tabs = document.createElement('nav');
+            tabs = document.createElement('ul');
 
         container.id = 'main-area';
         tabs.className = 'tabs';
@@ -31,25 +31,34 @@ class MainArea implements UIElement {
     }
 
     public addMap(map: MapManager) {
-        const ui = this.uiFactory.create(map),
-            tab = document.createElement('a');
+        const id = map.id,
+            ui = this.mapUIFactory.create(map),
+            tab = document.createElement('li'),
+            anchor = document.createElement('a'),
+            close = this.uiFactory.createCloseButton(e => {
+                e.stopPropagation();
+                this.removeMap(id);
+            });
 
-        tab.href = '#' + ui.id;
         tab.className = 'tab';
-        tab.innerText = map.id;
-        tab.onclick = () => this.activate(map.id);
+
+        anchor.href = '#' + ui.id;
+        anchor.innerText = id;
+        anchor.onclick = () => this.activate(id);
+
+        tab.append(anchor, close);
 
         this._mapManager = map;
 
         this.maps.push({
-            id: map.id,
+            id,
             map,
             ui,
             tab
         });
         this.container.append(ui.build());
         this.tabs.append(tab);
-        this.activate(map.id);
+        this.activate(id);
 
         ui.drawingArea.setup(map.mapAccessor.map);
     }
@@ -58,12 +67,23 @@ class MainArea implements UIElement {
         return this.container;
     }
 
-    private activate(id: string) {
-        const map = this.maps.find(m => m.id === id);
+    public removeMap(id: string) {
+        const map = this.getMap(id);
 
-        if (map === undefined) {
-            throw Error(`Could not find map with id '${id}'.`);
+        map.tab.remove();
+        map.ui.remove();
+
+        this.maps.splice(this.maps.indexOf(map), 1);
+
+        console.log(this.maps);
+
+        if (this.maps.length > 0) {
+            this.activate(this.maps[0].id);
         }
+    }
+
+    private activate(id: string) {
+        const map = this.getMap(id);
 
         this.maps.forEach(m => {
             m.ui.hide();
@@ -71,5 +91,15 @@ class MainArea implements UIElement {
         });
         map.ui.show();
         map.tab.classList.add('active');
+    }
+
+    private getMap(id: string) {
+        const map = this.maps.find(m => m.id === id);
+
+        if (map === undefined) {
+            throw Error(`Could not find map with id '${id}'.`);
+        }
+
+        return map;
     }
 }

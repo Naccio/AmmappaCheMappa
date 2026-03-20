@@ -45,11 +45,12 @@ class Application {
             textRenderer,
             treeRenderer
         ];
-        const modalLauncher = new ModalLauncher(localizer);
+        const uiFactory = new UIFactory();
+        const modalLauncher = new ModalLauncher(uiFactory, localizer);
         const mapManagerFactory = new MapManagerFactory(store, canvasProvider, renderingStrategies);
         const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
         const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store);
-        const mainArea = new MainArea(mapUIFactory);
+        const mainArea = new MainArea(mapUIFactory, uiFactory);
         const mapLoader = new MapLoader(mapManagerFactory, mainArea);
         const mapRenderer = new MapRenderer(mainArea);
         const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);

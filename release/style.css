@@ -7,7 +7,8 @@
     --border-radius: 0;
     --btn-bg: var(--bg);
     --btn-bg-hover: var(--bg-hover);
-    --btn-border: var(--border);
+    --btn-border-color: var(--bg-active);
+    --btn-border: var(--border-width) solid var(--btn-border-color);
     --btn-border-radius: var(--border-radius);
     --spacing-slim: .125rem;
     --spacing: .25rem;
@@ -249,16 +250,25 @@ dialog label {
 }
 
 .tab {
-    max-width: 100px;
-    overflow: hidden;
+    --tab-bg: var(--bg);
+    --btn-bg: var(--tab-bg);
+    --btn-border: none;
     font-size: .75rem;
-    padding: var(--spacing-slim) var(--spacing);
+    display: flex;
+    background: var(--tab-bg);
     border: var(--border);
     margin-bottom: calc(var(--border-width) * -1);
 }
 
 .tab.active {
-    background: var(--bg-active);
+    --tab-bg: var(--bg-active);
+}
+
+.tab a {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: var(--spacing-slim) var(--spacing);
 }
 
 .toolbar {

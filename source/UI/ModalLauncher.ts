@@ -1,7 +1,10 @@
+/// <reference path="../Localization/Localizer.ts" />
+/// <reference path="UIFactory.ts" />
+
 class ModalLauncher {
     private readonly confirmValue = 'confirm';
 
-    public constructor(private localizer: Localizer) {
+    public constructor(private uiFactory: UIFactory, private localizer: Localizer) {
     }
 
     public launch(title: string, content: HTMLElement[]) {
@@ -10,17 +13,12 @@ class ModalLauncher {
             body = document.createElement('div'),
             footer = document.createElement('footer'),
             h1 = document.createElement('h1'),
-            close = document.createElement('button');
+            close = this.uiFactory.createCloseButton(e => {
+                e.preventDefault();
+                dialog.close();
+            });
 
         h1.innerText = title;
-
-        close.type = 'button';
-        close.innerText = 'x';
-        close.tabIndex = -1;
-        close.onclick = (e) => {
-            e.preventDefault();
-            dialog.close();
-        };
 
         header.append(h1);
         header.append(close);
@@ -48,21 +46,16 @@ class ModalLauncher {
             footer = document.createElement('footer'),
             form = document.createElement('form'),
             h1 = document.createElement('h1'),
-            close = document.createElement('button'),
+            close = this.uiFactory.createCloseButton(e => {
+                e.preventDefault();
+                dialog.close();
+            }),
             cancel = document.createElement('button'),
             confirm = document.createElement('button');
 
         form.method = 'dialog';
 
         h1.innerText = title;
-
-        close.type = 'button';
-        close.innerText = 'x';
-        close.tabIndex = -1;
-        close.onclick = (e) => {
-            e.preventDefault();
-            dialog.close();
-        };
 
         header.append(h1);
         header.append(close);

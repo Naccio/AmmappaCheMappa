@@ -40,6 +40,10 @@ class MapUI implements UIElement {
         this.container.style.display = 'none';
     }
 
+    public remove() {
+        this.container.remove();
+    }
+
     public show() {
         this.container.style.display = 'grid';
     }
