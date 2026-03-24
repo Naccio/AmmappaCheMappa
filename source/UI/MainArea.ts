@@ -3,15 +3,11 @@
 /// <reference path="MapUIFactory.ts" />
 /// <reference path="UIElement.ts" />
 
-
-
 class MainArea implements UIElement {
     private readonly container: HTMLElement;
     private readonly tabs: HTMLElement;
 
     private readonly maps: { id: string, map: MapManager, ui: MapUI, tab: HTMLElement }[] = [];
-
-    private _mapManager?: MapManager;
 
     constructor(
         private mapsManager: MapsManager,
@@ -34,23 +30,21 @@ class MainArea implements UIElement {
         mapsManager.onRemove(id => this.remove(id));
     }
 
-    public get mapManager() {
-        return this._mapManager;
-    }
-
     public build() {
         return this.container;
     }
 
-    private activate(manager: MapManager) {
-        const map = this.getMap(manager.id);
-
+    private activate(manager?: MapManager) {
         this.maps.forEach(m => {
             m.ui.hide();
             m.tab.classList.remove('active');
         });
-        map.ui.show();
-        map.tab.classList.add('active');
+
+        if (manager) {
+            const map = this.getMap(manager.id);
+            map.ui.show();
+            map.tab.classList.add('active');
+        }
     }
 
     private getMap(id: string) {
@@ -80,8 +74,6 @@ class MainArea implements UIElement {
         anchor.onclick = () => this.mapsManager.activate(id);
 
         tab.append(anchor, close);
-
-        this._mapManager = map;
 
         this.maps.push({
             id,

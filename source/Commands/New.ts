@@ -1,10 +1,10 @@
 /// <reference path="../UI/ModalLauncher.ts" />
+/// <reference path="SimpleCommand.ts" />
 
-class New implements Command {
-    public readonly label;
+class New extends SimpleCommand {
 
     constructor(private mapFactory: MapFactory, private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
-        this.label = localizer['command_label_new'];
+        super(localizer['command_label_new']);
     }
 
     public execute() {
@@ -23,7 +23,7 @@ class New implements Command {
 
         columnsLabel.htmlFor = columnsInput.id;
         columnsLabel.innerText = this.localizer['input_label_columns'];
-        
+
         rowsInput.id = 'rows';
         rowsInput.type = 'number';
         rowsInput.min = '5';

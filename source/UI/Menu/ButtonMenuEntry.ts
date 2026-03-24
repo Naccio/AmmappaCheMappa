@@ -2,16 +2,19 @@
 /// <reference path="./MenuEntry.ts" />
 
 class ButtonMenuEntry implements MenuEntry {
-    
-    constructor(private label: string, private action: () => void) {
-    }
 
-    public build() {
+    protected button: HTMLButtonElement;
+
+    constructor(private label: string, private action: () => void) {
         const button = document.createElement('button');
 
         button.innerText = this.label;
         button.onclick = () => this.action();
 
-        return button;
+        this.button = button;
+    }
+
+    public build() {
+        return this.button;
     }
 }

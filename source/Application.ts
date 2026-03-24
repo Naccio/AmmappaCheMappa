@@ -54,14 +54,14 @@ class Application {
         const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
         const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store);
         const mainArea = new MainArea(mapsManager, mapUIFactory, uiFactory);
-        const mapRenderer = new MapRenderer(mainArea);
+        const mapRenderer = new MapRenderer(mapsManager);
         const newCommand = new New(mapFactory, mapsManager, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
         const openCommand = new Open(mapsManager, localizer);
         const openCommandMenuEntry = new CommandMenuEntry(openCommand);
-        const saveCommand = new Save(mainArea, localizer);
+        const saveCommand = new Save(mapsManager, localizer);
         const saveCommandMenuEntry = new CommandMenuEntry(saveCommand);
-        const exportCommand = new Export(mapRenderer, localizer);
+        const exportCommand = new Export(mapRenderer, mapsManager, localizer);
         const exportCommandMenuEntry = new CommandMenuEntry(exportCommand);
         const fileMenu = new SubmenuMenuEntry('File', [
             newCommandMenuEntry,

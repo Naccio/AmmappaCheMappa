@@ -2,11 +2,12 @@
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {
-    constructor(private mainArea: MainArea) {
+    constructor(private maps: MapsManager) {
     }
 
+    //TODO: Consider taking map as parameter
     render(): RenderedMap {
-        const mapManager = this.mainArea.mapManager;
+        const mapManager = this.maps.activeMap;
 
         if (mapManager === undefined) {
             throw new Error('No active map.');

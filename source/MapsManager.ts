@@ -3,7 +3,7 @@
 class MapsManager {
     private readonly addEvent = new InternalEvent<MapManager>();
     private readonly removeEvent = new InternalEvent<string>();
-    private readonly activateEvent = new InternalEvent<MapManager>();
+    private readonly activateEvent = new InternalEvent<MapManager | undefined>();
 
     private readonly maps: Dictionary<MapManager> = {};
 
@@ -36,6 +36,11 @@ class MapsManager {
             this.activate(key);
             break;
         }
+
+        if (this._activeMap?.id === id) {
+            this._activeMap = undefined;
+            this.activateEvent.trigger(undefined);
+        }
     }
 
     public activate(id: string) {
@@ -46,7 +51,7 @@ class MapsManager {
         this.activateEvent.trigger(map);
     }
 
-    public onActivate(handler: EventHandler<MapManager>) {
+    public onActivate(handler: EventHandler<MapManager | undefined>) {
         this.activateEvent.subscribe(handler);
     }
 

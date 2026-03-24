@@ -1,8 +1,9 @@
-class Open implements Command {
-    public label;
+/// <reference path="SimpleCommand.ts" />
+
+class Open extends SimpleCommand {
 
     constructor(private mapsManager: MapsManager, localizer: Localizer) {
-        this.label = localizer['command_label_open'];
+        super(localizer['command_label_open']);
     }
 
     public execute() {

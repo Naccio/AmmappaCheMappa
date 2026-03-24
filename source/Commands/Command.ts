@@ -1,4 +1,8 @@
+/// <reference path="../Events/ApplicationEvent.ts" />
+
 interface Command {
-    label: string;
+    get disabled(): boolean;
+    get label(): string;
     execute(): void;
+    onChange(handler: EventHandler<boolean>): void;
 }
