@@ -1,0 +1,60 @@
+/// <reference path="Model/Dictionary.ts" />
+
+class MapsManager {
+    private readonly addEvent = new InternalEvent<MapManager>();
+    private readonly removeEvent = new InternalEvent<string>();
+    private readonly activateEvent = new InternalEvent<MapManager>();
+
+    private readonly maps: Dictionary<MapManager> = {};
+
+    private _activeMap?: MapManager;
+
+    constructor(private factory: MapManagerFactory) {
+
+    }
+
+    public get activeMap() {
+        return this._activeMap;
+    }
+
+    public add(map: EditorMap) {
+        const manager = this.factory.create(map),
+            id = map.data.id;
+
+        this.maps[id] = manager;
+
+        this.addEvent.trigger(manager);
+        this.activate(id);
+    }
+
+    public remove(id: string) {
+        delete this.maps[id];
+
+        this.removeEvent.trigger(id);
+
+        for (let key in this.maps) {
+            this.activate(key);
+            break;
+        }
+    }
+
+    public activate(id: string) {
+        const map = this.maps[id];
+
+        this._activeMap = map;
+
+        this.activateEvent.trigger(map);
+    }
+
+    public onActivate(handler: EventHandler<MapManager>) {
+        this.activateEvent.subscribe(handler);
+    }
+
+    public onAdd(handler: EventHandler<MapManager>) {
+        this.addEvent.subscribe(handler);
+    }
+
+    public onRemove(handler: EventHandler<string>) {
+        this.removeEvent.subscribe(handler);
+    }
+}

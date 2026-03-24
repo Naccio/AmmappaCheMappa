@@ -13,13 +13,15 @@
 /// <reference path='Store.ts'/>
 /// <reference path='UI/ApplicationUI.ts'/>
 /// <reference path='UI/CanvasProvider.ts'/>
+/// <reference path='UI/MainArea.ts'/>
+/// <reference path='UI/MapUIFactory.ts'/>
 /// <reference path='UI/Menu/CommandMenuEntry.ts'/>
 /// <reference path='UI/Menu/LanguageMenu.ts'/>
 /// <reference path='UI/Menu/Menu.ts'/>
 /// <reference path='UI/Menu/SubmenuMenuEntry.ts'/>
 
 class Application {
-    private constructor(private ui: ApplicationUI, private mapFactory: MapFactory, private mapLoader: MapLoader, private store: Store) {
+    private constructor(private ui: ApplicationUI, private mapFactory: MapFactory, private mapsManager: MapsManager, private store: Store) {
     }
 
     public static async build() {
@@ -48,14 +50,14 @@ class Application {
         const uiFactory = new UIFactory();
         const modalLauncher = new ModalLauncher(uiFactory, localizer);
         const mapManagerFactory = new MapManagerFactory(store, canvasProvider, renderingStrategies);
+        const mapsManager = new MapsManager(mapManagerFactory);
         const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
         const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store);
-        const mainArea = new MainArea(mapUIFactory, uiFactory);
-        const mapLoader = new MapLoader(mapManagerFactory, mainArea);
+        const mainArea = new MainArea(mapsManager, mapUIFactory, uiFactory);
         const mapRenderer = new MapRenderer(mainArea);
-        const newCommand = new New(mapFactory, mapLoader, modalLauncher, localizer);
+        const newCommand = new New(mapFactory, mapsManager, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
-        const openCommand = new Open(mapLoader, localizer);
+        const openCommand = new Open(mapsManager, localizer);
         const openCommandMenuEntry = new CommandMenuEntry(openCommand);
         const saveCommand = new Save(mainArea, localizer);
         const saveCommandMenuEntry = new CommandMenuEntry(saveCommand);
@@ -84,7 +86,7 @@ class Application {
             mainArea
         ]);
 
-        return new Application(ui, mapFactory, mapLoader, store);
+        return new Application(ui, mapFactory, mapsManager, store);
     }
 
     public run() {
@@ -92,7 +94,7 @@ class Application {
             ?? this.mapFactory.create(20, 20);
 
         this.ui.build();
-        this.mapLoader.load(map);
+        this.mapsManager.add(map);
     }
 }
 

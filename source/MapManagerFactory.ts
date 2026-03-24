@@ -8,9 +8,8 @@ class MapManagerFactory {
         private store: Store,
         private canvasProvider: CanvasProvider,
         private renderingStrategies: ObjectRenderer[]
-    ) {
+    ) { }
 
-    }
     public create(map: EditorMap) {
         const mapAccessor = new MapAccessor(map, this.store);
         const grid = new GridLayerFactory(mapAccessor, this.canvasProvider);

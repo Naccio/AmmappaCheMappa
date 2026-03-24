@@ -1,7 +1,7 @@
 class Open implements Command {
     public label;
 
-    constructor(private mapLoader: MapLoader, localizer: Localizer) {
+    constructor(private mapsManager: MapsManager, localizer: Localizer) {
         this.label = localizer['command_label_open'];
     }
 
@@ -12,6 +12,6 @@ class Open implements Command {
     private readFile(file: string) {
         const map = Utilities.parseMap(file);
 
-        this.mapLoader.load(map);
+        this.mapsManager.add(map);
     }
 }

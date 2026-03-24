@@ -3,7 +3,7 @@
 class New implements Command {
     public readonly label;
 
-    constructor(private mapFactory: MapFactory, private mapLoader: MapLoader, private modal: ModalLauncher, private localizer: Localizer) {
+    constructor(private mapFactory: MapFactory, private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
         this.label = localizer['command_label_new'];
     }
 
@@ -39,7 +39,7 @@ class New implements Command {
                 rows = parseInt(rowsInput.value),
                 map = this.mapFactory.create(columns, rows);
 
-            this.mapLoader.load(map);
+            this.mapsManager.add(map);
         });
     }
 }
