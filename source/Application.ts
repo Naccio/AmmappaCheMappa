@@ -51,7 +51,7 @@ class Application {
         const uiFactory = new UIFactory();
         const modalLauncher = new ModalLauncher(uiFactory, localizer);
         const mapManagerFactory = new MapManagerFactory(store, canvasProvider, renderingStrategies);
-        const mapsManager = new MapsManager(mapManagerFactory);
+        const mapsManager = new MapsManager(mapManagerFactory, modalLauncher, localizer);
         const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
         const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store);
         const mainArea = new MainArea(mapsManager, mapUIFactory, uiFactory);

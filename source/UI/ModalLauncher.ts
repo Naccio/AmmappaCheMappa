@@ -1,6 +1,7 @@
 /// <reference path="../Localization/Localizer.ts" />
 /// <reference path="UIFactory.ts" />
 
+//TODO: Handle code duplication on dialog creation
 class ModalLauncher {
     private readonly confirmValue = 'confirm';
 
@@ -32,9 +33,19 @@ class ModalLauncher {
         dialog.append(body);
         dialog.append(footer);
 
+        dialog.onclose = () => dialog.remove();
+
         document.body.append(dialog);
 
         dialog.showModal();
+    }
+    
+    public launchConfirm(title: string, message: string, confirmCallback: () => void) {
+        const p = document.createElement('p');
+
+        p.innerText = message;
+
+        this.launchForm(title, [p], confirmCallback);
     }
 
     public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void): void;

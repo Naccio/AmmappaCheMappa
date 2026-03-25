@@ -9,9 +9,11 @@ class MapsManager {
 
     private _activeMap?: MapManager;
 
-    constructor(private factory: MapManagerFactory) {
-
-    }
+    constructor(
+        private factory: MapManagerFactory,
+        private modal: ModalLauncher,
+        private localizer: Localizer
+    ) { }
 
     public get activeMap() {
         return this._activeMap;
@@ -28,19 +30,25 @@ class MapsManager {
     }
 
     public remove(id: string) {
-        delete this.maps[id];
+        //TODO: Should this class be responsible for launching the modal?
+        this.modal.launchConfirm(
+            this.localizer['confirm_close_map_title'],
+            this.localizer['confirm_close_map_message'],
+            () => {
+                delete this.maps[id];
 
-        this.removeEvent.trigger(id);
+                this.removeEvent.trigger(id);
 
-        for (let key in this.maps) {
-            this.activate(key);
-            break;
-        }
+                for (let key in this.maps) {
+                    this.activate(key);
+                    break;
+                }
 
-        if (this._activeMap?.id === id) {
-            this._activeMap = undefined;
-            this.activateEvent.trigger(undefined);
-        }
+                if (this._activeMap?.id === id) {
+                    this._activeMap = undefined;
+                    this.activateEvent.trigger(undefined);
+                }
+            });
     }
 
     public activate(id: string) {

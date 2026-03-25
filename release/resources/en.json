@@ -7,6 +7,8 @@
     "command_label_new": "New map...",
     "command_label_open": "Open map...",
     "command_label_save": "Save map",
+    "confirm_close_map_title": "Close the map?",
+    "confirm_close_map_message": "All its data will be lost!",
     "form_title_new_map": "New map",
     "form_title_new_text": "New text",
     "input_label_columns": "Columns",
