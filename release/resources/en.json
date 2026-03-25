@@ -2,6 +2,7 @@
     "button_label_cancel": "Cancel",
     "button_label_confirm": "Confirm",
     "command_label_about": "About",
+    "command_label_close": "Close map",
     "command_label_export": "Export map",
     "command_label_new": "New map...",
     "command_label_open": "Open map...",

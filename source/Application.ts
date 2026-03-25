@@ -1,4 +1,5 @@
 /// <reference path='Commands/About.ts'/>
+/// <reference path='Commands/Close.ts'/>
 /// <reference path='Commands/Export.ts'/>
 /// <reference path='Commands/Open.ts'/>
 /// <reference path='Commands/New.ts'/>
@@ -63,11 +64,14 @@ class Application {
         const saveCommandMenuEntry = new CommandMenuEntry(saveCommand);
         const exportCommand = new Export(mapRenderer, mapsManager, localizer);
         const exportCommandMenuEntry = new CommandMenuEntry(exportCommand);
+        const closeCommand = new Close(mapsManager, localizer);
+        const closeCommandMenuEntry = new CommandMenuEntry(closeCommand);
         const fileMenu = new SubmenuMenuEntry('File', [
             newCommandMenuEntry,
             openCommandMenuEntry,
             saveCommandMenuEntry,
-            exportCommandMenuEntry
+            exportCommandMenuEntry,
+            closeCommandMenuEntry
         ]);
         const aboutCommand = new About(modalLauncher, localizer);
         const aboutCommandMenuEntry = new CommandMenuEntry(aboutCommand);
