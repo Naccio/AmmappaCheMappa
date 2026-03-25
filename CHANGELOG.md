@@ -7,18 +7,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [alpha.2] - UNRELEASED
 
+### Added
+
+- Commands:
+  - **Close**: closes the active map
+
 ### Changed
 
 - BREAKING: Model changed, maps generated with previous versions will
   no longer work
 
 - UI:
-  - **Drawing area**: 
-      - Map zoom and position are remembered between sessions
-      - Map default position is centered on main UI area instead of
-        whole window
-  - **Layers panel**:
-      - Active layer is remembered between sessions
+  - **Drawing area**:
+    - More than one map can be opened at once
+      - Open maps can be navigated using tabs
+    - Map default position is centered on main UI area instead of
+      whole window
+- Storage:
+  - Data stored between sessions:
+    - Map zoom
+    - Map position
+    - Map active layer
 
 
 ## [alpha.1] - 2025-05-16
@@ -108,6 +117,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Storage:
   - Application data is stored in browser's local storage
   - Application state is restored when the application is opened
-  - Stored data:
+  - Data stored between sessions:
     - Active map
     - Preferred language (if changed using the *Language* menu)
