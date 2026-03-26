@@ -2,6 +2,7 @@
 /// <reference path="MapUI.ts" />
 /// <reference path="MapUIFactory.ts" />
 /// <reference path="UIElement.ts" />
+/// <reference path="Welcome.ts" />
 
 class MainArea implements UIElement {
     private readonly container: HTMLElement;
@@ -12,7 +13,8 @@ class MainArea implements UIElement {
     constructor(
         private mapsManager: MapsManager,
         private mapUIFactory: MapUIFactory,
-        private uiFactory: UIFactory
+        private uiFactory: UIFactory,
+        private welcome: Welcome
     ) {
         const container = document.createElement('div'),
             tabs = document.createElement('ul');
@@ -24,6 +26,8 @@ class MainArea implements UIElement {
 
         this.container = container;
         this.tabs = tabs;
+
+        this.activate(undefined);
 
         mapsManager.onActivate(map => this.activate(map));
         mapsManager.onAdd(map => this.add(map));
@@ -44,6 +48,11 @@ class MainArea implements UIElement {
             const map = this.getMap(manager.id);
             map.ui.show();
             map.tab.classList.add('active');
+
+            //HACK: Magic string
+            document.getElementById('welcome')?.remove();
+        } else {
+            this.container.append(this.welcome.build());
         }
     }
 

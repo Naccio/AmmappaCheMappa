@@ -22,7 +22,7 @@
 /// <reference path='UI/Menu/SubmenuMenuEntry.ts'/>
 
 class Application {
-    private constructor(private ui: ApplicationUI, private mapFactory: MapFactory, private mapsManager: MapsManager, private store: Store) {
+    private constructor(private mapsManager: MapsManager, private store: Store) {
     }
 
     public static async build() {
@@ -54,7 +54,6 @@ class Application {
         const mapsManager = new MapsManager(mapManagerFactory, modalLauncher, localizer);
         const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
         const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store);
-        const mainArea = new MainArea(mapsManager, mapUIFactory, uiFactory);
         const mapRenderer = new MapRenderer(mapsManager);
         const newCommand = new New(mapFactory, mapsManager, modalLauncher, localizer);
         const newCommandMenuEntry = new CommandMenuEntry(newCommand);
@@ -85,20 +84,24 @@ class Application {
             languageMenu
         ], { alwaysVisible: true });
         const menu = new Menu(mainMenu);
+        const welcome = new Welcome(openCommand, newCommand, localizer);
+        const mainArea = new MainArea(mapsManager, mapUIFactory, uiFactory, welcome);
         const ui = new ApplicationUI([
             menu,
             mainArea
         ]);
 
-        return new Application(ui, mapFactory, mapsManager, store);
+        ui.build();
+
+        return new Application(mapsManager, store);
     }
 
     public run() {
-        const map = this.store.getMap()
-            ?? this.mapFactory.create(20, 20);
+        const map = this.store.getMap();
 
-        this.ui.build();
-        this.mapsManager.add(map);
+        if (map) {
+            this.mapsManager.add(map);
+        }
     }
 }
 

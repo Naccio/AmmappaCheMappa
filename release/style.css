@@ -10,6 +10,10 @@
     --btn-border-color: var(--bg-active);
     --btn-border: var(--border-width) solid var(--btn-border-color);
     --btn-border-radius: var(--border-radius);
+    --btn-font-size: var(--font-size);
+    --font-size: 1rem;
+    --font-size-small: calc(var(--font-size) * .75);
+    --font-size-big: calc(var(--font-size) * 1.5);
     --spacing-slim: .125rem;
     --spacing: .25rem;
     --spacing-wide: .5rem;
@@ -28,11 +32,8 @@ html {
 }
 
 body {
-    display: grid;
-    grid-template:
-        "top" 2rem
-        "main" 1fr
-        / 1fr;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     margin: 0;
 }
@@ -53,6 +54,7 @@ blockquote::after {
 button {
     background: var(--btn-bg);
     border: var(--btn-border);
+    font-size: var(--btn-font-size);
 }
 
 button:hover {
@@ -99,6 +101,10 @@ dialog label {
     margin: var(--spacing);
 }
 
+p {
+    margin: var(--spacing);
+}
+
 .dialog-body {
     padding: var(--spacing);
 }
@@ -124,7 +130,7 @@ dialog label {
 }
 
 #main-area {
-    grid-area: main;
+    flex-grow: 1;
     display: grid;
     grid-template:
         "tabs" 1.5rem
@@ -134,11 +140,11 @@ dialog label {
 
 #menu {
     --btn-border: none;
+    --btn-font-size: var(--font-size-small);
     --menu-bg: var(--bg);
     --menu-border: var(--border);
     display: flex;
     align-items: stretch;
-    grid-area: top;
     background: var(--menu-bg);
     border: var(--menu-border);
 }
@@ -194,6 +200,21 @@ dialog label {
 #menu>menu>li:last-child {
     /* this is the language menu */
     margin-left: auto;
+}
+
+#welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#welcome p {
+    font-size: var(--font-size-big);
+}
+
+#welcome button {
+    margin: var(--spacing-wide);
 }
 
 .drawing-area {
