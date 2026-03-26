@@ -25,8 +25,7 @@ class GridLayer implements DrawingLayer, LayerRenderer {
         this.setupCanvas();
     }
 
-    public update(cell: CellIndex) {
-
+    public update() {
     }
 
     public zoom() {

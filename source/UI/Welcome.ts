@@ -6,7 +6,7 @@
 class Welcome implements UIElement {
     private readonly container: HTMLDivElement;
 
-    constructor (
+    constructor(
         openCommand: Open,
         newCommand: New,
         localizer: Localizer
@@ -33,7 +33,7 @@ class Welcome implements UIElement {
         this.container = container;
     }
 
-    build() {
+    public get html() {
         return this.container;
     }
 

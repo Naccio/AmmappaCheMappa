@@ -34,7 +34,7 @@ class MainArea implements UIElement {
         mapsManager.onRemove(id => this.remove(id));
     }
 
-    public build() {
+    public get html() {
         return this.container;
     }
 
@@ -52,7 +52,7 @@ class MainArea implements UIElement {
             //HACK: Magic string
             document.getElementById('welcome')?.remove();
         } else {
-            this.container.append(this.welcome.build());
+            this.container.append(this.welcome.html);
         }
     }
 
@@ -90,10 +90,10 @@ class MainArea implements UIElement {
             ui,
             tab
         });
-        this.container.append(ui.build());
+        this.container.append(ui.html);
         this.tabs.append(tab);
 
-        ui.drawingArea.setup(map.mapAccessor.map);
+        ui.setup();
     }
 
     private remove(id: string) {

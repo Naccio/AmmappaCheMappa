@@ -7,22 +7,23 @@
 
 class DrawingArea implements UIElement {
     private readonly doubleClickThreshold = 250;
-
-    private _drawer?: MapDrawer;
-    private _wrapper?: HTMLElement;
+    private readonly wrapper: HTMLElement;
 
     private isShifting: boolean = false;
     private isDrawing: boolean = false;
     private lastShift: Point = VectorMath.zero;
     private lastWheelClick = 0;
 
-    constructor(private layers: LayersManager, private ui: DrawingUI, private tool: ToolActivator, private store: Store) {
-    }
-
-    public build() {
+    constructor(
+        private map: MapManager,
+        private ui: DrawingUI,
+        private tool: ToolActivator,
+        private drawer: MapDrawer
+    ) {
         const wrapper = document.createElement('div');
 
         wrapper.className = 'drawing-area';
+        wrapper.append(drawer.container);
 
         window.addEventListener('blur', this.blurHandler);
         wrapper.addEventListener('mousedown', this.mouseDownHandler);
@@ -30,54 +31,25 @@ class DrawingArea implements UIElement {
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
-        this.layers.onUpdate(this.layerUpdateHandler);
 
-        this._wrapper = wrapper;
+        map.layers.onCreate(this.layerCreateHandler);
+        map.layers.onUpdate(this.layerUpdateHandler);
 
-        return wrapper;
+        this.wrapper = wrapper;
     }
 
-    public setup(map: EditorMap) {
-        const container = document.createElement('div');
+    public get html() {
+        return this.wrapper;
+    }
 
-        container.style.position = 'absolute';
-
-        this.wrapper.innerHTML = '';
-        this.wrapper.append(container);
-
-        this._drawer = new MapDrawer(map, container, this.store);
-
-        this.drawer.resize(0);
-        //TODO: Probably the drawing area should not setup the layers
-        //      manager. The other way around seems more appropriate.
-        this.layers.clear();
-        map.data.layers.forEach(l => {
-            const layer = this.layers.add(l);
-            layer.drawing.setup(container);
-            this.layerDataUpdateHandler(l);
-        });
-        this.layers.select(map.activeLayer);
+    public setup() {
+        const container = this.drawer.container;
         this.ui.setup(container);
+        this.drawer.resize(0);
     }
 
 
     // PRIVATE
-
-    private get drawer() {
-        if (this._drawer === undefined) {
-            throw new Error('UI not built');
-        }
-
-        return this._drawer;
-    }
-
-    private get wrapper() {
-        if (this._wrapper === undefined) {
-            throw new Error('UI not built');
-        }
-
-        return this._wrapper;
-    }
 
     private getMapPoint(viewPortPoint: Point) {
         const boundingRectangle = this.wrapper.getBoundingClientRect(),
@@ -113,7 +85,7 @@ class DrawingArea implements UIElement {
 
     public zoom(direction: number) {
         this.drawer.resize(direction);
-        this.layers.layers.forEach(l => l.drawing.zoom());
+        this.map.layers.layers.forEach(l => l.drawing.zoom());
         this.ui.zoom();
     }
 
@@ -122,6 +94,11 @@ class DrawingArea implements UIElement {
 
     private blurHandler = () => {
         this.stop(undefined);
+    }
+
+    private layerCreateHandler = (c: LayerAccessor) => {
+        c.drawing.setup(this.drawer.container);
+        this.layerDataUpdateHandler(c.data);
     }
 
     private layerDataUpdateHandler = (c: MapLayer) => {
@@ -136,7 +113,7 @@ class DrawingArea implements UIElement {
         if ('id' in c) {
             this.layerDataUpdateHandler(c);
         } else {
-            this.layers.activeLayer?.drawing.update(c);
+            this.map.layers.activeLayer?.drawing.update(c);
         }
     }
 

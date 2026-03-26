@@ -1,10 +1,9 @@
 /// <reference path="./SubmenuMenuEntry.ts" />
 
 class Menu implements UIElement {
-    constructor(private mainEntry: SubmenuMenuEntry) {
-    }
+    private container: HTMLDivElement;
 
-    public build() {
+    constructor(private mainEntry: SubmenuMenuEntry) {
         const container = document.createElement('div'),
             elements = this.mainEntry.build();
 
@@ -14,6 +13,10 @@ class Menu implements UIElement {
             container.append(element);
         }
 
-        return container;
+        this.container = container;
+    }
+
+    public get html() {
+        return this.container;
     }
 }

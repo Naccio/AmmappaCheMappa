@@ -15,17 +15,18 @@ class MapUIFactory {
         private store: Store
     ) { }
 
-    create(map: MapManager) {
-        const mapAccessor = map.mapAccessor,
-            layersManager = map.layers;
+    create(mapManager: MapManager) {
+        const mapAccessor = mapManager.mapAccessor,
+            layersManager = mapManager.layers;
 
         const uiLayer = new DrawingUI(mapAccessor, this.canvasProvider);
         const tools = this.toolsFactory.create(mapAccessor, layersManager, uiLayer);
         const toolbar = new Toolbar(tools.tools, this.localizer, mapAccessor, layersManager);
         const toolActivator = new ToolActivator(toolbar);
-        const drawingArea = new DrawingArea(layersManager, uiLayer, toolActivator, this.store);
+        const drawer = new MapDrawer(mapAccessor.map, this.store);
+        const drawingArea = new DrawingArea(mapManager, uiLayer, toolActivator, drawer);
         const layersPanel = new LayersPanel(layersManager, this.localizer);
 
-        return new MapUI(map, toolbar, drawingArea, layersPanel);
+        return new MapUI(mapManager, toolbar, drawingArea, layersPanel);
     }
 }

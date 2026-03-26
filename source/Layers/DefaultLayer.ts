@@ -6,16 +6,14 @@ class DefaultLayer implements DrawingLayer, LayerRenderer {
     }
 
     public render(drawer: Drawer) {
-        const map = this.mapAccessor.map.data,
-            tmpDrawer = this.createDrawer(this.id + '-tmp');
+        const tmpDrawer = this.createDrawer(this.id + '-tmp');
 
         this.draw(tmpDrawer);
         drawer.image(tmpDrawer);
     }
 
     public setup(container: HTMLElement) {
-        const map = this.mapAccessor.map.data,
-            drawer = this.createDrawer(this.id);
+        const drawer = this.createDrawer(this.id);
 
         container.append(drawer.canvas);
 

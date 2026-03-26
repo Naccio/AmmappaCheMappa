@@ -2,16 +2,8 @@
 /// <reference path="RenderedMap.ts" />
 
 class MapRenderer {
-    constructor(private maps: MapsManager) {
-    }
 
-    //TODO: Consider taking map as parameter
-    render(): RenderedMap {
-        const mapManager = this.maps.activeMap;
-
-        if (mapManager === undefined) {
-            throw new Error('No active map.');
-        }
+    render(mapManager: MapManager): RenderedMap {
 
         const map = mapManager.mapAccessor.map.data,
             canvas = document.createElement('canvas'),

@@ -32,11 +32,6 @@ class LayersManager {
         return accessor;
     }
 
-    public clear() {
-        const layers = [...this.layers];
-        layers.forEach(l => this.delete(l.data.id));
-    }
-
     public delete(id: string) {
         const layer = this.getLayer(id);
 

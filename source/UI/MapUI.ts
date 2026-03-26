@@ -11,14 +11,17 @@ class MapUI implements UIElement {
     constructor(
         private map: MapManager,
         private toolbar: Toolbar,
-        //HACK: Leaky abstraction
-        public drawingArea: DrawingArea,
+        private drawingArea: DrawingArea,
         private layersPanel: LayersPanel
     ) {
         const container = document.createElement('div');
 
         container.id = this.id;
         container.className = 'map-ui';
+
+        container.append(this.toolbar.html);
+        container.append(this.drawingArea.html);
+        container.append(this.layersPanel.html);
 
         this.container = container;
     }
@@ -27,12 +30,7 @@ class MapUI implements UIElement {
         return this.map.id + '-ui';
     }
 
-    public build() {
-        this.container.innerHTML = '';
-        this.container.append(this.toolbar.build());
-        this.container.append(this.drawingArea.build());
-        this.container.append(this.layersPanel.build());
-
+    public get html() {
         return this.container;
     }
 
@@ -42,6 +40,19 @@ class MapUI implements UIElement {
 
     public remove() {
         this.container.remove();
+    }
+
+    public setup() {
+        const mapAccessor = this.map.mapAccessor,
+            layersManager = this.map.layers,
+            map = mapAccessor.map;
+
+        mapAccessor.map.data.layers.forEach(l => {
+            const layer = layersManager.add(l);
+        });
+        layersManager.select(map.activeLayer);
+
+        this.drawingArea.setup();
     }
 
     public show() {

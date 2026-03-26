@@ -1,22 +1,21 @@
 /// <reference path="../UIElement.ts" />
 
 class Toolbar implements UIElement {
+    private readonly container: HTMLDivElement;
+
     private _activeTool?: Tool;
 
-    constructor(private tools: Tool[], private localizer: Localizer, private mapAccessor: MapAccessor, private layers: LayersManager) {
-        layers.onSelect(this.layerSelectHandle);
-    }
-
-    public get activeTool() {
-        return this._activeTool;
-    }
-
-    public build() {
+    constructor(
+        private tools: Tool[],
+        localizer: Localizer,
+        private mapAccessor: MapAccessor,
+        private layers: LayersManager
+    ) {
         const container = document.createElement('div');
 
         container.className = 'toolbar';
 
-        for (let tool of this.tools) {
+        for (let tool of tools) {
             const configuration = tool.configuration,
                 id = configuration.id,
                 radioId = this.getRadioId(id),
@@ -24,14 +23,14 @@ class Toolbar implements UIElement {
                 label = document.createElement('label');
 
             radio.type = 'radio';
-            radio.name = this.mapAccessor.id + '-active-tool';
+            radio.name = mapAccessor.id + '-active-tool';
             radio.value = id;
             radio.id = radioId;
             radio.className = 'label-radio';
 
             label.htmlFor = radioId;
             label.innerText = id[0].toLocaleUpperCase();
-            label.title = this.localizer[configuration.labelResourceId];
+            label.title = localizer[configuration.labelResourceId];
 
             radio.addEventListener('change', () => this._activeTool = tool);
 
@@ -39,7 +38,17 @@ class Toolbar implements UIElement {
             container.append(label);
         }
 
-        return container;
+        this.container = container;
+
+        layers.onSelect(this.layerSelectHandle);
+    }
+
+    public get activeTool() {
+        return this._activeTool;
+    }
+
+    public get html() {
+        return this.container;
     }
 
     private getRadio(id: string): HTMLInputElement {

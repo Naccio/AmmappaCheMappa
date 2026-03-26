@@ -27,8 +27,7 @@ class DrawingUI implements DrawingLayer {
         this._drawer = drawer;
     }
 
-    public update(cell: CellIndex) {
-
+    public update() {
     }
 
     public zoom() {

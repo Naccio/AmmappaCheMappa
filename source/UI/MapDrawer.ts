@@ -3,9 +3,20 @@
 
 class MapDrawer {
     private actualShift: Vector = VectorMath.zero;
+    private readonly _container: HTMLDivElement;
 
-    constructor(private map: EditorMap, private container: HTMLElement, private store: Store) {
+    constructor(private map: EditorMap, private store: Store) {
+        const container = document.createElement('div');
+
+        container.style.position = 'absolute';
+
+        this._container = container;
+
         this.computeSize();
+    }
+
+    public get container() {
+        return this._container;
     }
 
     private get currentShift() {
