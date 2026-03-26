@@ -3,4 +3,5 @@
 interface ApplicationState {
     maps: EditorMap[];
     activeMap?: string;
+    locale?: string;
 }

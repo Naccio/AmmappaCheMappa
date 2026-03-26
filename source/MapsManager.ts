@@ -49,7 +49,7 @@ class MapsManager {
 
                 if (this._activeMap?.id === id) {
                     this._activeMap = undefined;
-                    this.store.setActiveMap(undefined);
+                    this.store.activeMap = undefined;
                     this.activateEvent.trigger(undefined);
                 }
             });
@@ -60,7 +60,7 @@ class MapsManager {
 
         this._activeMap = map;
 
-        this.store.setActiveMap(id);
+        this.store.activeMap = id;
         this.activateEvent.trigger(map);
     }
 
@@ -77,14 +77,14 @@ class MapsManager {
     }
 
     public setup() {
-        const maps = this.store.getMaps(),
-            map = this.store.getActiveMap();
+        const maps = this.store.maps,
+            activeMap = maps.find(m => m.data.id == this.store.activeMap);
 
         this.maps = {};
         maps.forEach(m => this.add(m));
 
-        if (map) {
-            this.activate(map.data.id);
+        if (activeMap) {
+            this.activate(activeMap.data.id);
         }
     }
 }

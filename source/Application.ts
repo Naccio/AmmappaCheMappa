@@ -10,7 +10,7 @@
 /// <reference path='Contents/Roads/RoadRenderer.ts'/>
 /// <reference path='Contents/Text/TextRenderer.ts'/>
 /// <reference path='Contents/Trees/TreeRenderer.ts'/>
-/// <reference path='Localization/Localizer.ts'/>
+/// <reference path='Localization/LocalizerFactory.ts'/>
 /// <reference path='Store.ts'/>
 /// <reference path='UI/ApplicationUI.ts'/>
 /// <reference path='UI/CanvasProvider.ts'/>
@@ -26,11 +26,9 @@ class Application {
     }
 
     public static async build() {
-        const locale = LocalizationHelper.getUserLocale();
-        document.documentElement.lang = locale;
-        const resource = await LocalizationHelper.loadResource(locale);
         const store = new Store();
-        const localizer = new Localizer(resource);
+        const localizerFactory = new LocalizerFactory(store);
+        const localizer = await localizerFactory.create();
         const mapFactory = new MapFactory(localizer);
         const canvasProvider = new CanvasProvider();
         const mountainFactory = new MountainFactory();
@@ -77,7 +75,7 @@ class Application {
         const helpMenu = new SubmenuMenuEntry(localizer['menu_label_help'], [
             aboutCommandMenuEntry
         ]);
-        const languageMenu = new LanguageMenu(localizer);
+        const languageMenu = new LanguageMenu(store, localizer);
         const mainMenu = new SubmenuMenuEntry('Menu', [
             fileMenu,
             helpMenu,

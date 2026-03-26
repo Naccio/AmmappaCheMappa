@@ -3,11 +3,11 @@
 
 class LanguageMenu extends SubmenuMenuEntry {
 
-    public constructor(localizer: Localizer) {
+    public constructor(state: ApplicationState, localizer: Localizer) {
         const entries: LanguageMenuEntry[] = [];
 
         for (let language of LocalizationHelper.languages) {
-            entries.push(new LanguageMenuEntry(language));
+            entries.push(new LanguageMenuEntry(state, language));
         }
 
         super(localizer['menu_label_language'], entries, { align: 'right' });

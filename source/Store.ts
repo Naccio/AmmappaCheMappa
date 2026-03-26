@@ -2,7 +2,7 @@
 /// <reference path="Model/EditorMap.ts" />
 
 //TODO: Consider switching to IndexedDB
-class Store {
+class Store implements ApplicationState {
     private _state?: ApplicationState;
 
     private get state() {
@@ -11,6 +11,28 @@ class Store {
         }
 
         return this._state;
+    }
+
+    public get activeMap() {
+        return this.state.activeMap;
+    }
+
+    public set activeMap(id: string | undefined) {
+        this.state.activeMap = id;
+        this.storeState();
+    }
+
+    public get locale() {
+        return this.state.locale;
+    }
+
+    public set locale(language: string | undefined) {
+        this.state.locale = language;
+        this.storeState();
+    }
+
+    public get maps() {
+        return this.state.maps;
     }
 
     public deleteMap(id: string) {
@@ -23,28 +45,10 @@ class Store {
         this.storeState();
     }
 
-    public getActiveMap() {
-        const id = this.state.activeMap;
-
-        return id
-            ? this.state.maps.find(m => m.data.id === id)
-            : undefined;
-    }
-
-    public getMaps() {
-        return this.state.maps;
-    }
-
     public saveMap(map: EditorMap) {
         if (this.state.maps.indexOf(map) === -1) {
             this.state.maps.push(map);
         }
-
-        this.storeState();
-    }
-
-    public setActiveMap(id?: string) {
-        this.state.activeMap = id;
 
         this.storeState();
     }
