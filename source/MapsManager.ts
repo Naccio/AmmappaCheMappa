@@ -1,3 +1,4 @@
+/// <reference path="Store.ts" />
 /// <reference path="Model/Dictionary.ts" />
 
 class MapsManager {
@@ -5,11 +6,12 @@ class MapsManager {
     private readonly removeEvent = new InternalEvent<string>();
     private readonly activateEvent = new InternalEvent<MapManager | undefined>();
 
-    private readonly maps: Dictionary<MapManager> = {};
+    private maps: Dictionary<MapManager> = {};
 
     private _activeMap?: MapManager;
 
     constructor(
+        private store: Store,
         private factory: MapManagerFactory,
         private modal: ModalLauncher,
         private localizer: Localizer
@@ -37,6 +39,7 @@ class MapsManager {
             () => {
                 delete this.maps[id];
 
+                this.store.deleteMap(id);
                 this.removeEvent.trigger(id);
 
                 for (let key in this.maps) {
@@ -46,6 +49,7 @@ class MapsManager {
 
                 if (this._activeMap?.id === id) {
                     this._activeMap = undefined;
+                    this.store.setActiveMap(undefined);
                     this.activateEvent.trigger(undefined);
                 }
             });
@@ -56,6 +60,7 @@ class MapsManager {
 
         this._activeMap = map;
 
+        this.store.setActiveMap(id);
         this.activateEvent.trigger(map);
     }
 
@@ -69,5 +74,17 @@ class MapsManager {
 
     public onRemove(handler: EventHandler<string>) {
         this.removeEvent.subscribe(handler);
+    }
+
+    public setup() {
+        const maps = this.store.getMaps(),
+            map = this.store.getActiveMap();
+
+        this.maps = {};
+        maps.forEach(m => this.add(m));
+
+        if (map) {
+            this.activate(map.data.id);
+        }
     }
 }

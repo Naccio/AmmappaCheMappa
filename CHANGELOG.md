@@ -26,6 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - A welcome message is shown when no map is open
 - Storage:
   - Data stored between sessions:
+    - Opened maps
+    - Active map
     - Map zoom
     - Map position
     - Map active layer

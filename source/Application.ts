@@ -22,7 +22,7 @@
 /// <reference path='UI/Menu/SubmenuMenuEntry.ts'/>
 
 class Application {
-    private constructor(private mapsManager: MapsManager, private store: Store) {
+    private constructor(private mapsManager: MapsManager) {
     }
 
     public static async build() {
@@ -51,7 +51,7 @@ class Application {
         const uiFactory = new UIFactory();
         const modalLauncher = new ModalLauncher(uiFactory, localizer);
         const mapManagerFactory = new MapManagerFactory(store, canvasProvider, renderingStrategies);
-        const mapsManager = new MapsManager(mapManagerFactory, modalLauncher, localizer);
+        const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
         const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
         const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store);
         const mapRenderer = new MapRenderer(mapsManager);
@@ -93,15 +93,11 @@ class Application {
 
         ui.build();
 
-        return new Application(mapsManager, store);
+        return new Application(mapsManager);
     }
 
     public run() {
-        const map = this.store.getMap();
-
-        if (map) {
-            this.mapsManager.add(map);
-        }
+        this.mapsManager.setup();
     }
 }
 
