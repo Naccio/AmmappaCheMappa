@@ -132,11 +132,8 @@ p {
 
 #main-area {
     flex-grow: 1;
-    display: grid;
-    grid-template:
-        "tabs" 1.5rem
-        "ui" 1fr
-        / 1fr;
+    display: flex;
+    flex-direction: column;
 }
 
 #menu {
@@ -204,6 +201,7 @@ p {
 }
 
 #welcome {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -253,8 +251,7 @@ p {
 }
 
 .map-ui {
-    height: 100%;
-    grid-area: ui;
+    flex-grow: 1;
     display: grid;
     grid-template:
         "left center right" 1fr
@@ -281,6 +278,7 @@ p {
     background: var(--tab-bg);
     border: var(--border);
     margin-bottom: calc(var(--border-width) * -1);
+    margin-top: var(--spacing-wide);
 }
 
 .tab.active {

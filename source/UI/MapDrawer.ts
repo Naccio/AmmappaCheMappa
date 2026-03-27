@@ -18,8 +18,6 @@ class MapDrawer implements UIElement {
 
         this.container = container;
 
-        this.computeSize();
-
         mapManager.layers.onCreate(this.layerCreateHandler);
         mapManager.layers.onUpdate(this.layerUpdateHandler);
     }
@@ -60,6 +58,9 @@ class MapDrawer implements UIElement {
         map.zoom = newZoom;
 
         this.computeSize();
+        //TODO: Adapt shift to zoom
+        this.shift(VectorMath.zero);
+
         this.store.saveMap(map);
         this.layers.forEach(l => l.zoom());
     }
@@ -76,7 +77,11 @@ class MapDrawer implements UIElement {
 
     private computeActualShift() {
         const container = this.container,
-            parent = container.parentElement ?? container;
+            parent = container.parentElement;
+
+        if (!parent) {
+            throw new Error('Map drawer not set up correctly.');
+        }
 
         const shiftToCenter = {
             x: (parent.clientWidth - container.clientWidth) / 2,
@@ -93,9 +98,6 @@ class MapDrawer implements UIElement {
 
         this.container.style.width = mapData.columns * multiplier + 'px';
         this.container.style.height = mapData.rows * multiplier + 'px';
-
-        //TODO: Adapt shift to zoom
-        this.shift(VectorMath.zero);
     }
 
     private layerCreateHandler = (c: LayerAccessor) => {

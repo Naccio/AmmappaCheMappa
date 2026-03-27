@@ -24,7 +24,8 @@ class DrawingArea implements UIElement {
         wrapper.append(drawer.html);
 
         window.addEventListener('blur', this.blurHandler);
-        
+        window.addEventListener('resize', this.resizeHandler);
+
         document.addEventListener('mouseup', this.mouseUpHandler);
 
         wrapper.addEventListener('mousedown', this.mouseDownHandler);
@@ -139,6 +140,10 @@ class DrawingArea implements UIElement {
         });
 
         this.stop(coordinates);
+    }
+
+    private resizeHandler = () => {
+        this.setup();
     }
 
     private wheelHandler = (e: WheelEvent) => {

@@ -48,9 +48,6 @@ class MainArea implements UIElement {
             const map = this.getMap(manager.id);
             map.ui.show();
             map.tab.classList.add('active');
-
-            //HACK: Magic string
-            document.getElementById('welcome')?.remove();
         } else {
             this.container.append(this.welcome.html);
         }
@@ -75,6 +72,9 @@ class MainArea implements UIElement {
                 e.stopPropagation();
                 this.mapsManager.remove(id);
             });
+
+        //HACK: Magic string
+        document.getElementById('welcome')?.remove();
 
         tab.className = 'tab';
 
