@@ -1,26 +1,45 @@
 /// <reference path="../Model/EditorMap.ts" />
 /// <reference path="../VectorMath.ts" />
 
-class MapDrawer {
+class MapDrawer implements UIElement {
     private actualShift: Vector = VectorMath.zero;
-    private readonly _container: HTMLDivElement;
+    private readonly container: HTMLDivElement;
 
-    constructor(private map: EditorMap, private store: Store) {
+    constructor(
+        private mapManager: MapManager,
+        private store: Store,
+        private ui: DrawingUI
+    ) {
         const container = document.createElement('div');
 
         container.style.position = 'absolute';
 
-        this._container = container;
+        container.append(ui.html);
+
+        this.container = container;
 
         this.computeSize();
+
+        mapManager.layers.onCreate(this.layerCreateHandler);
+        mapManager.layers.onUpdate(this.layerUpdateHandler);
     }
 
-    public get container() {
-        return this._container;
+    public get html() {
+        return this.container;
+    }
+
+    private get layers(): DrawingLayer[] {
+        const mapLayers = this.mapManager.layers.layers.map(l => l.drawing);
+
+        return [...mapLayers, this.ui];
     }
 
     private get currentShift() {
         return this.map.position;
+    }
+
+    private get map() {
+        return this.mapManager.mapAccessor.map;
     }
 
     public center() {
@@ -42,6 +61,7 @@ class MapDrawer {
 
         this.computeSize();
         this.store.saveMap(map);
+        this.layers.forEach(l => l.zoom());
     }
 
     public shift(vector: Vector) {
@@ -76,5 +96,27 @@ class MapDrawer {
 
         //TODO: Adapt shift to zoom
         this.shift(VectorMath.zero);
+    }
+
+    private layerCreateHandler = (c: LayerAccessor) => {
+        this.container.append(c.drawing.html);
+        c.renderer.render();
+        this.layerDataUpdateHandler(c.data);
+    }
+
+    private layerDataUpdateHandler = (c: MapLayer) => {
+        const element = document.getElementById(c.id);
+
+        if (element) {
+            element.style.display = c.hidden ? 'none' : 'block';
+        }
+    }
+
+    private layerUpdateHandler = (c: CellIndex | MapLayer) => {
+        if ('id' in c) {
+            this.layerDataUpdateHandler(c);
+        } else {
+            this.mapManager.layers.activeLayer?.drawing.update(c);
+        }
     }
 }

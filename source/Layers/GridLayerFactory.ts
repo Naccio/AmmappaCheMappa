@@ -7,16 +7,38 @@
 
 class GridLayerFactory implements LayerAbstractFactory {
 
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
+    private readonly layers: { id: string, layer: GridLayer }[] = [];
+
+    constructor(
+        private mapAccessor: MapAccessor,
+        private canvasProvider: CanvasProvider
+    ) {
     }
 
-    public type = 'grid';
+    public get type() {
+        return 'grid';
+    }
 
     createRenderer(id: string): LayerRenderer {
-        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
+        return this.getLayer(id);
     }
 
     createDrawing(id: string): DrawingLayer {
-        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
+        return this.getLayer(id);
+    }
+
+    private getLayer(id: string) {
+        let layer = this.layers.find(l => l.id === id);
+
+        if (!layer) {
+            layer = {
+                id,
+                layer: new GridLayer(id, this.mapAccessor, this.canvasProvider)
+            };
+
+            this.layers.push(layer);
+        }
+
+        return layer.layer;
     }
 }

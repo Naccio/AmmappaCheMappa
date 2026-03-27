@@ -15,25 +15,22 @@ class DrawingArea implements UIElement {
     private lastWheelClick = 0;
 
     constructor(
-        private map: MapManager,
-        private ui: DrawingUI,
         private tool: ToolActivator,
         private drawer: MapDrawer
     ) {
         const wrapper = document.createElement('div');
 
         wrapper.className = 'drawing-area';
-        wrapper.append(drawer.container);
+        wrapper.append(drawer.html);
 
         window.addEventListener('blur', this.blurHandler);
+        
+        document.addEventListener('mouseup', this.mouseUpHandler);
+
         wrapper.addEventListener('mousedown', this.mouseDownHandler);
         wrapper.addEventListener('mouseleave', this.mouseLeaveHandler);
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
-        document.addEventListener('mouseup', this.mouseUpHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
-
-        map.layers.onCreate(this.layerCreateHandler);
-        map.layers.onUpdate(this.layerUpdateHandler);
 
         this.wrapper = wrapper;
     }
@@ -43,8 +40,6 @@ class DrawingArea implements UIElement {
     }
 
     public setup() {
-        const container = this.drawer.container;
-        this.ui.setup(container);
         this.drawer.resize(0);
     }
 
@@ -85,8 +80,6 @@ class DrawingArea implements UIElement {
 
     public zoom(direction: number) {
         this.drawer.resize(direction);
-        this.map.layers.layers.forEach(l => l.drawing.zoom());
-        this.ui.zoom();
     }
 
 
@@ -94,27 +87,6 @@ class DrawingArea implements UIElement {
 
     private blurHandler = () => {
         this.stop(undefined);
-    }
-
-    private layerCreateHandler = (c: LayerAccessor) => {
-        c.drawing.setup(this.drawer.container);
-        this.layerDataUpdateHandler(c.data);
-    }
-
-    private layerDataUpdateHandler = (c: MapLayer) => {
-        const element = document.getElementById(c.id);
-
-        if (element) {
-            element.style.display = c.hidden ? 'none' : 'block';
-        }
-    }
-
-    private layerUpdateHandler = (c: CellIndex | MapLayer) => {
-        if ('id' in c) {
-            this.layerDataUpdateHandler(c);
-        } else {
-            this.map.layers.activeLayer?.drawing.update(c);
-        }
     }
 
     private mouseDownHandler = (e: MouseEvent) => {

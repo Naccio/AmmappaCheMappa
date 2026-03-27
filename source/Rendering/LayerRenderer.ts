@@ -1,3 +1,3 @@
 interface LayerRenderer {
-    render(drawer: Drawer): void;
+    render(drawer?: Drawer): void;
 }

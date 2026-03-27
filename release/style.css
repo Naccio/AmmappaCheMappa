@@ -13,6 +13,7 @@
     --btn-font-size: var(--font-size);
     --font-size: 1rem;
     --font-size-small: calc(var(--font-size) * .75);
+    --font-size-smaller: calc(var(--font-size-small) * .75);
     --font-size-big: calc(var(--font-size) * 1.5);
     --spacing-slim: .125rem;
     --spacing: .25rem;
@@ -274,7 +275,8 @@ p {
     --tab-bg: var(--bg);
     --btn-bg: var(--tab-bg);
     --btn-border: none;
-    font-size: .75rem;
+    --btn-font-size: var(--font-size-small);
+    font-size: var(--font-size-smaller);
     display: flex;
     background: var(--tab-bg);
     border: var(--border);

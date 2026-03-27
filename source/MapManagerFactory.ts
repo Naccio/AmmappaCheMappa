@@ -1,6 +1,5 @@
+/// <reference path="Layers/DefaultLayerFactory.ts" />
 /// <reference path="Layers/GridLayerFactory.ts" />
-/// <reference path="Layers/TerrainLayerFactory.ts" />
-/// <reference path="Layers/TextLayerFactory.ts" />
 /// <reference path="UI/Tools/ToolsManagerFactory.ts" />
 
 class MapManagerFactory {
@@ -15,8 +14,8 @@ class MapManagerFactory {
         const grid = new GridLayerFactory(mapAccessor, this.canvasProvider);
         const drawerFactory = new CellDrawerFactory(mapAccessor);
         const cellRenderer = new CellRenderer(drawerFactory, this.renderingStrategies);
-        const terrainLayer = new TerrainLayerFactory(mapAccessor, this.canvasProvider, cellRenderer);
-        const textLayer = new TextLayerFactory(mapAccessor, this.canvasProvider, cellRenderer);
+        const terrainLayer = new DefaultLayerFactory('terrain', mapAccessor, this.canvasProvider, cellRenderer);
+        const textLayer = new DefaultLayerFactory('text', mapAccessor, this.canvasProvider, cellRenderer);
         const layers = [
             terrainLayer,
             textLayer,

@@ -47,9 +47,7 @@ class MapUI implements UIElement {
             layersManager = this.map.layers,
             map = mapAccessor.map;
 
-        mapAccessor.map.data.layers.forEach(l => {
-            const layer = layersManager.add(l);
-        });
+        mapAccessor.map.data.layers.forEach(l => layersManager.add(l));
         layersManager.select(map.activeLayer);
 
         this.drawingArea.setup();

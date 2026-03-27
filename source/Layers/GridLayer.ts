@@ -5,24 +5,27 @@
 /// <reference path="DrawingLayer.ts" />
 
 class GridLayer implements DrawingLayer, LayerRenderer {
-    private wrapper?: HTMLElement;
+    private wrapper: HTMLElement;
 
-    constructor(private id: string, private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
-    }
-
-    public render(drawer: Drawer) {
-        this.renderAtScale(drawer, this.mapAccessor.map.data.pixelsPerCell);
-    }
-
-    public setup(container: HTMLElement) {
+    constructor(
+        private id: string,
+        private mapAccessor: MapAccessor,
+        private canvasProvider: CanvasProvider
+    ) {
         const wrapper = document.createElement('div');
 
         wrapper.id = this.id;
 
         this.wrapper = wrapper;
+    }
 
-        container.append(wrapper);
-        this.setupCanvas();
+    public get html() {
+        return this.wrapper;
+    }
+
+    public render(drawer?: Drawer) {
+        drawer ??= this.setupCanvas();
+        this.renderAtScale(drawer, this.mapAccessor.map.data.pixelsPerCell);
     }
 
     public update() {
@@ -56,19 +59,15 @@ class GridLayer implements DrawingLayer, LayerRenderer {
     }
 
     public setupCanvas() {
-        const container = this.wrapper?.parentElement;
-
-        if (!this.wrapper || !container) {
-            return;
-        }
-
-        const drawer = this.canvasProvider.create(this.id + 'canvas', container.clientWidth, container.clientHeight),
-            map = this.mapAccessor.map,
-            spacing = map.data.pixelsPerCell / map.zoom;
+        const map = this.mapAccessor.map,
+            spacing = map.data.pixelsPerCell / map.zoom,
+            drawer = this.canvasProvider.create(this.id + '-canvas', map.data.columns * spacing, map.data.rows * spacing);
 
         this.renderAtScale(drawer, spacing);
 
         this.wrapper.innerHTML = '';
         this.wrapper.append(drawer.canvas);
+
+        return drawer;
     }
 }
