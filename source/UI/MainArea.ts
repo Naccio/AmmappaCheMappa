@@ -79,7 +79,7 @@ class MainArea implements UIElement {
         tab.className = 'tab';
 
         anchor.href = '#' + ui.id;
-        anchor.innerText = id;
+        anchor.innerText = map.mapAccessor.map.data.title ?? id;
         anchor.onclick = () => this.mapsManager.activate(id);
 
         tab.append(anchor, close);

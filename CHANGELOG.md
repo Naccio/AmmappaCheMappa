@@ -11,19 +11,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 - Commands:
   - **Close**: closes the active map
+- UI:
+  - **Drawing area**:
+    - More than one map can be opened at once
+      - Open maps can be navigated using tabs
+      - A welcome message is shown when no map is open
 
 ### Changed
 
 - BREAKING: Model changed, maps generated with previous versions will
   no longer work
 
+- Commands:
+  - **New**: Maps can be given a title
 - UI:
   - **Drawing area**:
-    - More than one map can be opened at once
-      - Open maps can be navigated using tabs
     - Map default position is centered on main UI area instead of
       whole window
-    - A welcome message is shown when no map is open
 - Storage:
   - Data stored between sessions:
     - Opened maps

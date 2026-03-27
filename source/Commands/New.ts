@@ -8,11 +8,22 @@ class New extends SimpleCommand {
     }
 
     public execute() {
-        const columnsInput = document.createElement('input'),
+        const titleWrapper = document.createElement('div'),
+            titleInput = document.createElement('input'),
+            titleLabel = document.createElement('label'),
+            columnsInput = document.createElement('input'),
             columnsLabel = document.createElement('label'),
             rowsInput = document.createElement('input'),
             rowsLabel = document.createElement('label'),
             title = this.localizer['form_title_new_map'];
+
+        titleInput.id = 'title';
+        titleInput.type = 'text';
+
+        titleLabel.htmlFor = titleInput.id;
+        titleLabel.innerText = this.localizer['input_label_title'];
+
+        titleWrapper.append(titleLabel, titleInput);
 
         columnsInput.id = 'columns';
         columnsInput.type = 'number';
@@ -34,10 +45,10 @@ class New extends SimpleCommand {
         rowsLabel.htmlFor = rowsInput.id;
         rowsLabel.innerText = this.localizer['input_label_rows'];
 
-        this.modal.launchForm(title, [columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
+        this.modal.launchForm(title, [titleWrapper, columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
             const columns = parseInt(columnsInput.value),
                 rows = parseInt(rowsInput.value),
-                map = this.mapFactory.create(columns, rows);
+                map = this.mapFactory.create(titleInput.value, columns, rows);
 
             this.mapsManager.add(map);
         });

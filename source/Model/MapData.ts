@@ -2,6 +2,7 @@
 
 interface MapData {
     id: string,
+    title?: string,
     columns: number,
     rows: number,
     pixelsPerCell: number,
