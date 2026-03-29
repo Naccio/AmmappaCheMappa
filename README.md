@@ -11,7 +11,7 @@ The main objectives I have are:
  - Use modern HTML features
 
 A live version of the latest release can be seen at
-[this link](https://naccio.github.io/AmmappaCheMappa/).
+[this link](https://naccio.net/ammappa-che-mappa/).
 
 > ***Keep in mind that this tool is in early [alpha](CHANGELOG.md),
 > so expect stuff to break a lot.***
