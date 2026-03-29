@@ -5,7 +5,7 @@ class MapFactory {
     public constructor(private localizer: Localizer) {
     }
 
-    public create(title: string, width: number, height: number): EditorMap {
+    public create(title: string | undefined, width: number, height: number): EditorMap {
         const layers = [
             LayersHelper.create('text', this.localizer['layer_type_text']),
             LayersHelper.create('grid', this.localizer['layer_type_grid']),

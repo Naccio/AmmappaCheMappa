@@ -6,7 +6,8 @@
 
 abstract class ActiveMapCommand implements Command {
     private readonly changeEvent = new InternalEvent<boolean>();
-    protected _label: string;
+    private readonly _label: string;
+
     protected _disabled: boolean = true;
 
     constructor(mapsManager: MapsManager, label: string) {

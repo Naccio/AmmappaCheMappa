@@ -46,9 +46,10 @@ class New extends SimpleCommand {
         rowsLabel.innerText = this.localizer['input_label_rows'];
 
         this.modal.launchForm(title, [titleWrapper, columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
-            const columns = parseInt(columnsInput.value),
+            const title = titleInput.value === '' ? undefined : titleInput.value,
+                columns = parseInt(columnsInput.value),
                 rows = parseInt(rowsInput.value),
-                map = this.mapFactory.create(titleInput.value, columns, rows);
+                map = this.mapFactory.create(title, columns, rows);
 
             this.mapsManager.add(map);
         });

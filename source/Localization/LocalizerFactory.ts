@@ -10,7 +10,7 @@ class LocalizerFactory {
     public async create() {
         const locale = this.getUserLocale();
         document.documentElement.lang = locale;
-        const resource = await LocalizationHelper.loadResource(locale);
+        const resource = await this.loadResource(locale);
 
         return new Localizer(resource);
     }
@@ -24,7 +24,7 @@ class LocalizerFactory {
             locale = new Intl.Locale(navigator.language).language;
         }
 
-        if (!LocalizationHelper.isValid(locale)) {
+        if (!this.isValid(locale)) {
             locale = LocalizationHelper.languages[0].locale;
         }
 
@@ -33,5 +33,16 @@ class LocalizerFactory {
         }
 
         return locale!;
+    }
+
+    private isValid(locale: string) {
+        return LocalizationHelper.languages.find(l => l.locale === locale) !== undefined
+    }
+
+    private async loadResource(locale: string) {
+        const response = await fetch(`resources/${locale}.json`);
+        const json = await response.json();
+
+        return json as LocalizationResource
     }
 }

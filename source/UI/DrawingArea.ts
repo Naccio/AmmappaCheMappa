@@ -23,15 +23,15 @@ class DrawingArea implements UIElement {
         wrapper.className = 'drawing-area';
         wrapper.append(drawer.html);
 
-        window.addEventListener('blur', this.blurHandler);
-        window.addEventListener('resize', this.resizeHandler);
-
-        document.addEventListener('mouseup', this.mouseUpHandler);
-
         wrapper.addEventListener('mousedown', this.mouseDownHandler);
         wrapper.addEventListener('mouseleave', this.mouseLeaveHandler);
         wrapper.addEventListener('mousemove', this.mouseMoveHandler);
         wrapper.addEventListener('wheel', this.wheelHandler);
+
+        document.addEventListener('mouseup', this.mouseUpHandler);
+
+        window.addEventListener('blur', this.blurHandler);
+        window.addEventListener('resize', this.resizeHandler);
 
         this.wrapper = wrapper;
     }

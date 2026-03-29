@@ -4,20 +4,12 @@ class CellDrawer {
     constructor(private cellIndex: CellIndex, private mapAccessor: MapAccessor, private drawer: Drawer) {
     }
 
+    private get pixelsPerCell() {
+        return this.mapAccessor.map.data.pixelsPerCell;
+    }
+
     public get cell() {
-        return this.mapAccessor.getCell(this.index);
-    }
-
-    public get index(): CellIndex {
-        return this.cellIndex;
-    }
-
-    public get map() {
-        return this.mapAccessor.map;
-    }
-
-    public get pixelsPerCell() {
-        return this.map.data.pixelsPerCell;
+        return this.mapAccessor.getCell(this.cellIndex);
     }
 
     public bezier(from: Point, to: Point, control1: Point, control2: Point, style: LineStyle) {
@@ -85,7 +77,7 @@ class CellDrawer {
 
     private cellPointToMapPoint = (point: Point, padding?: number | Vector) => {
         const pixels = this.pixelsPerCell,
-            cellShift = this.mapAccessor.getPosition(this.index);
+            cellShift = this.mapAccessor.getPosition(this.cellIndex);
 
         point = VectorMath.multiply(point, pixels);
 

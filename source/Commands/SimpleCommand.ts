@@ -1,7 +1,7 @@
 /// <reference path="Command.ts" />
 
 abstract class SimpleCommand implements Command {
-    protected _label: string;
+    private readonly _label: string;
 
     constructor(label: string) {
         this._label = label;
