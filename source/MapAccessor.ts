@@ -1,24 +1,20 @@
-class MapAccessor {
-    private _map?: GridMap;
+/// <reference path="Model/EditorMap.ts" />
+/// <reference path="Store.ts" />
 
-    constructor() {
+class MapAccessor {
+    constructor(private _map: EditorMap, private store: Store) {
+    }
+
+    public get id() {
+        return this.map.data.id;
     }
 
     public get map() {
-        if (this._map === undefined) {
-            throw new Error('No map active');
-        }
-
         return this._map;
     }
 
-    public set map(map: GridMap) {
-        this._map = map;
-        this.save();
-    }
-
     public get scale() {
-        return this.map.zoom / this.map.pixelsPerCell;
+        return this.map.zoom / this.map.data.pixelsPerCell;
     }
 
     public absolutePosition(cell: CellIndex, normalizedPosition: Point): Point {
@@ -35,7 +31,7 @@ class MapAccessor {
 
     public getCell(index: CellIndex): GridCell {
         const name = GridHelper.cellIndexToName(index),
-            objects = this.map.objects[name] ?? [];
+            objects = this.map.data.objects[name] ?? [];
 
         return {
             index,
@@ -48,7 +44,7 @@ class MapAccessor {
             return undefined;
         }
 
-        const map = this.map,
+        const map = this.map.data,
             cell = VectorMath.multiply(position, this.scale),
             column = Math.floor(cell.x),
             row = Math.floor(cell.y);
@@ -81,7 +77,7 @@ class MapAccessor {
             y: index.row
         };
 
-        return VectorMath.multiply(shift, this.map.pixelsPerCell);
+        return VectorMath.multiply(shift, this.map.data.pixelsPerCell);
     }
 
     private getConnectingCells(from: CellIndex, to: CellIndex) {
@@ -129,16 +125,18 @@ class MapAccessor {
     }
 
     public save() {
-        localStorage.setItem('map', JSON.stringify(this._map));
+        if (this._map) {
+            this.store.saveMap(this._map);
+        }
     }
 
     public setObjects(index: CellIndex, objects: MapObject[]) {
         const cellName = GridHelper.cellIndexToName(index);
 
         if (objects.length === 0) {
-            delete this.map.objects[cellName];
+            delete this.map.data.objects[cellName];
         } else {
-            this.map.objects[cellName] = objects;
+            this.map.data.objects[cellName] = objects;
         }
 
         this.save();

@@ -1,18 +1,29 @@
 /// <reference path="../UI/ModalLauncher.ts" />
+/// <reference path="SimpleCommand.ts" />
 
-class New implements Command {
-    public readonly label;
+class New extends SimpleCommand {
 
-    constructor(private mapFactory: MapFactory, private mapLoader: MapLoader, private modal: ModalLauncher, private localizer: Localizer) {
-        this.label = localizer['command_label_new'];
+    constructor(private mapFactory: MapFactory, private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
+        super(localizer['command_label_new']);
     }
 
     public execute() {
-        const columnsInput = document.createElement('input'),
+        const titleWrapper = document.createElement('div'),
+            titleInput = document.createElement('input'),
+            titleLabel = document.createElement('label'),
+            columnsInput = document.createElement('input'),
             columnsLabel = document.createElement('label'),
             rowsInput = document.createElement('input'),
             rowsLabel = document.createElement('label'),
             title = this.localizer['form_title_new_map'];
+
+        titleInput.id = 'title';
+        titleInput.type = 'text';
+
+        titleLabel.htmlFor = titleInput.id;
+        titleLabel.innerText = this.localizer['input_label_title'];
+
+        titleWrapper.append(titleLabel, titleInput);
 
         columnsInput.id = 'columns';
         columnsInput.type = 'number';
@@ -23,7 +34,7 @@ class New implements Command {
 
         columnsLabel.htmlFor = columnsInput.id;
         columnsLabel.innerText = this.localizer['input_label_columns'];
-        
+
         rowsInput.id = 'rows';
         rowsInput.type = 'number';
         rowsInput.min = '5';
@@ -34,12 +45,13 @@ class New implements Command {
         rowsLabel.htmlFor = rowsInput.id;
         rowsLabel.innerText = this.localizer['input_label_rows'];
 
-        this.modal.launchForm(title, [columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
-            const columns = parseInt(columnsInput.value),
+        this.modal.launchForm(title, [titleWrapper, columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
+            const title = titleInput.value === '' ? undefined : titleInput.value,
+                columns = parseInt(columnsInput.value),
                 rows = parseInt(rowsInput.value),
-                map = this.mapFactory.create(columns, rows);
+                map = this.mapFactory.create(title, columns, rows);
 
-            this.mapLoader.load(map);
+            this.mapsManager.add(map);
         });
     }
 }

@@ -1,11 +1,11 @@
 /// <reference path="ButtonMenuEntry.ts" />
 /// <reference path="../../Localization/ApplicationLanguage.ts" />
-/// <reference path="../../Localization/LocalizationHelper.ts" />
+/// <reference path="../../Model/ApplicationState.ts" />
 
 class LanguageMenuEntry extends ButtonMenuEntry {
-    public constructor(private language: ApplicationLanguage) {
+    public constructor(state: ApplicationState, private language: ApplicationLanguage) {
         super(language.name, () => {
-            LocalizationHelper.storeUserLocale(language.locale);
+            state.locale = language.locale;
             window.location.reload();
         });
     }

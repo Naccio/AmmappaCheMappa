@@ -15,16 +15,8 @@ class CanvasProvider {
 
         this.canvases[id] = drawer;
 
-        this.scale(id, scale);
+        drawer.scale(scale);
 
         return drawer;
-    }
-
-    public scale(id: string, scale: number) {
-        this.canvases[id]?.scale(scale);
-    }
-
-    public get(id: string) {
-        return this.canvases[id];
     }
 }

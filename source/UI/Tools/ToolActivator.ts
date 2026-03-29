@@ -1,6 +1,7 @@
 /// <reference path='Toolbar.ts' />
 
 class ToolActivator {
+    //TODO: Should not depend on UI element
     constructor(private toolbar: Toolbar) {
     }
 

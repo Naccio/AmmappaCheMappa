@@ -2,12 +2,21 @@
     --bg: #eee;
     --bg-active: #ccc;
     --bg-hover: #ddd;
-    --border: 1px solid var(--bg-active);
+    --border-width: 1px;
+    --border: var(--border-width) solid var(--bg-active);
     --border-radius: 0;
     --btn-bg: var(--bg);
     --btn-bg-hover: var(--bg-hover);
-    --btn-border: var(--border);
+    --btn-border-color: var(--bg-active);
+    --btn-border: var(--border-width) solid var(--btn-border-color);
     --btn-border-radius: var(--border-radius);
+    --btn-font-size: var(--font-size);
+    --font-size: 1rem;
+    --font-size-small: calc(var(--font-size) * .75);
+    --font-size-smaller: calc(var(--font-size-small) * .75);
+    --font-size-big: calc(var(--font-size) * 1.5);
+    --text-color: #222;
+    --spacing-slim: .125rem;
     --spacing: .25rem;
     --spacing-wide: .5rem;
 }
@@ -20,16 +29,14 @@
 
 html {
     font-family: sans-serif;
+    color: var(--text-color);
     height: 100%;
     overflow: hidden;
 }
 
 body {
-    display: grid;
-    grid-template:
-        "top  top  top" 2rem
-        "left main right" 1fr
-        / 4rem 1fr 200px;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     margin: 0;
 }
@@ -50,6 +57,7 @@ blockquote::after {
 button {
     background: var(--btn-bg);
     border: var(--btn-border);
+    font-size: var(--btn-font-size);
 }
 
 button:hover {
@@ -96,6 +104,10 @@ dialog label {
     margin: var(--spacing);
 }
 
+p {
+    margin: var(--spacing);
+}
+
 .dialog-body {
     padding: var(--spacing);
 }
@@ -120,47 +132,19 @@ dialog label {
     background-color: var(--bg-active);
 }
 
-#drawing-area {
-    grid-area: main;
-    position: relative;
-    overflow: hidden;
-}
-
-#layers {
-    grid-area: right;
-    background: var(--bg);
-    border: var(--border);
-}
-
-#layers div {
-    position: relative;
-    height: 2rem;
-}
-
-#layers label {
+#main-area {
+    flex-grow: 1;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 2rem;
-    padding-right: var(--spacing);
-    position: absolute;
-    inset: 0;
-}
-
-#layers input[type="checkbox"] {
-    position: absolute;
-    left: var(--spacing);
-    top: var(--spacing);
-    z-index: 1;
+    flex-direction: column;
 }
 
 #menu {
     --btn-border: none;
+    --btn-font-size: var(--font-size-small);
     --menu-bg: var(--bg);
     --menu-border: var(--border);
     display: flex;
     align-items: stretch;
-    grid-area: top;
     background: var(--menu-bg);
     border: var(--menu-border);
 }
@@ -218,14 +202,110 @@ dialog label {
     margin-left: auto;
 }
 
-#toolbar {
+#welcome {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#welcome p {
+    font-size: var(--font-size-big);
+}
+
+#welcome button {
+    margin: var(--spacing-wide);
+}
+
+.drawing-area {
+    grid-area: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.layers {
+    grid-area: right;
+    background: var(--bg);
+    border: var(--border);
+}
+
+.layers div {
+    position: relative;
+    height: 2rem;
+}
+
+.layers label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: var(--spacing);
+    position: absolute;
+    inset: 0;
+}
+
+.layers input[type="checkbox"] {
+    position: absolute;
+    left: var(--spacing);
+    top: var(--spacing);
+    z-index: 1;
+}
+
+.map-ui {
+    flex-grow: 1;
+    display: grid;
+    grid-template:
+        "left center right" 1fr
+        / 4rem 1fr 200px;
+}
+
+.tabs {
+    display: flex;
+    gap: var(--spacing-wide);
+    padding: 0 var(--spacing-wide);
+    align-items: flex-end;
+    background: var(--bg);
+    margin: calc(var(--border-width) * -1) 0;
+    border: var(--border);
+}
+
+.tab {
+    --tab-bg: var(--bg);
+    --btn-bg: var(--tab-bg);
+    --btn-border: none;
+    --btn-font-size: var(--font-size-small);
+    font-size: var(--font-size-smaller);
+    display: flex;
+    align-items: center;
+    background: var(--tab-bg);
+    border: var(--border);
+    margin-bottom: calc(var(--border-width) * -1);
+    margin-top: var(--spacing-wide);
+}
+
+.tab.active {
+    --tab-bg: var(--bg-active);
+}
+
+.tab a {
+    color: var(--text-color);
+    text-decoration: none;
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: var(--spacing-slim) var(--spacing);
+}
+
+.toolbar {
     grid-area: left;
     padding: var(--spacing);
     background: var(--bg);
     border: var(--border);
 }
 
-#toolbar :not(:disabled)+label {
+.toolbar :not(:disabled)+label {
     font-size: 3rem;
     display: block;
     text-align: center;

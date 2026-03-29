@@ -33,15 +33,16 @@ class RiversTool implements Tool {
         }
 
         if (!GridHelper.cellIsEqual(activeCell, cell)) {
-            const river = this.getRiver(cell)!,
+            const map = this.mapAccessor.map,
+                river = this.getRiver(cell)!,
                 cellPosition = this.mapAccessor.getPosition(cell);
 
             this.createRivers(activeCell, this.startPosition, cell, position)
 
             this.startPosition = VectorMath.startOperation(river.from)
-                .multiply(this.mapAccessor.map.pixelsPerCell)
+                .multiply(map.data.pixelsPerCell)
                 .add(cellPosition)
-                .divide(this.mapAccessor.map.zoom);
+                .divide(map.zoom);
             this.activeCell = cell;
         } else {
             const river = this.getRiver(cell);

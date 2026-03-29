@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 
+## [alpha.2] - 2026-03-29
+
+### Added
+
+- Commands:
+  - **Close**: closes the active map
+- UI:
+  - **Drawing area**:
+    - More than one map can be opened at once
+      - Open maps can be navigated using tabs
+      - A welcome message is shown when no map is open
+
+### Changed
+
+- BREAKING: Model changed, maps generated with previous versions will
+  no longer work
+
+- Commands:
+  - **New**: Maps can be given a title
+- UI:
+  - **Drawing area**:
+    - Map default position is centered on main UI area instead of
+      whole window
+- Storage:
+  - Data stored between sessions:
+    - Opened maps
+    - Active map
+    - Map zoom
+    - Map position
+    - Map active layer
+
+
 ## [alpha.1] - 2025-05-16
 
 ### Added
@@ -28,7 +60,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Changed
 
 - UI:
-  - **Toolbar**: Tools that are not availabe on the active layer are
+  - **Toolbar**: Tools that are not available on the active layer are
     hidden
 - Tools:
   - Tools work on specific layer types
@@ -81,7 +113,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - one canvas per layer
     - the grid is in a different layer
     - only cells that are changed are redrawn, instead of the whole layer
-    - Kinda want to keep SVG open as a possibile alternative strategy
+    - Kinda want to keep SVG open as a possible alternative strategy
   - HTML modals are used for commands that require additional inputs
   - HTML popovers are used for menus
   - HTML radio inputs are used for exclusive selection (*e.g.* active tool)
@@ -92,6 +124,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Storage:
   - Application data is stored in browser's local storage
   - Application state is restored when the application is opened
-  - Stored data:
+  - Data stored between sessions:
     - Active map
     - Preferred language (if changed using the *Language* menu)

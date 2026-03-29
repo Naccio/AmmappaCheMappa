@@ -2,23 +2,25 @@ class LayersPanel implements UIElement {
     private container: HTMLDivElement;
 
     public constructor(private layers: LayersManager, private localizer: Localizer) {
-        this.container = document.createElement('div');
+        const container = document.createElement('div');
 
-        this.container.id = 'layers';
+        container.className = 'layers';
 
-        layers.onCreate(l => this.buildLayer(l));
-        layers.onDelete(l => this.removeLayer(l.id));
-        layers.onSelect(l => this.selectLayer(l));
+        this.layers.onCreate(l => this.buildLayer(l));
+        this.layers.onDelete(l => this.removeLayer(l.id));
+        this.layers.onSelect(l => this.selectLayer(l));
+
+        this.container = container;
     }
 
-    build(): void {
-        document.getElementById('layers')?.remove();
-        document.body.append(this.container);
+    public get html() {
+        return this.container;
     }
 
     private buildLayer(layer: LayerAccessor) {
         const data = layer.data,
             id = data.id,
+            mapId = this.layers.mapId,
             //HACK: Magic string layer_type_
             type = this.localizer[`layer_type_${data.type}`],
             wrapper = document.createElement('div'),
@@ -28,7 +30,7 @@ class LayersPanel implements UIElement {
             typeLabel = document.createElement('small');
 
         check.type = 'checkbox';
-        check.name = 'visible-layers';
+        check.name = mapId + '-visible-layers';
         check.value = id;
         check.id = id + '-visible';
         check.checked = !data.hidden;
@@ -36,7 +38,7 @@ class LayersPanel implements UIElement {
         check.onchange = () => this.layers.update(id, l => l.hidden = !check.checked);
 
         radio.type = 'radio';
-        radio.name = 'active-layer';
+        radio.name = mapId + '-active-layer';
         radio.value = id;
         radio.id = this.getRadioId(id);
         radio.className = 'label-radio';

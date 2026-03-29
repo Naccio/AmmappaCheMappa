@@ -1,10 +1,10 @@
 /// <reference path="MapLayer.ts" />
 
-interface GridMap {
+interface MapData {
     id: string,
+    title?: string,
     columns: number,
     rows: number,
-    zoom: number,
     pixelsPerCell: number,
     objects: { [index: string]: MapObject[] },
     layers: MapLayer[]

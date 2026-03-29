@@ -1,37 +1,36 @@
 /// <reference path="../UIElement.ts" />
 
 class Toolbar implements UIElement {
+    private readonly container: HTMLDivElement;
+
     private _activeTool?: Tool;
 
-    constructor(private tools: Tool[], private localizer: Localizer, private layers: LayersManager) {
-        layers.onSelect(this.layerSelectHandle);
-    }
-
-    public get activeTool() {
-        return this._activeTool;
-    }
-
-    public build() {
+    constructor(
+        private tools: Tool[],
+        localizer: Localizer,
+        private mapAccessor: MapAccessor,
+        private layers: LayersManager
+    ) {
         const container = document.createElement('div');
 
-        container.id = 'toolbar';
+        container.className = 'toolbar';
 
-        for (let tool of this.tools) {
+        for (let tool of tools) {
             const configuration = tool.configuration,
                 id = configuration.id,
-                radioId = this.getRadioId(configuration.id),
+                radioId = this.getRadioId(id),
                 radio = document.createElement('input'),
                 label = document.createElement('label');
 
             radio.type = 'radio';
-            radio.name = 'active-tool';
+            radio.name = mapAccessor.id + '-active-tool';
             radio.value = id;
             radio.id = radioId;
             radio.className = 'label-radio';
 
             label.htmlFor = radioId;
             label.innerText = id[0].toLocaleUpperCase();
-            label.title = this.localizer[configuration.labelResourceId];
+            label.title = localizer[configuration.labelResourceId];
 
             radio.addEventListener('change', () => this._activeTool = tool);
 
@@ -39,20 +38,30 @@ class Toolbar implements UIElement {
             container.append(label);
         }
 
-        document.body.append(container);
+        this.container = container;
+
+        layers.onSelect(this.layerSelectHandle);
     }
 
-    public getRadio(id: string): HTMLInputElement {
+    public get activeTool() {
+        return this._activeTool;
+    }
+
+    public get html() {
+        return this.container;
+    }
+
+    private getRadio(id: string): HTMLInputElement {
         id = this.getRadioId(id);
         //HACK: Should check if it actually is an input
         return document.getElementById(id) as HTMLInputElement;
     }
 
     private getRadioId(id: string) {
-        return 'tool-' + id
+        return `${this.mapAccessor.id}-${id}-tool`;
     }
 
-    public selectFirstTool() {
+    private selectFirstTool() {
         for (let tool of this.tools) {
             if (this.isCompatibleWith(tool, this.layers.activeLayer)) {
                 this.selectTool(tool.configuration.id);
@@ -63,7 +72,7 @@ class Toolbar implements UIElement {
         this._activeTool = undefined;
     }
 
-    public selectTool(id: string) {
+    private selectTool(id: string) {
         id = this.getRadioId(id);
         document.getElementById(id)?.click();
     }

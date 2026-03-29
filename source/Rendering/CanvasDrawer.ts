@@ -4,6 +4,7 @@ class CanvasDrawer implements Drawer{
 
     private readonly context: CanvasRenderingContext2D;
 
+    //HACK: Leaky abstraction
     public constructor(public canvas: HTMLCanvasElement) {
         const context = canvas.getContext('2d');
 

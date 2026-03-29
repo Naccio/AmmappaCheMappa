@@ -2,7 +2,7 @@
 /// <reference path="InternalEvent.ts" />
 
 class EventManager {
-    private subscriptions: { [type: string]: any } = {};
+    private readonly subscriptions: { [type: string]: any } = {};
 
     subscribe<T>(type: string, handler: EventHandler<T>) {
         this.getEvent<T>(type).subscribe(handler);

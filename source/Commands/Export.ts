@@ -1,16 +1,20 @@
+/// <reference path="../MapsManager.ts" />
 /// <reference path="../Rendering/MapRenderer.ts" />
-/// <reference path="./Command.ts" />
+/// <reference path="ActiveMapCommand.ts" />
 
-class Export implements Command {
-    public readonly label;
+class Export extends ActiveMapCommand {
 
-    constructor(private renderer: MapRenderer, localizer: Localizer) {
-        this.label = localizer['command_label_export'];
+    constructor(private renderer: MapRenderer, private maps: MapsManager, localizer: Localizer) {
+        super(maps, localizer['command_label_export']);
     }
 
     public execute() {
-        const map = this.renderer.render();
+        const map = this.maps.activeMap;
 
-        Utilities.download('map.png', map.toDataURL());
+        if (map) {
+            const renderedMap = this.renderer.render(map);
+
+            Utilities.download('map.png', renderedMap.toDataURL());
+        }
     }
 }

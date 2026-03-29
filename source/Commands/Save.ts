@@ -1,12 +1,19 @@
-class Save implements Command {
-    public label;
+/// <reference path="ActiveMapCommand.ts" />
 
-    constructor(private mapAccessor: MapAccessor, localizer: Localizer) {
-        this.label = localizer['command_label_save'];
+class Save extends ActiveMapCommand {
+
+    constructor(private maps: MapsManager, localizer: Localizer) {
+        super(maps, localizer['command_label_save']);
     }
 
     public execute() {
-        const json = JSON.stringify(this.mapAccessor.map),
+        const map = this.maps.activeMap?.mapAccessor.map;
+
+        if (map === undefined) {
+            return;
+        }
+
+        const json = JSON.stringify(map),
             content = 'data:text/plain;charset=utf-8,' + encodeURIComponent(json);
 
         Utilities.download('map.json', content);

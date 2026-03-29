@@ -1,26 +1,34 @@
+/// <reference path="../MapAccessor.ts" />
+/// <reference path="../Model/CellIndex.ts" />
+/// <reference path="../Rendering/Drawer.ts" />
+/// <reference path="../Rendering/LayerRenderer.ts" />
+/// <reference path="DrawingLayer.ts" />
+
 class GridLayer implements DrawingLayer, LayerRenderer {
-    private wrapper?: HTMLElement;
+    private wrapper: HTMLElement;
 
-    constructor(private id: string, private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
-    }
-
-    public render(drawer: Drawer) {
-        this.renderAtScale(drawer, this.mapAccessor.map.pixelsPerCell);
-    }
-
-    public setup(container: HTMLElement) {
+    constructor(
+        private id: string,
+        private mapAccessor: MapAccessor,
+        private canvasProvider: CanvasProvider
+    ) {
         const wrapper = document.createElement('div');
 
         wrapper.id = this.id;
 
         this.wrapper = wrapper;
-
-        container.append(wrapper);
-        this.setupCanvas();
     }
 
-    public update(cell: CellIndex) {
+    public get html() {
+        return this.wrapper;
+    }
 
+    public render(drawer?: Drawer) {
+        drawer ??= this.setupCanvas();
+        this.renderAtScale(drawer, this.mapAccessor.map.data.pixelsPerCell);
+    }
+
+    public update() {
     }
 
     public zoom() {
@@ -28,7 +36,7 @@ class GridLayer implements DrawingLayer, LayerRenderer {
     }
 
     private renderAtScale(drawer: Drawer, spacing: number) {
-        const map = this.mapAccessor.map,
+        const map = this.mapAccessor.map.data,
             style: LineStyle = {
                 color: '#999',
                 lineWidth: 2
@@ -51,35 +59,15 @@ class GridLayer implements DrawingLayer, LayerRenderer {
     }
 
     public setupCanvas() {
-        const container = this.wrapper?.parentElement;
-
-        if (!this.wrapper || !container) {
-            return;
-        }
-
-        const drawer = this.canvasProvider.create(this.id + 'canvas', container.clientWidth, container.clientHeight),
-            map = this.mapAccessor.map,
-            spacing = map.pixelsPerCell / map.zoom;
+        const map = this.mapAccessor.map,
+            spacing = map.data.pixelsPerCell / map.zoom,
+            drawer = this.canvasProvider.create(this.id + '-canvas', map.data.columns * spacing, map.data.rows * spacing);
 
         this.renderAtScale(drawer, spacing);
 
         this.wrapper.innerHTML = '';
         this.wrapper.append(drawer.canvas);
-    }
-}
 
-class GridLayerFactory implements LayerAbstractFactory {
-
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
-    }
-
-    public type = 'grid';
-
-    createRenderer(id: string): LayerRenderer {
-        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
-    }
-
-    createDrawing(id: string): DrawingLayer {
-        return new GridLayer(id, this.mapAccessor, this.canvasProvider);
+        return drawer;
     }
 }

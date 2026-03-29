@@ -1,7 +1,11 @@
+/// <reference path="../Localization/Localizer.ts" />
+/// <reference path="UIFactory.ts" />
+
+//TODO: Handle code duplication on dialog creation
 class ModalLauncher {
     private readonly confirmValue = 'confirm';
 
-    public constructor(private localizer: Localizer) {
+    public constructor(private uiFactory: UIFactory, private localizer: Localizer) {
     }
 
     public launch(title: string, content: HTMLElement[]) {
@@ -10,17 +14,12 @@ class ModalLauncher {
             body = document.createElement('div'),
             footer = document.createElement('footer'),
             h1 = document.createElement('h1'),
-            close = document.createElement('button');
+            close = this.uiFactory.createCloseButton(e => {
+                e.preventDefault();
+                dialog.close();
+            });
 
         h1.innerText = title;
-
-        close.type = 'button';
-        close.innerText = 'x';
-        close.tabIndex = -1;
-        close.onclick = (e) => {
-            e.preventDefault();
-            dialog.close();
-        };
 
         header.append(h1);
         header.append(close);
@@ -34,9 +33,19 @@ class ModalLauncher {
         dialog.append(body);
         dialog.append(footer);
 
+        dialog.onclose = () => dialog.remove();
+
         document.body.append(dialog);
 
         dialog.showModal();
+    }
+    
+    public launchConfirm(title: string, message: string, confirmCallback: () => void) {
+        const p = document.createElement('p');
+
+        p.innerText = message;
+
+        this.launchForm(title, [p], confirmCallback);
     }
 
     public launchForm(title: string, content: HTMLElement[], confirmCallback: () => void): void;
@@ -48,21 +57,16 @@ class ModalLauncher {
             footer = document.createElement('footer'),
             form = document.createElement('form'),
             h1 = document.createElement('h1'),
-            close = document.createElement('button'),
+            close = this.uiFactory.createCloseButton(e => {
+                e.preventDefault();
+                dialog.close();
+            }),
             cancel = document.createElement('button'),
             confirm = document.createElement('button');
 
         form.method = 'dialog';
 
         h1.innerText = title;
-
-        close.type = 'button';
-        close.innerText = 'x';
-        close.tabIndex = -1;
-        close.onclick = (e) => {
-            e.preventDefault();
-            dialog.close();
-        };
 
         header.append(h1);
         header.append(close);

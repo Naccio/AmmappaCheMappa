@@ -19,22 +19,17 @@ class LayersManager {
         return this._activeLayer;
     }
 
+    public get mapId() {
+        return this.mapAccessor.id;
+    }
+
     public add(layer: MapLayer) {
         const accessor = this.factory.create(layer);
 
         this.layers.push(accessor);
         this.createEvent.trigger(accessor);
 
-        if (this._activeLayer === undefined) {
-            this.select(layer.id);
-        }
-
         return accessor;
-    }
-
-    public clear() {
-        const layers = [...this.layers];
-        layers.forEach(l => this.delete(l.data.id));
     }
 
     public delete(id: string) {
@@ -51,7 +46,9 @@ class LayersManager {
         const layer = this.getLayer(id);
 
         this._activeLayer = layer;
+        this.mapAccessor.map.activeLayer = id;
 
+        this.mapAccessor.save();
         this.selectEvent.trigger(layer);
     }
 

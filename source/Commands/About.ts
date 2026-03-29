@@ -1,12 +1,11 @@
 /// <reference path="../Localization/Localizer.ts" />
 /// <reference path="../UI/ModalLauncher.ts" />
-/// <reference path="Command.ts" />
+/// <reference path="SimpleCommand.ts" />
 
-class About implements Command {
-    public readonly label;
+class About extends SimpleCommand {
 
     constructor(private modal: ModalLauncher, private localizer: Localizer) {
-        this.label = localizer['command_label_about'];
+        super(localizer['command_label_about']);
     }
 
     public execute() {
@@ -16,7 +15,7 @@ class About implements Command {
 
         quote.innerText = this.localizer['paragraph_about'];
 
-        versionLink.innerText = 'alpha.1';
+        versionLink.innerText = 'alpha.2';
         versionLink.href = 'https://github.com/Naccio/AmmappaCheMappa';
         versionLink.target = '_blank';
 
