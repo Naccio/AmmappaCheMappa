@@ -33,12 +33,20 @@ class LayersManager {
     }
 
     public delete(id: string) {
-        const layer = this.getLayer(id);
+        if (this.layers.length === 1) {
+            return;
+        }
+
+        const layer = this.getLayer(id),
+            map = this.mapAccessor.map;
 
         this.layers = this.layers.filter(l => l.data.id !== id);
         if (this.activeLayer?.data.id === id) {
             this._activeLayer = undefined;
+            this.select(this.layers[0].data.id);
         }
+        this.mapAccessor.map.data.layers = this.layers.map(l => l.data);
+        this.mapAccessor.save();
         this.deleteEvent.trigger(layer.data);
     }
 

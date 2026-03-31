@@ -19,6 +19,7 @@ class MapDrawer implements UIElement {
         this.container = container;
 
         mapManager.layers.onCreate(this.layerCreateHandler);
+        mapManager.layers.onDelete(this.layerDeleteHandler);
         mapManager.layers.onUpdate(this.layerUpdateHandler);
     }
 
@@ -112,6 +113,12 @@ class MapDrawer implements UIElement {
         if (element) {
             element.style.display = c.hidden ? 'none' : 'block';
         }
+    }
+
+    private layerDeleteHandler = (c: MapLayer) => {
+        const element = document.getElementById(c.id);
+
+        element?.remove();
     }
 
     private layerUpdateHandler = (c: CellIndex | MapLayer) => {

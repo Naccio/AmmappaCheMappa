@@ -12,7 +12,8 @@ class MapUIFactory {
         private canvasProvider: CanvasProvider,
         private toolsFactory: ToolsManagerFactory,
         private localizer: Localizer,
-        private store: Store
+        private store: Store,
+        private ui: UIFactory
     ) { }
 
     create(mapManager: MapManager) {
@@ -25,7 +26,7 @@ class MapUIFactory {
         const toolActivator = new ToolActivator(toolbar);
         const drawer = new MapDrawer(mapManager, this.store, uiLayer);
         const drawingArea = new DrawingArea(toolActivator, drawer);
-        const layersPanel = new LayersPanel(layersManager, this.localizer);
+        const layersPanel = new LayersPanel(layersManager, this.ui, this.localizer);
 
         return new MapUI(mapManager, toolbar, drawingArea, layersPanel);
     }
