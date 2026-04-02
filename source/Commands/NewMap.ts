@@ -4,7 +4,7 @@
 class NewMap extends SimpleCommand {
 
     constructor(private mapFactory: MapFactory, private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
-        super(localizer['command_label_new']);
+        super(localizer['command_label_new_map']);
     }
 
     public execute() {

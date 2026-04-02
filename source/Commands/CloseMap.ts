@@ -4,7 +4,7 @@
 class CloseMap extends ActiveMapCommand {
 
     constructor(private maps: MapsManager, localizer: Localizer) {
-        super(maps, localizer['command_label_close']);
+        super(maps, localizer['command_label_close_map']);
     }
 
     public execute() {

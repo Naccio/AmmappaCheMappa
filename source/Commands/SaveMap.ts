@@ -4,7 +4,7 @@
 class SaveMap extends ActiveMapCommand {
 
     constructor(private maps: MapsManager, localizer: Localizer) {
-        super(maps, localizer['command_label_save']);
+        super(maps, localizer['command_label_save_map']);
     }
 
     public execute() {

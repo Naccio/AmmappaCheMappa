@@ -21,10 +21,10 @@ class Welcome implements UIElement {
 
         message.innerText = localizer['paragraph_about'];
 
-        openButton.innerText = localizer['command_label_open'];
+        openButton.innerText = localizer['command_label_open_map'];
         openButton.onclick = () => openCommand.execute();
 
-        newButton.innerText = localizer['command_label_new'];
+        newButton.innerText = localizer['command_label_new_map'];
         newButton.onclick = () => newCommand.execute();
 
         buttons.append(openButton, newButton);

@@ -3,7 +3,7 @@
 class OpenMap extends SimpleCommand {
 
     constructor(private mapsManager: MapsManager, localizer: Localizer) {
-        super(localizer['command_label_open']);
+        super(localizer['command_label_open_map']);
     }
 
     public execute() {

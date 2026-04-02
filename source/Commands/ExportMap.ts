@@ -5,7 +5,7 @@
 class ExportMap extends ActiveMapCommand {
 
     constructor(private renderer: MapRenderer, private maps: MapsManager, localizer: Localizer) {
-        super(maps, localizer['command_label_export']);
+        super(maps, localizer['command_label_export_map']);
     }
 
     public execute() {
