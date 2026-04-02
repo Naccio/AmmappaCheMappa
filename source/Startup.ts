@@ -1,5 +1,6 @@
 /// <reference path='Commands/About.ts'/>
 /// <reference path='Commands/Close.ts'/>
+/// <reference path='Commands/DeleteLayer.ts'/>
 /// <reference path='Commands/Export.ts'/>
 /// <reference path='Commands/Open.ts'/>
 /// <reference path='Commands/New.ts'/>
@@ -56,6 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const exportCommand = new Export(mapRenderer, mapsManager, localizer);
     const closeCommand = new Close(mapsManager, localizer);
 
+    const deleteLayerCommand = new DeleteLayer(mapsManager, localizer);
+
     const aboutCommand = new About(modalLauncher, localizer);
 
     builder
@@ -65,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             m.addCommand(saveCommand);
             m.addCommand(exportCommand);
             m.addCommand(closeCommand);
+        })
+        .addMenu(localizer['menu_label_layer'], m => {
+            m.addCommand(deleteLayerCommand);
         })
         .addMenu(localizer['menu_label_help'], m => {
             m.addCommand(aboutCommand);
