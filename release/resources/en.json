@@ -19,6 +19,7 @@
     "layer_type_grid": "Grid",
     "layer_type_terrain": "Terrain",
     "layer_type_text": "Text",
+    "menu_label_file": "File",
     "menu_label_help": "Help",
     "menu_label_language": "Language",
     "paragraph_about": "Welcome to 'Gio Caboto's Mapping Challenge'. I am Caboto. Now, draw a map.",
