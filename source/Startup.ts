@@ -3,6 +3,7 @@
 /// <reference path='Commands/DeleteLayer.ts'/>
 /// <reference path='Commands/ExportMap.ts'/>
 /// <reference path='Commands/OpenMap.ts'/>
+/// <reference path='Commands/NewLayer.ts'/>
 /// <reference path='Commands/NewMap.ts'/>
 /// <reference path='Commands/SaveMap.ts'/>
 /// <reference path='Contents/Mountains/MountainsRenderer.ts'/>
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const exportCommand = new ExportMap(mapRenderer, mapsManager, localizer);
     const closeCommand = new CloseMap(mapsManager, localizer);
 
+    const newLayerCommand = new NewLayer(mapsManager, modalLauncher, localizer);
     const deleteLayerCommand = new DeleteLayer(mapsManager, localizer);
 
     const aboutCommand = new About(modalLauncher, localizer);
@@ -70,6 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             m.addCommand(closeCommand);
         })
         .addMenu(localizer['menu_label_layer'], m => {
+            m.addCommand(newLayerCommand);
             m.addCommand(deleteLayerCommand);
         })
         .addMenu(localizer['menu_label_help'], m => {

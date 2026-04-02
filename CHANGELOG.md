@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [alpha.3] - UNRELEASED
 
+### Added
+
+- Commands:
+  - **New layer**: allows to create a new layer in the active map
+  - **Delete layer**: allows to delete the selected layer in the active map
+- UI:
+  - **Main menu**:
+    - *Layer* menu: gives access to all layer commands
+
 ### Changed
 
 - UI:
@@ -19,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Added
 
 - Commands:
-  - **Close**: closes the active map
+  - **Close map**: closes the active map
 - UI:
   - **Drawing area**:
     - More than one map can be opened at once
@@ -84,17 +93,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Added
 
 - Commands:
-  - **New**: allows to create a new map with custom dimensions
-  - **Open**: allows to load a map from a JSON file
-  - **Save**: allows to download the current map as a JSON file
-  - **Export**: allows to download the current map as a PNG image
+  - **New map**: allows to create a new map with custom dimensions
+  - **Open map**: allows to load a map from a JSON file
+  - **Save map**: allows to download the current map as a JSON file
+  - **Export map**: allows to download the current map as a PNG image
 - UI:
   - **Drawing area**: main element of the UI, allows to draw the map
     - Scroll to zoom
     - Click and drag with auxiliary button to move
     - Double click auxiliary button to center
   - **Main menu**:
-    - *File* menu: gives access to all commands
+    - *File* menu: gives access to all map commands
     - *Language* menu: allows to change localization
   - **Toolbar**: allows to select a tool to use in the **drawing area**
 - Tools:

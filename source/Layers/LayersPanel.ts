@@ -25,6 +25,7 @@ class LayersPanel implements UIElement {
     private buildLayer(layer: LayerAccessor) {
         const data = layer.data,
             id = data.id,
+            name = data.name ?? data.id,
             mapId = this.layersManager.mapId,
             //HACK: Magic string layer_type_
             type = this.localizer[`layer_type_${data.type}`],
@@ -32,6 +33,7 @@ class LayersPanel implements UIElement {
             check = document.createElement('input'),
             radio = document.createElement('input'),
             label = document.createElement('label'),
+            labelText = document.createElement('span'),
             typeLabel = document.createElement('small'),
             deleteButton = this.uiFactory.createCloseButton(_ => this.layersManager.delete(id));
 
@@ -51,11 +53,13 @@ class LayersPanel implements UIElement {
 
         radio.onchange = () => this.layersManager.select(id);
 
+        labelText.innerText = name;
+
         typeLabel.innerText = `(${type})`;
 
         label.htmlFor = radio.id;
-        label.innerText = data.name;
-        label.title = data.name;
+        label.title = name;
+        label.append(labelText);
         label.append(typeLabel);
         label.append(deleteButton);
 

@@ -27,6 +27,7 @@ class LayersManager {
         const accessor = this.factory.create(layer);
 
         this.layers.push(accessor);
+        this.saveLayers();
         this.createEvent.trigger(accessor);
 
         return accessor;
@@ -37,16 +38,14 @@ class LayersManager {
             return;
         }
 
-        const layer = this.getLayer(id),
-            map = this.mapAccessor.map;
+        const layer = this.getLayer(id);
 
         this.layers = this.layers.filter(l => l.data.id !== id);
         if (this.activeLayer?.data.id === id) {
             this._activeLayer = undefined;
             this.select(this.layers[0].data.id);
         }
-        this.mapAccessor.map.data.layers = this.layers.map(l => l.data);
-        this.mapAccessor.save();
+        this.saveLayers();
         this.deleteEvent.trigger(layer.data);
     }
 
@@ -104,5 +103,10 @@ class LayersManager {
         }
 
         return layer;
+    }
+
+    private saveLayers() {
+        this.mapAccessor.map.data.layers = this.layers.map(l => l.data);
+        this.mapAccessor.save();
     }
 }

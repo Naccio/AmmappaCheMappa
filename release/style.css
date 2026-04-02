@@ -255,9 +255,14 @@ small {
     inset: 0;
 }
 
+.layers label span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: auto;
+}
+
 .layers label small {
-    margin-left: auto;
-    margin-right: var(--spacing-wide);
+    margin: 0 var(--spacing-wide);
 }
 
 .layers input[type="checkbox"] {
