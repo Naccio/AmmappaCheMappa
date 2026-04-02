@@ -15,7 +15,7 @@ class DeleteLayer extends ActiveMapCommand {
     public execute() {
         const layers = this.activeMap?.layers;
 
-        if (layers?.activeLayer === undefined || layers?.layers.length === 1) {
+        if (layers?.activeLayer === undefined || layers.layers.length === 1) {
             return;
         }
 

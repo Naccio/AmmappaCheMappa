@@ -2,7 +2,7 @@
 /// <reference path="../Rendering/MapRenderer.ts" />
 /// <reference path="ActiveMapCommand.ts" />
 
-class Export extends ActiveMapCommand {
+class ExportMap extends ActiveMapCommand {
 
     constructor(private renderer: MapRenderer, private maps: MapsManager, localizer: Localizer) {
         super(maps, localizer['command_label_export']);

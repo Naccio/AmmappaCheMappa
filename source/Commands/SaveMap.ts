@@ -1,6 +1,7 @@
+/// <reference path="../Localization/Localizer.ts" />
 /// <reference path="ActiveMapCommand.ts" />
 
-class Save extends ActiveMapCommand {
+class SaveMap extends ActiveMapCommand {
 
     constructor(private maps: MapsManager, localizer: Localizer) {
         super(maps, localizer['command_label_save']);

@@ -1,6 +1,6 @@
 /// <reference path="SimpleCommand.ts" />
 
-class Open extends SimpleCommand {
+class OpenMap extends SimpleCommand {
 
     constructor(private mapsManager: MapsManager, localizer: Localizer) {
         super(localizer['command_label_open']);

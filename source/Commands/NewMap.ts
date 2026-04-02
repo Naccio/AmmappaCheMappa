@@ -1,7 +1,7 @@
 /// <reference path="../UI/ModalLauncher.ts" />
 /// <reference path="SimpleCommand.ts" />
 
-class New extends SimpleCommand {
+class NewMap extends SimpleCommand {
 
     constructor(private mapFactory: MapFactory, private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
         super(localizer['command_label_new']);

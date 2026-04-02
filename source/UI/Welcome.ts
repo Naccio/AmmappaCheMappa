@@ -1,5 +1,5 @@
-/// <reference path="../Commands/New.ts" />
-/// <reference path="../Commands/Open.ts" />
+/// <reference path="../Commands/NewMap.ts" />
+/// <reference path="../Commands/OpenMap.ts" />
 /// <reference path="../Localization/Localizer.ts" />
 /// <reference path="UIElement.ts" />
 
@@ -7,8 +7,8 @@ class Welcome implements UIElement {
     private readonly container: HTMLDivElement;
 
     constructor(
-        openCommand: Open,
-        newCommand: New,
+        openCommand: OpenMap,
+        newCommand: NewMap,
         localizer: Localizer
     ) {
         const container = document.createElement('div'),

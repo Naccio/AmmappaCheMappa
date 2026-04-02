@@ -1,10 +1,10 @@
 /// <reference path='Commands/About.ts'/>
-/// <reference path='Commands/Close.ts'/>
+/// <reference path='Commands/CloseMap.ts'/>
 /// <reference path='Commands/DeleteLayer.ts'/>
-/// <reference path='Commands/Export.ts'/>
-/// <reference path='Commands/Open.ts'/>
-/// <reference path='Commands/New.ts'/>
-/// <reference path='Commands/Save.ts'/>
+/// <reference path='Commands/ExportMap.ts'/>
+/// <reference path='Commands/OpenMap.ts'/>
+/// <reference path='Commands/NewMap.ts'/>
+/// <reference path='Commands/SaveMap.ts'/>
 /// <reference path='Contents/Mountains/MountainsRenderer.ts'/>
 /// <reference path='Contents/Places/PlaceRenderer.ts'/>
 /// <reference path='Contents/Rivers/RiverRenderer.ts'/>
@@ -51,11 +51,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store, uiFactory);
     const mapRenderer = new MapRenderer();
 
-    const newCommand = new New(mapFactory, mapsManager, modalLauncher, localizer);
-    const openCommand = new Open(mapsManager, localizer);
-    const saveCommand = new Save(mapsManager, localizer);
-    const exportCommand = new Export(mapRenderer, mapsManager, localizer);
-    const closeCommand = new Close(mapsManager, localizer);
+    const newCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);
+    const openCommand = new OpenMap(mapsManager, localizer);
+    const saveCommand = new SaveMap(mapsManager, localizer);
+    const exportCommand = new ExportMap(mapRenderer, mapsManager, localizer);
+    const closeCommand = new CloseMap(mapsManager, localizer);
 
     const deleteLayerCommand = new DeleteLayer(mapsManager, localizer);
 
