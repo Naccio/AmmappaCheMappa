@@ -15,7 +15,7 @@ class MapFactory {
         return {
             zoom: 2,
             position: { x: .5, y: .5 },
-            activeLayer: layers[0].id,
+            activeLayer: layers[2].id,
             data: {
                 id: Utilities.generateId('map'),
                 title,

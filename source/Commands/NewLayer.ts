@@ -1,4 +1,6 @@
+/// <reference path="../Localization/Localizer.ts" />
 /// <reference path="../MapsManager.ts" />
+/// <reference path="../UI/Forms/FormsHelper.ts" />
 /// <reference path="../UI/ModalLauncher.ts" />
 /// <reference path="ActiveMapCommand.ts" />
 
@@ -15,43 +17,17 @@ class NewLayer extends ActiveMapCommand {
             return;
         }
 
-        const nameWrapper = document.createElement('div'),
-            nameInput = document.createElement('input'),
-            nameLabel = document.createElement('label'),
-            typeSelect = document.createElement('select'),
-            typeLabel = document.createElement('label'),
-            terrainTypeOption = document.createElement('option'),
-            gridTypeOption = document.createElement('option'),
-            textTypeOption = document.createElement('option'),
+        const nameInput = FormsHelper.createTextInput(this.localizer['input_label_name']),
+            typeSelect = FormsHelper.createSelect(this.localizer['input_label_type'], [
+                { value: 'terrain', label: this.localizer['layer_type_terrain'] },
+                { value: 'grid', label: this.localizer['layer_type_grid'] },
+                { value: 'text', label: this.localizer['layer_type_text'] }
+            ]),
             title = this.localizer['form_title_new_layer'];
 
-        nameInput.id = 'name';
-        nameInput.type = 'text';
-
-        nameLabel.htmlFor = nameInput.id;
-        nameLabel.innerText = this.localizer['input_label_name'];
-
-        nameWrapper.append(nameLabel, nameInput);
-
-        typeSelect.id = 'type';
         typeSelect.required = true;
 
-        terrainTypeOption.value = 'terrain';
-        terrainTypeOption.innerText = this.localizer['layer_type_terrain'];
-
-        gridTypeOption.value = 'grid';
-        gridTypeOption.innerText = this.localizer['layer_type_grid'];
-
-        textTypeOption.value = 'text';
-        textTypeOption.innerText = this.localizer['layer_type_text'];
-
-        typeSelect.append(terrainTypeOption, gridTypeOption, textTypeOption);
-        typeSelect.value = 'terrain';
-
-        typeLabel.htmlFor = typeSelect.id;
-        typeLabel.innerText = this.localizer['input_label_type'];
-
-        this.modal.launchForm(title, [nameWrapper, typeLabel, typeSelect], () => {
+        this.modal.launchForm(title, [nameInput.html, typeSelect.html], () => {
             const name = nameInput.value === '' ? undefined : nameInput.value,
                 type = typeSelect.value,
                 layer = LayersHelper.create(type, name);

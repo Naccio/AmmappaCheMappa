@@ -1,3 +1,7 @@
+/// <reference path="../Localization/Localizer.ts" />
+/// <reference path="../MapFactory.ts" />
+/// <reference path="../MapsManager.ts" />
+/// <reference path="../UI/Forms/FormsHelper.ts" />
 /// <reference path="../UI/ModalLauncher.ts" />
 /// <reference path="SimpleCommand.ts" />
 
@@ -8,44 +12,18 @@ class NewMap extends SimpleCommand {
     }
 
     public execute() {
-        const titleWrapper = document.createElement('div'),
-            titleInput = document.createElement('input'),
-            titleLabel = document.createElement('label'),
-            columnsInput = document.createElement('input'),
-            columnsLabel = document.createElement('label'),
-            rowsInput = document.createElement('input'),
-            rowsLabel = document.createElement('label'),
+        const titleInput = FormsHelper.createTextInput(this.localizer['input_label_title']),
+            columnsInput = FormsHelper.createNumberInput(this.localizer['input_label_columns'], 5, 500),
+            rowsInput = FormsHelper.createNumberInput(this.localizer['input_label_rows'], 5, 500),
             title = this.localizer['form_title_new_map'];
 
-        titleInput.id = 'title';
-        titleInput.type = 'text';
-
-        titleLabel.htmlFor = titleInput.id;
-        titleLabel.innerText = this.localizer['input_label_title'];
-
-        titleWrapper.append(titleLabel, titleInput);
-
-        columnsInput.id = 'columns';
-        columnsInput.type = 'number';
-        columnsInput.min = '5';
-        columnsInput.max = '100';
         columnsInput.value = '20';
         columnsInput.required = true;
-
-        columnsLabel.htmlFor = columnsInput.id;
-        columnsLabel.innerText = this.localizer['input_label_columns'];
-
-        rowsInput.id = 'rows';
-        rowsInput.type = 'number';
-        rowsInput.min = '5';
-        rowsInput.max = '100';
+        
         rowsInput.value = '20';
-        columnsInput.required = true;
+        rowsInput.required = true;
 
-        rowsLabel.htmlFor = rowsInput.id;
-        rowsLabel.innerText = this.localizer['input_label_rows'];
-
-        this.modal.launchForm(title, [titleWrapper, columnsLabel, columnsInput, rowsLabel, rowsInput], () => {
+        this.modal.launchForm(title, [titleInput.html, columnsInput.html, rowsInput.html], () => {
             const title = titleInput.value === '' ? undefined : titleInput.value,
                 columns = parseInt(columnsInput.value),
                 rows = parseInt(rowsInput.value),
