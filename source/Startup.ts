@@ -2,6 +2,7 @@
 /// <reference path='Commands/CloseMap.ts'/>
 /// <reference path='Commands/DeleteLayer.ts'/>
 /// <reference path='Commands/EditLayer.ts'/>
+/// <reference path='Commands/EditMap.ts'/>
 /// <reference path='Commands/ExportMap.ts'/>
 /// <reference path='Commands/OpenMap.ts'/>
 /// <reference path='Commands/NewLayer.ts'/>
@@ -53,11 +54,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store, uiFactory);
     const mapRenderer = new MapRenderer();
 
-    const newCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);
-    const openCommand = new OpenMap(mapsManager, localizer);
-    const saveCommand = new SaveMap(mapsManager, localizer);
-    const exportCommand = new ExportMap(mapRenderer, mapsManager, localizer);
-    const closeCommand = new CloseMap(mapsManager, localizer);
+    const newMapCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);
+    const openMapCommand = new OpenMap(mapsManager, localizer);
+    const editMapCommand = new EditMap(mapsManager, modalLauncher, localizer);
+    const saveMapCommand = new SaveMap(mapsManager, localizer);
+    const exportMapCommand = new ExportMap(mapRenderer, mapsManager, localizer);
+    const closeMapCommand = new CloseMap(mapsManager, localizer);
 
     const newLayerCommand = new NewLayer(mapsManager, modalLauncher, localizer);
     const editLayerCommand = new EditLayer(mapsManager, modalLauncher, localizer);
@@ -67,11 +69,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     builder
         .addMenu(localizer['menu_label_file'], m => {
-            m.addCommand(newCommand);
-            m.addCommand(openCommand);
-            m.addCommand(saveCommand);
-            m.addCommand(exportCommand);
-            m.addCommand(closeCommand);
+            m.addCommand(newMapCommand);
+            m.addCommand(openMapCommand);
+            m.addCommand(editMapCommand);
+            m.addCommand(saveMapCommand);
+            m.addCommand(exportMapCommand);
+            m.addCommand(closeMapCommand);
         })
         .addMenu(localizer['menu_label_layer'], m => {
             m.addCommand(newLayerCommand);
@@ -88,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             m.alignRight();
         });
 
-    const welcome = new Welcome(openCommand, newCommand, localizer);
+    const welcome = new Welcome(openMapCommand, newMapCommand, localizer);
     const mainArea = new MainArea(mapsManager, mapUIFactory, uiFactory, welcome);
 
     builder.addUI(mainArea);

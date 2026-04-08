@@ -3,6 +3,7 @@
 
 class MapsManager {
     private readonly addEvent = new InternalEvent<MapManager>();
+    private readonly updateEvent = new InternalEvent<MapData>();
     private readonly removeEvent = new InternalEvent<string>();
     private readonly activateEvent = new InternalEvent<MapManager | undefined>();
 
@@ -64,12 +65,25 @@ class MapsManager {
         this.activateEvent.trigger(map);
     }
 
+    public update(id: string, action: (map: MapData) => void) {
+        const mapManager = this.maps[id],
+            map = mapManager.mapAccessor.map;
+
+        action(map.data);
+        this.store.saveMap(map);
+        this.updateEvent.trigger(map.data);
+    }
+
     public onActivate(handler: EventHandler<MapManager | undefined>) {
         this.activateEvent.subscribe(handler);
     }
 
     public onAdd(handler: EventHandler<MapManager>) {
         this.addEvent.subscribe(handler);
+    }
+
+    public onUpdate(handler: EventHandler<MapData>) {
+        this.updateEvent.subscribe(handler);
     }
 
     public onRemove(handler: EventHandler<string>) {

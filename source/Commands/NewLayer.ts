@@ -28,8 +28,8 @@ class NewLayer extends ActiveMapCommand {
         typeSelect.required = true;
 
         this.modal.launchForm(title, [nameInput.html, typeSelect.html], () => {
-            const name = nameInput.value === '' ? undefined : nameInput.value,
-                type = typeSelect.value,
+            const name = nameInput.value,
+                type = typeSelect.value!,
                 layer = LayersHelper.create(type, name);
 
             map.layers.add(layer);

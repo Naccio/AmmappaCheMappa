@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Added
 
 - Commands:
+  - **Edit map**: allows to edit the active map
   - **New layer**: allows to create a new layer in the active map
   - **Edit layer**: allows to edit the selected layer in the active map
   - **Delete layer**: allows to delete the selected layer in the active map
@@ -20,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Changed
 
 - UI:
+  - **Main menu**:
+    - *File* menu: added **Edit map** command
   - **Layers Panel**:
     - Layers have a "close" button
 

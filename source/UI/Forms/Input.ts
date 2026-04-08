@@ -41,10 +41,12 @@ class Input implements UIElement {
     }
 
     public get value() {
-        return this.input.value;
+        return this.input.value === ''
+            ? undefined
+            : this.input.value;
     }
 
-    public set value(value: string) {
-        this.input.value = value;
+    public set value(value: string | undefined) {
+        this.input.value = value ?? '';
     }
 }

@@ -34,7 +34,7 @@ class TextTool implements Tool {
         textInput.required = true;
 
         this.modal.launchForm(title, [textInput.html, sizeInput.html], () => {
-            const fontSize = parseInt(sizeInput.value) / 100,
+            const fontSize = parseInt(sizeInput.value!) / 100,
                 layer = TextHelper.layer,
                 normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
                 position = VectorMath.round(normalizedPosition, 2),
@@ -42,7 +42,7 @@ class TextTool implements Tool {
                     type: TextHelper.objectType,
                     layer,
                     position,
-                    value: textInput.value,
+                    value: textInput.value!,
                     fontSize
                 };
 

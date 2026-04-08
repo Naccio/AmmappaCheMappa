@@ -24,9 +24,9 @@ class NewMap extends SimpleCommand {
         rowsInput.required = true;
 
         this.modal.launchForm(title, [titleInput.html, columnsInput.html, rowsInput.html], () => {
-            const title = titleInput.value === '' ? undefined : titleInput.value,
-                columns = parseInt(columnsInput.value),
-                rows = parseInt(rowsInput.value),
+            const title = titleInput.value,
+                columns = parseInt(columnsInput.value!),
+                rows = parseInt(rowsInput.value!),
                 map = this.mapFactory.create(title, columns, rows);
 
             this.mapsManager.add(map);

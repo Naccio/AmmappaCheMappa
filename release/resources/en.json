@@ -1,21 +1,27 @@
 {
     "button_label_cancel": "Cancel",
     "button_label_confirm": "Confirm",
+
     "command_label_about": "About",
     "command_label_close_map": "Close map",
     "command_label_delete_layer": "Delete layer",
     "command_label_edit_layer": "Edit layer...",
+    "command_label_edit_map": "Edit map...",
     "command_label_export_map": "Export map",
     "command_label_new_layer": "New layer...",
     "command_label_new_map": "New map...",
     "command_label_open_map": "Open map...",
     "command_label_save_map": "Save map",
+
     "confirm_close_map_title": "Close the map?",
     "confirm_close_map_message": "All its data will be lost!",
+
     "form_title_edit_layer": "Edit layer",
+    "form_title_edit_map": "Edit map",
     "form_title_new_layer": "New layer",
     "form_title_new_map": "New map",
     "form_title_new_text": "New text",
+
     "input_label_columns": "Columns",
     "input_label_name": "Name",
     "input_label_rows": "Rows",
@@ -23,14 +29,18 @@
     "input_label_text": "Text",
     "input_label_title": "Title",
     "input_label_type": "Type",
+
     "layer_type_grid": "Grid",
     "layer_type_terrain": "Terrain",
     "layer_type_text": "Text",
+
     "menu_label_file": "File",
     "menu_label_help": "Help",
     "menu_label_language": "Language",
     "menu_label_layer": "Layer",
+
     "paragraph_about": "Welcome to 'Gio Caboto's Mapping Challenge'. I am Caboto. Now, draw a map.",
+
     "tool_label_eraser": "Eraser",
     "tool_label_mountains": "Mountains",
     "tool_label_places": "Place",

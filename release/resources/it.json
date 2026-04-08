@@ -1,21 +1,27 @@
 {
     "button_label_cancel": "Annulla",
     "button_label_confirm": "Conferma",
+
     "command_label_about": "Informazioni",
     "command_label_close_map": "Chiudi mappa",
     "command_label_delete_layer": "Elimina livello",
     "command_label_edit_layer": "Modifica livello...",
+    "command_label_edit_map": "Modifica mappa...",
     "command_label_export_map": "Esporta mappa",
     "command_label_new_layer": "Nuovo livello...",
     "command_label_new_map": "Nuova mappa...",
     "command_label_open_map": "Apri mappa...",
     "command_label_save_map": "Salva mappa",
+
     "confirm_close_map_title": "Chiudere la mappa?",
     "confirm_close_map_message": "Tutti i suoi dati saranno persi!",
+
     "form_title_edit_layer": "Modifica livello",
+    "form_title_edit_map": "Modifica mappa",
     "form_title_new_layer": "Nuovo livello",
     "form_title_new_map": "Nuova mappa",
     "form_title_new_text": "Nuovo testo",
+
     "input_label_columns": "Colonne",
     "input_label_name": "Name",
     "input_label_rows": "Righe",
@@ -23,14 +29,18 @@
     "input_label_text": "Testo",
     "input_label_type": "Tipo",
     "input_label_title": "Titolo",
+
     "layer_type_grid": "Griglia",
     "layer_type_terrain": "Terreno",
     "layer_type_text": "Testo",
+
     "menu_label_file": "File",
     "menu_label_help": "Aiuto",
     "menu_label_language": "Lingua",
     "menu_label_layer": "Livello",
+
     "paragraph_about": "Benvenuto ad 'Ammappa che mappa di Gio Caboto', io sono Caboto. Ora disegna una mappa.",
+
     "tool_label_eraser": "Gomma",
     "tool_label_mountains": "Montagne",
     "tool_label_places": "Luogo",
