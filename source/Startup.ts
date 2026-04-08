@@ -1,6 +1,7 @@
 /// <reference path='Commands/About.ts'/>
 /// <reference path='Commands/CloseMap.ts'/>
 /// <reference path='Commands/DeleteLayer.ts'/>
+/// <reference path='Commands/EditLayer.ts'/>
 /// <reference path='Commands/ExportMap.ts'/>
 /// <reference path='Commands/OpenMap.ts'/>
 /// <reference path='Commands/NewLayer.ts'/>
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const closeCommand = new CloseMap(mapsManager, localizer);
 
     const newLayerCommand = new NewLayer(mapsManager, modalLauncher, localizer);
+    const editLayerCommand = new EditLayer(mapsManager, modalLauncher, localizer);
     const deleteLayerCommand = new DeleteLayer(mapsManager, localizer);
 
     const aboutCommand = new About(modalLauncher, localizer);
@@ -73,6 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
         .addMenu(localizer['menu_label_layer'], m => {
             m.addCommand(newLayerCommand);
+            m.addCommand(editLayerCommand);
             m.addCommand(deleteLayerCommand);
         })
         .addMenu(localizer['menu_label_help'], m => {

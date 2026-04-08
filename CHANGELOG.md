@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 - Commands:
   - **New layer**: allows to create a new layer in the active map
+  - **Edit layer**: allows to edit the selected layer in the active map
   - **Delete layer**: allows to delete the selected layer in the active map
 - UI:
   - **Main menu**:
