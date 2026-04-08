@@ -6,7 +6,7 @@ class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
     private readonly deleteEvent = new InternalEvent<MapLayer>();
     private readonly selectEvent = new InternalEvent<LayerAccessor>();
-    private readonly updateEvent = new InternalEvent<CellIndex | MapLayer>();
+    private readonly updateEvent = new InternalEvent<CellIndex>();
 
     private _activeLayer?: LayerAccessor;
 
@@ -40,13 +40,13 @@ class LayersManager {
 
         const layer = this.getLayer(id);
 
-        this.layers = this.layers.filter(l => l.data.id !== id);
-        if (this.activeLayer?.data.id === id) {
+        this.layers = this.layers.filter(l => l.id !== id);
+        if (this.activeLayer?.id === id) {
             this._activeLayer = undefined;
-            this.select(this.layers[0].data.id);
+            this.select(this.layers[0].id);
         }
         this.saveLayers();
-        this.deleteEvent.trigger(layer.data);
+        this.deleteEvent.trigger(layer.value);
     }
 
     public select(id: string) {
@@ -64,7 +64,7 @@ class LayersManager {
             return;
         }
 
-        objects.forEach(o => o.layer = this._activeLayer!.data.id);
+        objects.forEach(o => o.layer = this._activeLayer!.id);
 
         this.mapAccessor.setObjects(index, objects);
 
@@ -74,12 +74,11 @@ class LayersManager {
     public update(id: string, action: (layer: MapLayer) => void) {
         const layer = this.getLayer(id);
 
-        action(layer.data);
+        layer.update(action);
         this.mapAccessor.save();
-        this.updateEvent.trigger(layer.data);
     }
 
-    public onUpdate(handler: EventHandler<CellIndex | MapLayer>) {
+    public onUpdate(handler: EventHandler<CellIndex>) {
         this.updateEvent.subscribe(handler);
     }
 
@@ -96,7 +95,7 @@ class LayersManager {
     }
 
     private getLayer(id: string) {
-        const layer = this.layers.find(l => l.data.id === id);
+        const layer = this.layers.find(l => l.id === id);
 
         if (layer === undefined) {
             throw new Error(`Layer '${id}' does not exist.`);
@@ -106,7 +105,7 @@ class LayersManager {
     }
 
     private saveLayers() {
-        this.mapAccessor.map.data.layers = this.layers.map(l => l.data);
+        this.mapAccessor.map.data.layers = this.layers.map(l => l.value);
         this.mapAccessor.save();
     }
 }

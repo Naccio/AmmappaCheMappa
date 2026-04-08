@@ -12,7 +12,6 @@ class LayersPanel implements UIElement {
         container.className = 'layers';
 
         layersManager.onCreate(l => this.buildLayer(l));
-        layersManager.onUpdate(l => this.updateLayer(l));
         layersManager.onDelete(l => this.removeLayer(l.id));
         layersManager.onSelect(l => this.selectLayer(l));
 
@@ -24,7 +23,7 @@ class LayersPanel implements UIElement {
     }
 
     private buildLayer(layer: LayerAccessor) {
-        const data = layer.data,
+        const data = layer.value,
             id = data.id,
             name = this.getName(data),
             mapId = this.layersManager.mapId,
@@ -67,6 +66,14 @@ class LayersPanel implements UIElement {
         wrapper.append(check);
         wrapper.append(radio);
         wrapper.append(label);
+
+        layer.subscribe(l => {
+            const name = this.getName(l);
+
+            label.title = name;
+            labelText.innerText = name;
+        });
+
         this.container.append(wrapper);
         this.layers[id] = wrapper;
     }
@@ -85,21 +92,7 @@ class LayersPanel implements UIElement {
     }
 
     private selectLayer(layer: LayerAccessor) {
-        const id = this.getRadioId(layer.data.id);
+        const id = this.getRadioId(layer.id);
         document.getElementById(id)?.click();
-    }
-
-    private updateLayer(layer: MapLayer | CellIndex) {
-        // CellIndex.column
-        if ('column' in layer) {
-            return;
-        }
-
-        const name = this.getName(layer),
-            html = this.layers[layer.id];
-
-        //TODO: This could be done more cleanly
-        html.getElementsByTagName('label')[0].title = name;
-        html.getElementsByTagName('span')[0].innerText = name;
     }
 }

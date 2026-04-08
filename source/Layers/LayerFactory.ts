@@ -9,11 +9,11 @@ class LayerFactory {
     public create(layer: MapLayer): LayerAccessor {
         const factory = this.getFactory(layer.type);
 
-        return {
-            data: layer,
-            renderer: factory.createRenderer(layer.id),
-            drawing: factory.createDrawing(layer.id)
-        };
+        return new LayerAccessor(
+            layer,
+            factory.createDrawing(layer.id),
+            factory.createRenderer(layer.id)
+        );
     }
 
     private getFactory(type: string) {

@@ -18,20 +18,21 @@ class EditLayer extends ActiveMapCommand {
             return;
         }
 
-        const type = layer.data.type,
+        const data = layer.value,
+            type = data.type,
             nameInput = FormsHelper.createTextInput(this.localizer['input_label_name']),
             typeSelect = FormsHelper.createSelect(this.localizer['input_label_type'], [
                 { value: type, label: this.localizer['layer_type_' + type] }
             ]),
             title = this.localizer['form_title_edit_layer'];
 
-        nameInput.value = layer.data.name ?? '';
+        nameInput.value = data.name ?? '';
         typeSelect.disabled = true;
 
         this.modal.launchForm(title, [nameInput.html, typeSelect.html], () => {
             const name = nameInput.value === '' ? undefined : nameInput.value;
 
-            layers?.update(layer.data.id, l => l.name = name);
+            layers?.update(layer.id, l => l.name = name);
         });
     }
 }

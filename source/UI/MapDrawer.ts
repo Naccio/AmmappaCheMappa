@@ -104,7 +104,7 @@ class MapDrawer implements UIElement {
     private layerCreateHandler = (c: LayerAccessor) => {
         this.container.append(c.drawing.html);
         c.renderer.render();
-        this.layerDataUpdateHandler(c.data);
+        this.layerDataUpdateHandler(c.value);
     }
 
     private layerDataUpdateHandler = (c: MapLayer) => {
@@ -121,11 +121,7 @@ class MapDrawer implements UIElement {
         element?.remove();
     }
 
-    private layerUpdateHandler = (c: CellIndex | MapLayer) => {
-        if ('id' in c) {
-            this.layerDataUpdateHandler(c);
-        } else {
-            this.mapManager.layers.activeLayer?.drawing.update(c);
-        }
+    private layerUpdateHandler = (c: CellIndex) => {
+        this.mapManager.layers.activeLayer?.drawing.update(c);
     }
 }

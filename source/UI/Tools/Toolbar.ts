@@ -84,7 +84,7 @@ class Toolbar implements UIElement {
 
         const layerTypes = tool.configuration.layerTypes;
 
-        return layerTypes.length === 0 || layerTypes.includes(layer.data.type);
+        return layerTypes.length === 0 || layerTypes.includes(layer.value.type);
     }
 
     private layerSelectHandle = (layer: LayerAccessor) => {

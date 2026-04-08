@@ -7,7 +7,7 @@ class MapRenderer {
 
         const map = mapManager.mapAccessor.map.data,
             canvas = document.createElement('canvas'),
-            layers = mapManager.layers.layers.filter(l => !l.data.hidden);
+            layers = mapManager.layers.layers.filter(l => !l.value.hidden);
 
         canvas.width = map.columns * map.pixelsPerCell;
         canvas.height = map.rows * map.pixelsPerCell;

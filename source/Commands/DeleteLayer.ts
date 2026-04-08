@@ -19,7 +19,7 @@ class DeleteLayer extends ActiveMapCommand {
             return;
         }
 
-        layers.delete(layers.activeLayer.data.id);
+        layers.delete(layers.activeLayer.id);
     }
 
     private activeLayerHandler() {
