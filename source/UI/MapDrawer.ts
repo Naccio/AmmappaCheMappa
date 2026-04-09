@@ -20,7 +20,6 @@ class MapDrawer implements UIElement {
 
         mapManager.layers.onCreate(this.layerCreateHandler);
         mapManager.layers.onDelete(this.layerDeleteHandler);
-        mapManager.layers.onUpdate(this.layerUpdateHandler);
     }
 
     public get html() {
@@ -104,24 +103,12 @@ class MapDrawer implements UIElement {
     private layerCreateHandler = (c: LayerAccessor) => {
         this.container.append(c.drawing.html);
         c.renderer.render();
-        this.layerDataUpdateHandler(c.value);
-    }
-
-    private layerDataUpdateHandler = (c: MapLayer) => {
-        const element = document.getElementById(c.id);
-
-        if (element) {
-            element.style.display = c.hidden ? 'none' : 'block';
-        }
+        c.subscribe(l => c.drawing.html.style.display = l.hidden ? 'none' : 'block');
     }
 
     private layerDeleteHandler = (c: MapLayer) => {
         const element = document.getElementById(c.id);
 
         element?.remove();
-    }
-
-    private layerUpdateHandler = (c: CellIndex) => {
-        this.mapManager.layers.activeLayer?.drawing.update(c);
     }
 }

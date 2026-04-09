@@ -14,6 +14,7 @@ class Observable<T> {
     }
 
     public subscribe(action: (value: T) => void) {
+        action(this._value);
         this.event.subscribe(action);
     }
 

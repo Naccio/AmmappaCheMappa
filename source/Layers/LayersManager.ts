@@ -6,7 +6,6 @@ class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
     private readonly deleteEvent = new InternalEvent<MapLayer>();
     private readonly selectEvent = new InternalEvent<LayerAccessor>();
-    private readonly updateEvent = new InternalEvent<CellIndex>();
 
     private _activeLayer?: LayerAccessor;
 
@@ -67,8 +66,7 @@ class LayersManager {
         objects.forEach(o => o.layer = this._activeLayer!.id);
 
         this.mapAccessor.setObjects(index, objects);
-
-        this.updateEvent.trigger(index);
+        this._activeLayer.drawing.update(index);
     }
 
     public update(id: string, action: (layer: MapLayer) => void) {
@@ -76,10 +74,6 @@ class LayersManager {
 
         layer.update(action);
         this.mapAccessor.save();
-    }
-
-    public onUpdate(handler: EventHandler<CellIndex>) {
-        this.updateEvent.subscribe(handler);
     }
 
     public onSelect(handler: EventHandler<LayerAccessor>) {

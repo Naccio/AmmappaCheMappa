@@ -53,12 +53,9 @@ class LayersPanel implements UIElement {
 
         radio.onchange = () => this.layersManager.select(id);
 
-        labelText.innerText = name;
-
         typeLabel.innerText = `(${type})`;
 
         label.htmlFor = radio.id;
-        label.title = name;
         label.append(labelText);
         label.append(typeLabel);
         label.append(deleteButton);
