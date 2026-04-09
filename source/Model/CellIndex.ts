@@ -1,4 +1,4 @@
-interface CellIndex {
+export interface CellIndex {
     column: number;
     row: number;
 }

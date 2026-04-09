@@ -1,6 +1,6 @@
-/// <reference path='ApplicationBuilder.ts'/>
+import { ApplicationBuilder } from "./ApplicationBuilder";
 
-class Application {
+export class Application {
     constructor(private startupAction: () => void) {
     }
 

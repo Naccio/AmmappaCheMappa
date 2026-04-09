@@ -1,12 +1,12 @@
-/// <reference path="../Model/MapObject.ts" />
-/// <reference path="CellDrawer.ts" />
-/// <reference path="ObjectRenderer.ts" />
+import { MapObject } from "../Model/MapObject";
+import { CellDrawer } from "./CellDrawer";
+import { ObjectRenderer } from "./ObjectRenderer";
 
-abstract class GenericObjectRenderer<T extends MapObject> implements ObjectRenderer {
+export abstract class GenericObjectRenderer<T extends MapObject> implements ObjectRenderer {
 
-    protected abstract is(object: MapObject) : object is T;
+    protected abstract is(object: MapObject): object is T;
 
-    protected abstract draw(object: T, drawer: CellDrawer) : void;
+    protected abstract draw(object: T, drawer: CellDrawer): void;
 
     public render(object: MapObject, drawer: CellDrawer): void {
         if (this.is(object)) {

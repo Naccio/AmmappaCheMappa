@@ -1,27 +1,36 @@
-/// <reference path='Commands/About.ts'/>
-/// <reference path='Commands/CloseMap.ts'/>
-/// <reference path='Commands/DeleteLayer.ts'/>
-/// <reference path='Commands/EditLayer.ts'/>
-/// <reference path='Commands/EditMap.ts'/>
-/// <reference path='Commands/ExportMap.ts'/>
-/// <reference path='Commands/OpenMap.ts'/>
-/// <reference path='Commands/NewLayer.ts'/>
-/// <reference path='Commands/NewMap.ts'/>
-/// <reference path='Commands/SaveMap.ts'/>
-/// <reference path='Contents/Mountains/MountainsRenderer.ts'/>
-/// <reference path='Contents/Places/PlaceRenderer.ts'/>
-/// <reference path='Contents/Rivers/RiverRenderer.ts'/>
-/// <reference path='Contents/Roads/RoadRenderer.ts'/>
-/// <reference path='Contents/Text/TextRenderer.ts'/>
-/// <reference path='Contents/Trees/TreeRenderer.ts'/>
-/// <reference path='Localization/LocalizationHelper.ts'/>
-/// <reference path='Localization/LocalizerFactory.ts'/>
-/// <reference path='Store.ts'/>
-/// <reference path='UI/ApplicationUI.ts'/>
-/// <reference path='UI/CanvasProvider.ts'/>
-/// <reference path='UI/MainArea.ts'/>
-/// <reference path='UI/MapUIFactory.ts'/>
-/// <reference path='UI/Menu/LanguageMenuEntry.ts'/>
+import { Application } from "./Application";
+import { About } from "./Commands/About";
+import { CloseMap } from "./Commands/CloseMap";
+import { DeleteLayer } from "./Commands/DeleteLayer";
+import { EditLayer } from "./Commands/EditLayer";
+import { EditMap } from "./Commands/EditMap";
+import { ExportMap } from "./Commands/ExportMap";
+import { NewLayer } from "./Commands/NewLayer";
+import { NewMap } from "./Commands/NewMap";
+import { OpenMap } from "./Commands/OpenMap";
+import { SaveMap } from "./Commands/SaveMap";
+import { MountainFactory } from "./Contents/Mountains/MountainFactory";
+import { MountainsRenderer } from "./Contents/Mountains/MountainsRenderer";
+import { PlaceRenderer } from "./Contents/Places/PlaceRenderer";
+import { RiverRenderer } from "./Contents/Rivers/RiverRenderer";
+import { RoadRenderer } from "./Contents/Roads/RoadRenderer";
+import { TextRenderer } from "./Contents/Text/TextRenderer";
+import { TreeRenderer } from "./Contents/Trees/TreeRenderer";
+import { LocalizationHelper } from "./Localization/LocalizationHelper";
+import { LocalizerFactory } from "./Localization/LocalizerFactory";
+import { MapFactory } from "./MapFactory";
+import { MapManagerFactory } from "./MapManagerFactory";
+import { MapsManager } from "./MapsManager";
+import { MapRenderer } from "./Rendering/MapRenderer";
+import { Store } from "./Store";
+import { CanvasProvider } from "./UI/CanvasProvider";
+import { MainArea } from "./UI/MainArea";
+import { MapUIFactory } from "./UI/MapUIFactory";
+import { LanguageMenuEntry } from "./UI/Menu/LanguageMenuEntry";
+import { ModalLauncher } from "./UI/ModalLauncher";
+import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
+import { UIFactory } from "./UI/UIFactory";
+import { Welcome } from "./UI/Welcome";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();

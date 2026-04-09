@@ -1,10 +1,11 @@
-/// <reference path="../../MathHelper.ts" />
-/// <reference path="../../VectorMath.ts" />
+import { MathHelper } from "../../MathHelper";
+import { MapObject } from "../../Model/MapObject";
+import { Tree } from "./Tree";
 
-class  TreesHelper {
+export class TreesHelper {
     public static readonly objectType = 'tree';
 
-    public static create() : Tree {
+    public static create(): Tree {
         const crownWidth = MathHelper.random(.4, .6),
             height = MathHelper.random(.8, .95),
             crownTrunkRatio = MathHelper.random(.2, .35),
@@ -25,7 +26,7 @@ class  TreesHelper {
         }
     }
 
-    public static isTree(object: MapObject) : object is Tree {
+    public static isTree(object: MapObject): object is Tree {
         return object.type === this.objectType;
     }
 }

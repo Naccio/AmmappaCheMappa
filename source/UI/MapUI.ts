@@ -1,10 +1,10 @@
-/// <reference path="../MapManager.ts" />
-/// <reference path="../Layers/LayersPanel.ts" />
-/// <reference path="DrawingArea.ts" />
-/// <reference path="Tools/Toolbar.ts" />
-/// <reference path="UIElement.ts" />
+import { LayersPanel } from "../Layers/LayersPanel";
+import { MapManager } from "../MapManager";
+import { DrawingArea } from "./DrawingArea";
+import { Toolbar } from "./Tools/Toolbar";
+import { UIElement } from "./UIElement";
 
-class MapUI implements UIElement {
+export class MapUI implements UIElement {
 
     private container: HTMLDivElement;
 

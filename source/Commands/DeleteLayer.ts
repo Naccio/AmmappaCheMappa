@@ -1,7 +1,9 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="ActiveMapCommand.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { MapManager } from "../MapManager";
+import { MapsManager } from "../MapsManager";
+import { ActiveMapCommand } from "./ActiveMapCommand";
 
-class DeleteLayer extends ActiveMapCommand {
+export class DeleteLayer extends ActiveMapCommand {
 
     private readonly registeredTo = new Set<string>();
 

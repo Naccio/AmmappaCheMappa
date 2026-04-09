@@ -6,7 +6,7 @@ campaign and couldn't find a suitable tool for drawing world maps.
 The main objectives I have are:
  - Have fun
  - Learn some TypeScript
- - Use zero dependencies
+ - Use zero frontend dependencies
  - Use zero backend
  - Use modern HTML features
 

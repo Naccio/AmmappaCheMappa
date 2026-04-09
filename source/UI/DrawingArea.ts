@@ -1,11 +1,12 @@
-/// <reference path="../Layers/LayersManager.ts" />
-/// <reference path="../Model/EditorMap.ts" />
-/// <reference path="../Model/Point.ts" />
-/// <reference path="DrawingUI.ts" />
-/// <reference path="MapDrawer.ts" />
-/// <reference path="UIElement.ts" />
+import { Point } from "../Model/Point";
+import { Vector } from "../Model/Vector";
+import { Utilities } from "../Utilities";
+import { VectorMath } from "../VectorMath";
+import { MapDrawer } from "./MapDrawer";
+import { ToolActivator } from "./Tools/ToolActivator";
+import { UIElement } from "./UIElement";
 
-class DrawingArea implements UIElement {
+export class DrawingArea implements UIElement {
     private readonly doubleClickThreshold = 250;
     private readonly wrapper: HTMLElement;
 

@@ -1,7 +1,7 @@
-/// <reference path="../../Utilities.ts" />
-/// <reference path="../UIElement.ts" />
+import { Utilities } from "../../Utilities";
+import { UIElement } from "../UIElement";
 
-class Input implements UIElement {
+export class Input implements UIElement {
     private readonly container: HTMLDivElement;
 
     public constructor(protected readonly input: HTMLInputElement | HTMLSelectElement, label: string) {

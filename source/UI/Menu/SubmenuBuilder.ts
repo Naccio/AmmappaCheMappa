@@ -1,9 +1,9 @@
-/// <reference path="../../Commands/Command.ts" />
-/// <reference path="CommandMenuEntry.ts" />
-/// <reference path="MenuEntry.ts" />
-/// <reference path="SubmenuMenuEntry.ts" />
+import { Command } from "../../Commands/Command";
+import { CommandMenuEntry } from "./CommandMenuEntry";
+import { MenuEntry } from "./MenuEntry";
+import { SubmenuMenuEntry, SubmenuMenuSettings } from "./SubmenuMenuEntry";
 
-class SubmenuBuilder {
+export class SubmenuBuilder {
     private readonly entries: MenuEntry[] = [];
     private readonly settings: SubmenuMenuSettings = {};
 

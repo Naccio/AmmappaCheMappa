@@ -1,6 +1,15 @@
-/// <reference path="River.ts" />
+import { GridHelper } from "../../GridHelper";
+import { LayersManager } from "../../Layers/LayersManager";
+import { MapAccessor } from "../../MapAccessor";
+import { MathHelper } from "../../MathHelper";
+import { CellIndex } from "../../Model/CellIndex";
+import { Point } from "../../Model/Point";
+import { Tool } from "../../UI/Tools/Tool";
+import { VectorMath } from "../../VectorMath";
+import { River } from "./River";
+import { RiversHelper } from "./RiversHelper";
 
-class RiversTool implements Tool {
+export class RiversTool implements Tool {
     public readonly configuration = {
         id: 'rivers',
         labelResourceId: 'tool_label_rivers',

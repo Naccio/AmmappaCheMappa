@@ -1,8 +1,13 @@
-/// <reference path='../../UI/Tools/CellTool.ts'/>
-/// <reference path='Tree.ts'/>
-/// <reference path='TreesHelper.ts'/>
+import { LayersManager } from "../../Layers/LayersManager";
+import { MapAccessor } from "../../MapAccessor";
+import { MathHelper } from "../../MathHelper";
+import { CellIndex } from "../../Model/CellIndex";
+import { CellTool } from "../../UI/Tools/CellTool";
+import { VectorMath } from "../../VectorMath";
+import { Tree } from "./Tree";
+import { TreesHelper } from "./TreesHelper";
 
-class TreesTool extends CellTool {
+export class TreesTool extends CellTool {
     public readonly configuration = {
         id: 'trees',
         labelResourceId: 'tool_label_trees',

@@ -1,8 +1,8 @@
-/// <reference path="../MapManager.ts" />
-/// <reference path="../MapsManager.ts" />
-/// <reference path="ConditionalCommand.ts" />
+import { MapManager } from "../MapManager";
+import { MapsManager } from "../MapsManager";
+import { ConditionalCommand } from "./ConditionalCommand";
 
-abstract class ActiveMapCommand extends ConditionalCommand {
+export abstract class ActiveMapCommand extends ConditionalCommand {
 
     private _activeMap?: MapManager;
 

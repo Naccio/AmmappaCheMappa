@@ -1,10 +1,8 @@
-/// <reference path="../Events/ApplicationEvent.ts" />
-/// <reference path="../Events/InternalEvent.ts" />
-/// <reference path="../MapManager.ts" />
-/// <reference path="../MapsManager.ts" />
-/// <reference path="Command.ts" />
+import { EventHandler } from "../Events/ApplicationEvent";
+import { InternalEvent } from "../Events/InternalEvent";
+import { Command } from "./Command";
 
-abstract class ConditionalCommand implements Command {
+export abstract class ConditionalCommand implements Command {
     private readonly changeEvent = new InternalEvent<boolean>();
     private readonly _label: string;
 

@@ -1,6 +1,6 @@
-/// <reference path="Point.ts" />
+import { Point } from "./Point";
 
-interface Line {
+export interface Line {
     from: Point,
     to: Point
 }

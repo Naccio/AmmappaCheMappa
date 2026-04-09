@@ -1,6 +1,9 @@
-/// <reference path="./CellTool.ts" />
+import { LayersManager } from "../../Layers/LayersManager";
+import { MapAccessor } from "../../MapAccessor";
+import { CellIndex } from "../../Model/CellIndex";
+import { CellTool } from "./CellTool";
 
-class Eraser extends CellTool {
+export class Eraser extends CellTool {
     public readonly configuration = {
         id: 'eraser',
         labelResourceId: 'tool_label_eraser',

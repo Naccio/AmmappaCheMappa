@@ -1,4 +1,4 @@
-interface MapObject {
+export interface MapObject {
     type: string,
     layer: string
 }

@@ -1,7 +1,11 @@
-/// <reference path="CellDrawerFactory.ts" />
-/// <reference path="ObjectRenderer.ts" />
+import { CellIndex } from "../Model/CellIndex";
+import { MapObject } from "../Model/MapObject";
+import { CellDrawer } from "./CellDrawer";
+import { CellDrawerFactory } from "./CellDrawerFactory";
+import { Drawer } from "./Drawer";
+import { ObjectRenderer } from "./ObjectRenderer";
 
-class CellRenderer {
+export class CellRenderer {
     constructor(private drawerFactory: CellDrawerFactory, private renderers: ObjectRenderer[]) {
     }
 

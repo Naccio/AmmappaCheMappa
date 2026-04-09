@@ -1,4 +1,6 @@
-class ApplicationUI {
+import { UIElement } from "./UIElement";
+
+export class ApplicationUI {
     constructor(private elements: UIElement[]) {
     }
 

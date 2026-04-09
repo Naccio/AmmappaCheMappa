@@ -1,6 +1,6 @@
-/// <reference path="Model/EditorMap.ts" />
+import { EditorMap } from "./Model/EditorMap";
 
-class Utilities {
+export class Utilities {
 
     public static download(filename: string, content: string) {
         const element = document.createElement('a');

@@ -1,6 +1,6 @@
-/// <reference path='InternalEvent.ts' />
+import { InternalEvent } from "./InternalEvent";
 
-class Observable<T> {
+export class Observable<T> {
     private readonly event = new InternalEvent<T>();
 
     private _value: T;

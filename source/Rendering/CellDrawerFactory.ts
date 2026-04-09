@@ -1,7 +1,9 @@
-/// <reference path="../Model/CellIndex.ts" />
-/// <reference path="CellDrawer.ts" />
+import { MapAccessor } from "../MapAccessor";
+import { CellIndex } from "../Model/CellIndex";
+import { CellDrawer } from "./CellDrawer";
+import { Drawer } from "./Drawer";
 
-class CellDrawerFactory {
+export class CellDrawerFactory {
     constructor(private mapAccessor: MapAccessor) {
     }
 

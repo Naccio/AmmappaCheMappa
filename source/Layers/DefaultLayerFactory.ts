@@ -1,8 +1,12 @@
-/// <reference path="DefaultLayer.ts" />
-/// <reference path="LayerAbstractFactory.ts" />
-/// <reference path="../UI/CanvasProvider.ts" />
+import { MapAccessor } from "../MapAccessor";
+import { CellRenderer } from "../Rendering/CellRenderer";
+import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { CanvasProvider } from "../UI/CanvasProvider";
+import { DefaultLayer } from "./DefaultLayer";
+import { DrawingLayer } from "./DrawingLayer";
+import { LayerAbstractFactory } from "./LayerAbstractFactory";
 
-class DefaultLayerFactory implements LayerAbstractFactory {
+export class DefaultLayerFactory implements LayerAbstractFactory {
 
     private readonly layers: { id: string, layer: DefaultLayer }[] = [];
 

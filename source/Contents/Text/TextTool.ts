@@ -1,13 +1,15 @@
-/// <reference path='../../Localization/Localizer.ts'/>
-/// <reference path='../../MapAccessor.ts'/>
-/// <reference path='../../UI/Forms/FormsHelper.ts'/>
-/// <reference path='../../UI/ModalLauncher.ts'/>
-/// <reference path='../../UI/Tools/Tool.ts'/>
-/// <reference path='../../VectorMath.ts'/>
-/// <reference path='GridText.ts'/>
-/// <reference path='TextHelper.ts'/>
+import { LayersManager } from "../../Layers/LayersManager";
+import { Localizer } from "../../Localization/Localizer";
+import { MapAccessor } from "../../MapAccessor";
+import { Point } from "../../Model/Point";
+import { FormsHelper } from "../../UI/Forms/FormsHelper";
+import { ModalLauncher } from "../../UI/ModalLauncher";
+import { Tool } from "../../UI/Tools/Tool";
+import { VectorMath } from "../../VectorMath";
+import { GridText } from "./GridText";
+import { TextHelper } from "./TextHelper";
 
-class TextTool implements Tool {
+export class TextTool implements Tool {
     public readonly configuration = {
         id: 'text',
         labelResourceId: 'tool_label_text',

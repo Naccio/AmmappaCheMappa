@@ -1,4 +1,4 @@
-interface MapLayer {
+export interface MapLayer {
     id: string;
     type: string;
     name?: string;

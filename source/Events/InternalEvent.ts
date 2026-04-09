@@ -1,6 +1,6 @@
-/// <reference path="ApplicationEvent.ts" />
+import { ApplicationEvent, EventHandler } from "./ApplicationEvent";
 
-class InternalEvent<T> implements ApplicationEvent<T> {
+export class InternalEvent<T> implements ApplicationEvent<T> {
     private handlers: EventHandler<T>[] = [];
 
     public subscribe(handler: EventHandler<T>): void {

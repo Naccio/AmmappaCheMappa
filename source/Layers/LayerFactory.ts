@@ -1,7 +1,8 @@
-/// <reference path="LayerAbstractFactory.ts" />
-/// <reference path="LayersHelper.ts" />
+import { MapLayer } from "../Model/MapLayer";
+import { LayerAbstractFactory } from "./LayerAbstractFactory";
+import { LayerAccessor } from "./LayerAccessor";
 
-class LayerFactory {
+export class LayerFactory {
 
     public constructor(private factories: LayerAbstractFactory[]) {
     }

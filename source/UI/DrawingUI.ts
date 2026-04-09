@@ -1,8 +1,10 @@
-/// <reference path="../Layers/DrawingLayer.ts"/>
-/// <reference path="../MapAccessor.ts"/>
-/// <reference path="CanvasProvider.ts"/>
+import { DrawingLayer } from "../Layers/DrawingLayer";
+import { MapAccessor } from "../MapAccessor";
+import { CanvasDrawer } from "../Rendering/CanvasDrawer";
+import { Drawer } from "../Rendering/Drawer";
+import { CanvasProvider } from "./CanvasProvider";
 
-class DrawingUI implements DrawingLayer {
+export class DrawingUI implements DrawingLayer {
     private readonly _drawer: CanvasDrawer;
 
     constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {

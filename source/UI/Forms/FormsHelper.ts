@@ -1,6 +1,6 @@
-/// <reference path="Input.ts" />
+import { Input } from "./Input";
 
-class FormsHelper {
+export class FormsHelper {
 
     public static createNumberInput(label: string, min: number, max: number) {
         const input = document.createElement('input');

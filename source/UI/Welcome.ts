@@ -1,9 +1,9 @@
-/// <reference path="../Commands/NewMap.ts" />
-/// <reference path="../Commands/OpenMap.ts" />
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="UIElement.ts" />
+import { NewMap } from "../Commands/NewMap";
+import { OpenMap } from "../Commands/OpenMap";
+import { Localizer } from "../Localization/Localizer";
+import { UIElement } from "./UIElement";
 
-class Welcome implements UIElement {
+export class Welcome implements UIElement {
     private readonly container: HTMLDivElement;
 
     constructor(

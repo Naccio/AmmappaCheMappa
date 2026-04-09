@@ -1,8 +1,9 @@
-/// <reference path="../Model/ApplicationState.ts" />
-/// <reference path="LocalizationHelper.ts" />
-/// <reference path="Localizer.ts" />
+import { ApplicationState } from "../Model/ApplicationState";
+import { LocalizationHelper } from "./LocalizationHelper";
+import { LocalizationResource } from "./LocalizationResource";
+import { Localizer } from "./Localizer";
 
-class LocalizerFactory {
+export class LocalizerFactory {
 
     constructor(private state: ApplicationState) {
     }

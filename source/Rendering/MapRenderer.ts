@@ -1,7 +1,8 @@
-/// <reference path="CanvasDrawer.ts" />
-/// <reference path="RenderedMap.ts" />
+import { MapManager } from "../MapManager";
+import { CanvasDrawer } from "./CanvasDrawer";
+import { RenderedMap } from "./RenderedMap";
 
-class MapRenderer {
+export class MapRenderer {
 
     render(mapManager: MapManager): RenderedMap {
 

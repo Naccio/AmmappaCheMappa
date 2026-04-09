@@ -1,6 +1,6 @@
-type EventHandler<T> = (data: T) => void;
+export type EventHandler<T> = (data: T) => void;
 
-interface ApplicationEvent<T> {
+export interface ApplicationEvent<T> {
     subscribe(handler: EventHandler<T>): void;
     unsubscribe(handler: EventHandler<T>): void;
 }

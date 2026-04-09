@@ -1,12 +1,18 @@
-/// <reference path="../MapManager.ts" />
-/// <reference path="../Layers/LayersPanel.ts" />
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="DrawingArea.ts" />
-/// <reference path="Tools/ToolActivator.ts" />
-/// <reference path="Tools/Toolbar.ts" />
-/// <reference path="Tools/ToolsManagerFactory.ts" />
+import { LayersPanel } from "../Layers/LayersPanel";
+import { Localizer } from "../Localization/Localizer";
+import { MapManager } from "../MapManager";
+import { Store } from "../Store";
+import { CanvasProvider } from "./CanvasProvider";
+import { DrawingArea } from "./DrawingArea";
+import { DrawingUI } from "./DrawingUI";
+import { MapDrawer } from "./MapDrawer";
+import { MapUI } from "./MapUI";
+import { ToolActivator } from "./Tools/ToolActivator";
+import { Toolbar } from "./Tools/Toolbar";
+import { ToolsManagerFactory } from "./Tools/ToolsManagerFactory";
+import { UIFactory } from "./UIFactory";
 
-class MapUIFactory {
+export class MapUIFactory {
 
     constructor(
         private canvasProvider: CanvasProvider,

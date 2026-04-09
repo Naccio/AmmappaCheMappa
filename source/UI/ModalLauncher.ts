@@ -1,8 +1,8 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="UIFactory.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { UIFactory } from "./UIFactory";
 
 //TODO: Handle code duplication on dialog creation
-class ModalLauncher {
+export class ModalLauncher {
     private readonly confirmValue = 'confirm';
 
     public constructor(private uiFactory: UIFactory, private localizer: Localizer) {
@@ -39,7 +39,7 @@ class ModalLauncher {
 
         dialog.showModal();
     }
-    
+
     public launchConfirm(title: string, message: string, confirmCallback: () => void) {
         const p = document.createElement('p');
 

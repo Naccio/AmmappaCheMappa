@@ -1,8 +1,17 @@
-/// <reference path="Layers/DefaultLayerFactory.ts" />
-/// <reference path="Layers/GridLayerFactory.ts" />
-/// <reference path="UI/Tools/ToolsManagerFactory.ts" />
+import { DefaultLayerFactory } from "./Layers/DefaultLayerFactory";
+import { GridLayerFactory } from "./Layers/GridLayerFactory";
+import { LayerFactory } from "./Layers/LayerFactory";
+import { LayersManager } from "./Layers/LayersManager";
+import { MapAccessor } from "./MapAccessor";
+import { MapManager } from "./MapManager";
+import { EditorMap } from "./Model/EditorMap";
+import { CellDrawerFactory } from "./Rendering/CellDrawerFactory";
+import { CellRenderer } from "./Rendering/CellRenderer";
+import { ObjectRenderer } from "./Rendering/ObjectRenderer";
+import { Store } from "./Store";
+import { CanvasProvider } from "./UI/CanvasProvider";
 
-class MapManagerFactory {
+export class MapManagerFactory {
     constructor(
         private store: Store,
         private canvasProvider: CanvasProvider,

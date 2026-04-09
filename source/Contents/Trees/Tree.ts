@@ -1,6 +1,7 @@
-/// <reference path="../../Model/MapObject.ts" />
+import { MapObject } from "../../Model/MapObject"
+import { Point } from "../../Model/Point"
 
-interface Tree extends MapObject {
+export interface Tree extends MapObject {
     position: Point,
     crownWidth: number,
     crownHeight: number

@@ -1,15 +1,20 @@
-/// <reference path="../../Rendering/GenericObjectRenderer.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { CellDrawer } from "../../Rendering/CellDrawer";
+import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
+import { LineStyle } from "../../Rendering/LineStyle";
+import { Tree } from "./Tree";
+import { TreesHelper } from "./TreesHelper";
 
-class TreeRenderer extends GenericObjectRenderer<Tree> {
+export class TreeRenderer extends GenericObjectRenderer<Tree> {
     private readonly lineWidth = 2;
 
-    protected is(object: MapObject) : object is Tree {
+    protected is(object: MapObject): object is Tree {
         return TreesHelper.isTree(object);
     }
 
     protected draw(tree: Tree, drawer: CellDrawer) {
         const position = tree.position,
-        radiusX = tree.crownWidth / 2,
+            radiusX = tree.crownWidth / 2,
             radiusY = tree.crownHeight / 2,
             trunkTop = {
                 x: position.x,

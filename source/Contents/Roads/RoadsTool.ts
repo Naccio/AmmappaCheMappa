@@ -1,4 +1,14 @@
-class RoadsTool implements Tool {
+import { GridHelper } from "../../GridHelper";
+import { LayersManager } from "../../Layers/LayersManager";
+import { MapAccessor } from "../../MapAccessor";
+import { CellIndex } from "../../Model/CellIndex";
+import { Point } from "../../Model/Point";
+import { DrawingUI } from "../../UI/DrawingUI";
+import { Tool } from "../../UI/Tools/Tool";
+import { VectorMath } from "../../VectorMath";
+import { Road } from "./Road";
+
+export class RoadsTool implements Tool {
     public readonly configuration = {
         id: 'roads',
         labelResourceId: 'tool_label_roads',

@@ -1,7 +1,7 @@
-/// <reference path="../../Model/GridCell.ts" />
-/// <reference path="Mountain.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { Mountain } from "./Mountain";
 
-class MountainsHelper {
+export class MountainsHelper {
     public static readonly objectType = 'mountain';
 
     public static isMountain(object: MapObject): object is Mountain {

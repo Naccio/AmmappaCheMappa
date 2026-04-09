@@ -1,8 +1,9 @@
-/// <reference path="../Events/Observable.ts" />
-/// <reference path="../Model/MapLayer.ts" />
-/// <reference path="../Rendering/LayerRenderer.ts" />
+import { Observable } from "../Events/Observable";
+import { MapLayer } from "../Model/MapLayer";
+import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { DrawingLayer } from "./DrawingLayer";
 
-class LayerAccessor extends Observable<MapLayer> {
+export class LayerAccessor extends Observable<MapLayer> {
     public constructor(
         data: MapLayer,
         public readonly drawing: DrawingLayer,

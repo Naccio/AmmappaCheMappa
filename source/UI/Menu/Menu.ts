@@ -1,6 +1,7 @@
-/// <reference path="./SubmenuMenuEntry.ts" />
+import { UIElement } from "../UIElement";
+import { SubmenuMenuEntry } from "./SubmenuMenuEntry";
 
-class Menu implements UIElement {
+export class Menu implements UIElement {
     private container: HTMLDivElement;
 
     constructor(private mainEntry: SubmenuMenuEntry) {

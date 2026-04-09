@@ -1,6 +1,6 @@
-/// <reference path="Tool.ts" />
+import { Tool } from "./Tool";
 
-class ToolsManager {
+export class ToolsManager {
     constructor(private _tools: Tool[]) {
     }
 

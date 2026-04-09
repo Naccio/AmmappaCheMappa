@@ -1,10 +1,13 @@
-/// <reference path="../MapManager.ts" />
-/// <reference path="MapUI.ts" />
-/// <reference path="MapUIFactory.ts" />
-/// <reference path="UIElement.ts" />
-/// <reference path="Welcome.ts" />
+import { MapManager } from "../MapManager";
+import { MapsManager } from "../MapsManager";
+import { MapData } from "../Model/MapData";
+import { MapUI } from "./MapUI";
+import { MapUIFactory } from "./MapUIFactory";
+import { UIElement } from "./UIElement";
+import { UIFactory } from "./UIFactory";
+import { Welcome } from "./Welcome";
 
-class MainArea implements UIElement {
+export class MainArea implements UIElement {
     private readonly container: HTMLElement;
     private readonly tabs: HTMLElement;
 

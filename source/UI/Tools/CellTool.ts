@@ -1,9 +1,11 @@
-/// <reference path="../../MapAccessor.ts" />
-/// <reference path="../../Model/CellIndex.ts" />
-/// <reference path="../../Model/Vector.ts" />
-/// <reference path="Tool.ts" />
+import { GridHelper } from "../../GridHelper";
+import { MapAccessor } from "../../MapAccessor";
+import { CellIndex } from "../../Model/CellIndex";
+import { Point } from "../../Model/Point";
+import { Tool } from "./Tool";
+import { ToolConfiguration } from "./ToolConfiguration";
 
-abstract class CellTool implements Tool {
+export abstract class CellTool implements Tool {
     private lastCell?: CellIndex;
     private lastPosition?: Point;
 

@@ -1,10 +1,11 @@
-/// <reference path="../MapAccessor.ts" />
-/// <reference path="../Model/CellIndex.ts" />
-/// <reference path="../Rendering/Drawer.ts" />
-/// <reference path="../Rendering/LayerRenderer.ts" />
-/// <reference path="DrawingLayer.ts" />
+import { MapAccessor } from "../MapAccessor";
+import { Drawer } from "../Rendering/Drawer";
+import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { LineStyle } from "../Rendering/LineStyle";
+import { CanvasProvider } from "../UI/CanvasProvider";
+import { DrawingLayer } from "./DrawingLayer";
 
-class GridLayer implements DrawingLayer, LayerRenderer {
+export class GridLayer implements DrawingLayer, LayerRenderer {
     private wrapper: HTMLElement;
 
     constructor(

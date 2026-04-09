@@ -1,7 +1,8 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="ActiveMapCommand.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { MapsManager } from "../MapsManager";
+import { ActiveMapCommand } from "./ActiveMapCommand";
 
-class CloseMap extends ActiveMapCommand {
+export class CloseMap extends ActiveMapCommand {
 
     constructor(private maps: MapsManager, localizer: Localizer) {
         super(maps, localizer['command_label_close_map']);

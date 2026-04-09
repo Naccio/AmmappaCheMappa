@@ -1,11 +1,11 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="../MapFactory.ts" />
-/// <reference path="../MapsManager.ts" />
-/// <reference path="../UI/Forms/FormsHelper.ts" />
-/// <reference path="../UI/ModalLauncher.ts" />
-/// <reference path="SimpleCommand.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { MapFactory } from "../MapFactory";
+import { MapsManager } from "../MapsManager";
+import { FormsHelper } from "../UI/Forms/FormsHelper";
+import { ModalLauncher } from "../UI/ModalLauncher";
+import { SimpleCommand } from "./SimpleCommand";
 
-class NewMap extends SimpleCommand {
+export class NewMap extends SimpleCommand {
 
     constructor(private mapFactory: MapFactory, private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
         super(localizer['command_label_new_map']);
@@ -19,7 +19,7 @@ class NewMap extends SimpleCommand {
 
         columnsInput.value = '20';
         columnsInput.required = true;
-        
+
         rowsInput.value = '20';
         rowsInput.required = true;
 

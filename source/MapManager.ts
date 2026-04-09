@@ -1,7 +1,7 @@
-/// <reference path="Layers/LayersManager.ts" />
-/// <reference path="MapAccessor.ts" />
+import { LayersManager } from "./Layers/LayersManager";
+import { MapAccessor } from "./MapAccessor";
 
-class MapManager {
+export class MapManager {
     constructor(public mapAccessor: MapAccessor, public layers: LayersManager) {
     }
 

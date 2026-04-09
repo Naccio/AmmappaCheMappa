@@ -1,6 +1,6 @@
-/// <reference path="ApplicationLanguage.ts" />
+import { ApplicationLanguage } from "./ApplicationLanguage";
 
-class LocalizationHelper {
+export class LocalizationHelper {
     public static readonly languages: ApplicationLanguage[] = [{
         locale: "en",
         name: "English"

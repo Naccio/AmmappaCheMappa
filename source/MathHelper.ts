@@ -1,8 +1,8 @@
-class MathHelper {
+export class MathHelper {
 
     public static clamp(number: number, min: number, max: number) {
         return Math.min(Math.max(number, min), max);
-      }
+    }
 
     public static nearestPower(x: number, base: number) {
         return Math.pow(base, this.nearestRoot(x, base));

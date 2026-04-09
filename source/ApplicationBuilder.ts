@@ -1,11 +1,11 @@
-/// <reference path="Application.ts" />
-/// <reference path="UI/ApplicationUI.ts" />
-/// <reference path="UI/Menu/Menu.ts" />
-/// <reference path="UI/Menu/SubmenuBuilder.ts" />
-/// <reference path="UI/Menu/SubmenuMenuEntry.ts" />
-/// <reference path="UI/UIElement.ts" />
+import { Application } from "./Application";
+import { ApplicationUI } from "./UI/ApplicationUI";
+import { Menu } from "./UI/Menu/Menu";
+import { SubmenuBuilder } from "./UI/Menu/SubmenuBuilder";
+import { SubmenuMenuEntry } from "./UI/Menu/SubmenuMenuEntry";
+import { UIElement } from "./UI/UIElement";
 
-class ApplicationBuilder {
+export class ApplicationBuilder {
     private readonly menu: SubmenuMenuEntry[] = [];
     private readonly ui: UIElement[] = [];
 

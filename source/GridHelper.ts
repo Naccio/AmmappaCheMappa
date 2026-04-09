@@ -1,4 +1,9 @@
-class GridHelper {
+import { CellIndex } from "./Model/CellIndex";
+import { Point } from "./Model/Point";
+import { Vector } from "./Model/Vector";
+import { VectorMath } from "./VectorMath";
+
+export class GridHelper {
     public static readonly quadrantShift: Vector[] = [
         { x: 0, y: 0 },
         { x: 1, y: 0 },
@@ -17,7 +22,7 @@ class GridHelper {
         return cell1?.column === cell2?.column && cell1?.row === cell2?.row;
     }
 
-    public static cellNameToIndex(name: string) : CellIndex {
+    public static cellNameToIndex(name: string): CellIndex {
         const splitName = name.split(/([0-9]+)/),
             // -1 to switch from 1-based to 0-based numbering
             column = this.columnNameToNumber(splitName[0]) - 1,
@@ -30,8 +35,7 @@ class GridHelper {
         let number = 0;
 
         name = name.toUpperCase();
-        for (let i = 0; i < name.length; i++)
-        {
+        for (let i = 0; i < name.length; i++) {
             const charCode = name.charCodeAt(i);
 
             number *= 26;
@@ -40,22 +44,20 @@ class GridHelper {
 
         return number;
     }
-    
-    public static columnNumberToName(number: number)
-    {
+
+    public static columnNumberToName(number: number) {
         let name = '';
-    
-        while (number > 0)
-        {
+
+        while (number > 0) {
             const modulo = (number - 1) % 26;
             name = String.fromCharCode(65 + modulo) + name;
             number = Math.floor((number - modulo) / 26);
-        } 
-    
+        }
+
         return name;
     }
 
-    public static getConnection(cell: CellIndex, from: Point, direction: Vector) : [Point, CellIndex, Point] {
+    public static getConnection(cell: CellIndex, from: Point, direction: Vector): [Point, CellIndex, Point] {
         // Multiply by a large number to minimize the rounding errors
         // when calculating the intersections
         const distantTo = VectorMath.multiply(direction, 1000),
@@ -111,7 +113,7 @@ class GridHelper {
 
         throw new Error('Could not find next connection.');
     }
-    
+
     public static isBottom(quadrant: number) {
         return quadrant === 2 || quadrant === 3;
     }

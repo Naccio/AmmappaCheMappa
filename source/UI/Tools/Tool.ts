@@ -1,7 +1,7 @@
-/// <reference path="../../Model/Point.ts" />
-/// <reference path="ToolConfiguration.ts" />
+import { Point } from "../../Model/Point";
+import { ToolConfiguration } from "./ToolConfiguration";
 
-interface Tool {
+export interface Tool {
     readonly configuration: ToolConfiguration;
 
     start(position: Point): void;

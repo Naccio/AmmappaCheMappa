@@ -1,6 +1,7 @@
-/// <reference path="../../Model/MapObject.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { Point } from "../../Model/Point";
 
-interface Mountain extends MapObject {
+export interface Mountain extends MapObject {
     position: Point,
     width: number,
     height: number

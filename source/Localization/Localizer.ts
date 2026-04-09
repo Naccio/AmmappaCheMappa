@@ -1,7 +1,7 @@
-/// <reference path="LocalizationResource.ts" />
+import { LocalizationResource } from "./LocalizationResource";
 
-class Localizer {
-    readonly [key: string] : string;
+export class Localizer {
+    readonly [key: string]: string;
 
     public constructor(resource: LocalizationResource) {
         // Cannot assign using readonly index, see

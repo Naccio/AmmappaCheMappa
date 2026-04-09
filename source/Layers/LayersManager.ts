@@ -1,8 +1,13 @@
-/// <reference path="../Events/EventManager.ts" />
-/// <reference path="LayerAccessor.ts" />
-/// <reference path="LayerFactory.ts" />
+import { EventHandler } from "../Events/ApplicationEvent";
+import { InternalEvent } from "../Events/InternalEvent";
+import { MapAccessor } from "../MapAccessor";
+import { CellIndex } from "../Model/CellIndex";
+import { MapLayer } from "../Model/MapLayer";
+import { MapObject } from "../Model/MapObject";
+import { LayerAccessor } from "./LayerAccessor";
+import { LayerFactory } from "./LayerFactory";
 
-class LayersManager {
+export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
     private readonly deleteEvent = new InternalEvent<MapLayer>();
     private readonly selectEvent = new InternalEvent<LayerAccessor>();

@@ -1,7 +1,9 @@
-/// <reference path="Layers/LayersHelper.ts" />
-/// <reference path="Model/EditorMap.ts" />
+import { LayersHelper } from "./Layers/LayersHelper";
+import { Localizer } from "./Localization/Localizer";
+import { EditorMap } from "./Model/EditorMap";
+import { Utilities } from "./Utilities";
 
-class MapFactory {
+export class MapFactory {
     public constructor(private localizer: Localizer) {
     }
 

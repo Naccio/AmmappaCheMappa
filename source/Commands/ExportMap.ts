@@ -1,8 +1,10 @@
-/// <reference path="../MapsManager.ts" />
-/// <reference path="../Rendering/MapRenderer.ts" />
-/// <reference path="ActiveMapCommand.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { MapsManager } from "../MapsManager";
+import { MapRenderer } from "../Rendering/MapRenderer";
+import { Utilities } from "../Utilities";
+import { ActiveMapCommand } from "./ActiveMapCommand";
 
-class ExportMap extends ActiveMapCommand {
+export class ExportMap extends ActiveMapCommand {
 
     constructor(private renderer: MapRenderer, private maps: MapsManager, localizer: Localizer) {
         super(maps, localizer['command_label_export_map']);

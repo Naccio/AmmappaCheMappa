@@ -1,7 +1,6 @@
-/// <reference path="../../Commands/Command.ts" />
-/// <reference path="./MenuEntry.ts" />
+import { MenuEntry } from "./MenuEntry";
 
-class ButtonMenuEntry implements MenuEntry {
+export class ButtonMenuEntry implements MenuEntry {
 
     protected button: HTMLButtonElement;
 

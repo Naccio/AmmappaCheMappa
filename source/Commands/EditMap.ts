@@ -1,11 +1,10 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="../MapFactory.ts" />
-/// <reference path="../MapsManager.ts" />
-/// <reference path="../UI/Forms/FormsHelper.ts" />
-/// <reference path="../UI/ModalLauncher.ts" />
-/// <reference path="ActiveMapCommand.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { MapsManager } from "../MapsManager";
+import { FormsHelper } from "../UI/Forms/FormsHelper";
+import { ModalLauncher } from "../UI/ModalLauncher";
+import { ActiveMapCommand } from "./ActiveMapCommand";
 
-class EditMap extends ActiveMapCommand {
+export class EditMap extends ActiveMapCommand {
 
     constructor(private mapsManager: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
         super(mapsManager, localizer['command_label_edit_map']);
@@ -28,7 +27,7 @@ class EditMap extends ActiveMapCommand {
 
         columnsInput.value = map.columns.toString();
         columnsInput.disabled = true;
-        
+
         rowsInput.value = map.rows.toString();
         rowsInput.disabled = true;
 

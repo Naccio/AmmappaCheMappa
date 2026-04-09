@@ -1,3 +1,3 @@
-interface RenderedMap {
-    toDataURL() : string;
+export interface RenderedMap {
+    toDataURL(): string;
 }

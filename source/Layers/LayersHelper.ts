@@ -1,7 +1,7 @@
-/// <reference path="../Model/MapLayer.ts" />
-/// <reference path="../Utilities.ts" />
+import { MapLayer } from "../Model/MapLayer";
+import { Utilities } from "../Utilities";
 
-class LayersHelper {
+export class LayersHelper {
     public static create(type: string, name?: string): MapLayer {
         return {
             id: Utilities.generateId('layer'),

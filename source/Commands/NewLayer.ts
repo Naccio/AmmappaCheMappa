@@ -1,10 +1,11 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="../MapsManager.ts" />
-/// <reference path="../UI/Forms/FormsHelper.ts" />
-/// <reference path="../UI/ModalLauncher.ts" />
-/// <reference path="ActiveMapCommand.ts" />
+import { LayersHelper } from "../Layers/LayersHelper";
+import { Localizer } from "../Localization/Localizer";
+import { MapsManager } from "../MapsManager";
+import { FormsHelper } from "../UI/Forms/FormsHelper";
+import { ModalLauncher } from "../UI/ModalLauncher";
+import { ActiveMapCommand } from "./ActiveMapCommand";
 
-class NewLayer extends ActiveMapCommand {
+export class NewLayer extends ActiveMapCommand {
 
     constructor(maps: MapsManager, private modal: ModalLauncher, private localizer: Localizer) {
         super(maps, localizer['command_label_new_layer']);

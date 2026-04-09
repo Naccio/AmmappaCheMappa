@@ -1,3 +1,3 @@
-interface LocalizationResource {
-    readonly [key: string] : string;
+export interface LocalizationResource {
+    readonly [key: string]: string;
 }

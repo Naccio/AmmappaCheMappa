@@ -1,7 +1,15 @@
-/// <reference path="Store.ts" />
-/// <reference path="Model/Dictionary.ts" />
+import { EventHandler } from "./Events/ApplicationEvent";
+import { InternalEvent } from "./Events/InternalEvent";
+import { Localizer } from "./Localization/Localizer";
+import { MapManager } from "./MapManager";
+import { MapManagerFactory } from "./MapManagerFactory";
+import { Dictionary } from "./Model/Dictionary";
+import { EditorMap } from "./Model/EditorMap";
+import { MapData } from "./Model/MapData";
+import { Store } from "./Store";
+import { ModalLauncher } from "./UI/ModalLauncher";
 
-class MapsManager {
+export class MapsManager {
     private readonly addEvent = new InternalEvent<MapManager>();
     private readonly updateEvent = new InternalEvent<MapData>();
     private readonly removeEvent = new InternalEvent<string>();

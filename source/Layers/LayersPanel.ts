@@ -1,4 +1,12 @@
-class LayersPanel implements UIElement {
+import { Localizer } from "../Localization/Localizer";
+import { Dictionary } from "../Model/Dictionary";
+import { MapLayer } from "../Model/MapLayer";
+import { UIElement } from "../UI/UIElement";
+import { UIFactory } from "../UI/UIFactory";
+import { LayerAccessor } from "./LayerAccessor";
+import { LayersManager } from "./LayersManager";
+
+export class LayersPanel implements UIElement {
     private readonly container: HTMLDivElement;
     private readonly layers: Dictionary<HTMLElement> = {};
 

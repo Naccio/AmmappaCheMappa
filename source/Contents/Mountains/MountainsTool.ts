@@ -1,8 +1,11 @@
-/// <reference path='../../UI/Tools/CellTool.ts'/>
-/// <reference path='MountainFactory.ts'/>
-/// <reference path='MountainsHelper.ts'/>
+import { LayersManager } from "../../Layers/LayersManager";
+import { MapAccessor } from "../../MapAccessor";
+import { CellIndex } from "../../Model/CellIndex";
+import { CellTool } from "../../UI/Tools/CellTool";
+import { Mountain } from "./Mountain";
+import { MountainFactory } from "./MountainFactory";
 
-class MountainsTool extends CellTool {
+export class MountainsTool extends CellTool {
     public readonly configuration = {
         id: 'mountains',
         labelResourceId: 'tool_label_mountains',

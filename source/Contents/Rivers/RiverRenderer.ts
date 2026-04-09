@@ -1,21 +1,26 @@
-/// <reference path="RiversHelper.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { CellDrawer } from "../../Rendering/CellDrawer";
+import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
+import { LineStyle } from "../../Rendering/LineStyle";
+import { River } from "./River";
+import { RiversHelper } from "./RiversHelper";
 
-class RiverRenderer extends GenericObjectRenderer<River> {
+export class RiverRenderer extends GenericObjectRenderer<River> {
     private readonly lineWidth = 6;
 
-    protected is(object: MapObject) : object is River {
+    protected is(object: MapObject): object is River {
         return RiversHelper.isRiver(object);
     }
 
     protected draw(river: River, drawer: CellDrawer) {
         const from = river.from,
             to = river.to,
-            style : LineStyle = {
+            style: LineStyle = {
                 lineWidth: this.lineWidth,
                 ignoreBorders: true
             };
-            // directionFrom = VectorMath.direction(from, river.bend1),
-            // directionTo = VectorMath.direction(river.bend2, river.to);
+        // directionFrom = VectorMath.direction(from, river.bend1),
+        // directionTo = VectorMath.direction(river.bend2, river.to);
 
         drawer.bezier(from, to, river.bend1, river.bend2, style);
         // drawer.circle(river.bend1, .05, { fillStyle: '#F00' });

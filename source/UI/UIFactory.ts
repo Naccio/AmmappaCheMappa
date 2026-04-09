@@ -1,4 +1,4 @@
-class UIFactory {
+export class UIFactory {
     public createCloseButton(onClick: (e: MouseEvent) => void) {
         const close = document.createElement('button');
 

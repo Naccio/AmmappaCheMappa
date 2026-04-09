@@ -1,3 +1,3 @@
-interface MenuEntry {
+export interface MenuEntry {
     build(): HTMLElement | HTMLElement[];
 }

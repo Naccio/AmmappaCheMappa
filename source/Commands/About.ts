@@ -1,8 +1,8 @@
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="../UI/ModalLauncher.ts" />
-/// <reference path="SimpleCommand.ts" />
+import { Localizer } from "../Localization/Localizer";
+import { ModalLauncher } from "../UI/ModalLauncher";
+import { SimpleCommand } from "./SimpleCommand";
 
-class About extends SimpleCommand {
+export class About extends SimpleCommand {
 
     constructor(private modal: ModalLauncher, private localizer: Localizer) {
         super(localizer['command_label_about']);

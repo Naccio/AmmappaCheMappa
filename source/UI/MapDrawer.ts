@@ -1,7 +1,16 @@
-/// <reference path="../Model/EditorMap.ts" />
-/// <reference path="../VectorMath.ts" />
+import { DrawingLayer } from "../Layers/DrawingLayer";
+import { LayerAccessor } from "../Layers/LayerAccessor";
+import { MapManager } from "../MapManager";
+import { MathHelper } from "../MathHelper";
+import { MapLayer } from "../Model/MapLayer";
+import { Point } from "../Model/Point";
+import { Vector } from "../Model/Vector";
+import { Store } from "../Store";
+import { VectorMath } from "../VectorMath";
+import { DrawingUI } from "./DrawingUI";
+import { UIElement } from "./UIElement";
 
-class MapDrawer implements UIElement {
+export class MapDrawer implements UIElement {
     private actualShift: Vector = VectorMath.zero;
     private readonly container: HTMLDivElement;
 

@@ -1,6 +1,6 @@
-/// <reference path="../Events/ApplicationEvent.ts" />
+import { EventHandler } from "../Events/ApplicationEvent";
 
-interface Command {
+export interface Command {
     get disabled(): boolean;
     get label(): string;
     execute(): void;

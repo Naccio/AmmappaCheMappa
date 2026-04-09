@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - UI:
   - **Main menu**:
     - *Layer* menu: gives access to all layer commands
+- Architecture:
+  - Added `package.json` and all the other NPM shenanigans
 
 ### Changed
 
@@ -25,6 +27,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - *File* menu: added **Edit map** command
   - **Layers Panel**:
     - Layers have a "close" button
+- Architecture:
+  - Moved `tsconfig.json` to root folder
+  - Switched from `outFile` to webpack since it got deprecated
+    - This effectively changes my commitment of "no dependencies" to
+      "no frontend dependencies", since apparently it is not possible
+      to transpile TypeScript into a single file without having to
+      install a plethora of other things
 
 
 ## [alpha.2] - 2026-03-29
