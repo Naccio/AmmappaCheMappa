@@ -1,7 +1,7 @@
 # Ammappa che mappa
 
-This is a tool I started building for fun when I was DMing a D&D
-campaign and couldn't find a suitable tool for drawing world maps.
+This is a tool I started building for fun when I was DMing a D&D campaign and
+couldn't find a suitable tool for drawing world maps.
 
 The main objectives I have are:
  - Have fun
@@ -13,5 +13,5 @@ The main objectives I have are:
 A live version of the latest release can be seen at
 [this link](https://naccio.net/ammappa-che-mappa/).
 
-> ***Keep in mind that this tool is in early [alpha](CHANGELOG.md),
-> so expect stuff to break a lot.***
+> ***Keep in mind that this tool is in early [alpha](CHANGELOG.md), so expect
+> stuff to break a lot.***

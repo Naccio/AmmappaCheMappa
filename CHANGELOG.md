@@ -29,11 +29,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - Layers have a "close" button
 - Architecture:
   - Moved `tsconfig.json` to root folder
-  - Switched from `outFile` to webpack since it got deprecated
-    - This effectively changes my commitment of "no dependencies" to
-      "no frontend dependencies", since apparently it is not possible
-      to transpile TypeScript into a single file without having to
-      install a plethora of other things
+  - Switched from `outFile` to webpack since the former got
+    deprecated
+    - This effectively changes my commitment of "no dependencies" to "no
+      frontend dependencies", since apparently it is not possible to transpile
+      TypeScript into a single file without having to install a plethora of
+      other things
+    - A nice thing about this is that now the output JavaScript is minimized
 
 
 ## [alpha.2] - 2026-03-29
@@ -50,15 +52,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ### Changed
 
-- BREAKING: Model changed, maps generated with previous versions will
-  no longer work
+- BREAKING: Model changed, maps generated with previous versions will no longer
+  work
 
 - Commands:
   - **New**: Maps can be given a title
 - UI:
   - **Drawing area**:
-    - Map default position is centered on main UI area instead of
-      whole window
+    - Map default position is centered on main UI area instead of whole window
 - Storage:
   - Data stored between sessions:
     - Opened maps
@@ -73,11 +74,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Added
 
 - Commands:
-  - **About**: opens a dialog containing the application's current
-    version and a link to its repository
+  - **About**: opens a dialog containing the application's current version and
+    a link to its repository
 - UI:
-  - **Layers panel**: allows to toggle a layer's visibility and to
-    choose which layer is active
+  - **Layers panel**: allows to toggle a layer's visibility and to choose which
+    layer is active
     - Layers can have different types: *terrain*, *text*, *grid*
     - At the moment one layer per type is generated
     - Layers management (CRUD operations) will be added in the future
@@ -85,18 +86,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - *Help* menu
 - Architecture:
   - Changelog
-  - HTML checkbox inputs are used for multiple selection (*e.g.*
-    visible layers)
+  - HTML checkbox inputs are used for multiple selection (*e.g.* visible layers)
 
 ### Changed
 
 - UI:
-  - **Toolbar**: Tools that are not available on the active layer are
-    hidden
+  - **Toolbar**: Tools that are not available on the active layer are hidden
 - Tools:
   - Tools work on specific layer types
-  - **Mountains**, **Places**, **River**, **Road** and **Trees** work
-    on *terrain* layers
+  - **Mountains**, **Places**, **River**, **Road** and **Trees** work on
+    *terrain* layers
   - **Text** works on *text* layers
   - **Eraser** works on *terrain* and *text* layers
 
@@ -120,26 +119,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - *Language* menu: allows to change localization
   - **Toolbar**: allows to select a tool to use in the **drawing area**
 - Tools:
-  (can be used by clicking on a cell or clicking and dragging over
-  multiple cells)
+  (can be used by clicking on a cell or clicking and dragging over multiple
+  cells)
   - **Eraser**: allows to clear cells
   - **Mountains**: allows to draw mountains
     (4 mountains per cell will be randomly generated)
   - **Place**: allows to mark places of interest
     (one place per cell)
   - **River**: allows to draw rivers
-    (connected pieces of river will be generated in each cell using
-    bezier curves)
+    (connected pieces of river will be generated in each cell using bezier
+    curves)
   - **Road**: allows to draw roads
-    (connected pieces of road will be generated in each cell using
-    straight lines)
+    (connected pieces of road will be generated in each cell using straight
+    lines)
   - **Text**: allows to add labels to the map
   - **Trees**: allows to draw trees
     (24 trees per cell will be randomly generated)
 - Architecture:
   - No external libraries, NPM is used exclusively for tsc
-  - Trying to be as SOLID as possible while still maintaining
-    some agility
+  - Trying to be as SOLID as possible while still maintaining some agility
   - HTML canvas is used to draw the map
     - one canvas per layer
     - the grid is in a different layer
