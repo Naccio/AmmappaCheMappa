@@ -15,7 +15,7 @@ export class About extends SimpleCommand {
 
         quote.innerText = this.localizer['paragraph_about'];
 
-        versionLink.innerText = 'alpha.2';
+        versionLink.innerText = 'alpha.3';
         versionLink.href = 'https://github.com/Naccio/AmmappaCheMappa';
         versionLink.target = '_blank';
 
