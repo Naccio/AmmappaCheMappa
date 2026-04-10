@@ -1,12 +1,20 @@
-/// <reference path="Store.ts" />
-/// <reference path="Model/Dictionary.ts" />
+import { EventHandler } from "./Events/ApplicationEvent";
+import { InternalEvent } from "./Events/InternalEvent";
+import { Localizer } from "./Localization/Localizer";
+import { MapManager } from "./MapManager";
+import { MapManagerFactory } from "./MapManagerFactory";
+import { EditorMap } from "./Model/EditorMap";
+import { MapData } from "./Model/MapData";
+import { Store } from "./Store";
+import { ModalLauncher } from "./UI/ModalLauncher";
 
-class MapsManager {
+export class MapsManager {
     private readonly addEvent = new InternalEvent<MapManager>();
+    private readonly updateEvent = new InternalEvent<MapData>();
     private readonly removeEvent = new InternalEvent<string>();
     private readonly activateEvent = new InternalEvent<MapManager | undefined>();
 
-    private maps: Dictionary<MapManager> = {};
+    private maps: Map<string, MapManager> = new Map<string, MapManager>();
 
     private _activeMap?: MapManager;
 
@@ -25,7 +33,7 @@ class MapsManager {
         const manager = this.factory.create(map),
             id = map.data.id;
 
-        this.maps[id] = manager;
+        this.maps.set(id, manager);
 
         this.addEvent.trigger(manager);
         this.activate(id);
@@ -37,7 +45,7 @@ class MapsManager {
             this.localizer['confirm_close_map_title'],
             this.localizer['confirm_close_map_message'],
             () => {
-                delete this.maps[id];
+                this.maps.delete(id);
 
                 this.store.deleteMap(id);
                 this.removeEvent.trigger(id);
@@ -56,12 +64,26 @@ class MapsManager {
     }
 
     public activate(id: string) {
-        const map = this.maps[id];
+        const map = this.maps.get(id);
 
         this._activeMap = map;
 
         this.store.activeMap = id;
         this.activateEvent.trigger(map);
+    }
+
+    public update(id: string, action: (map: MapData) => void) {
+        const mapManager = this.maps.get(id);
+
+        if (mapManager === undefined) {
+            return;
+        }
+
+        const map = mapManager.mapAccessor.map;
+
+        action(map.data);
+        this.store.saveMap(map);
+        this.updateEvent.trigger(map.data);
     }
 
     public onActivate(handler: EventHandler<MapManager | undefined>) {
@@ -72,6 +94,10 @@ class MapsManager {
         this.addEvent.subscribe(handler);
     }
 
+    public onUpdate(handler: EventHandler<MapData>) {
+        this.updateEvent.subscribe(handler);
+    }
+
     public onRemove(handler: EventHandler<string>) {
         this.removeEvent.subscribe(handler);
     }
@@ -80,7 +106,6 @@ class MapsManager {
         const maps = this.store.maps,
             activeMap = maps.find(m => m.data.id == this.store.activeMap);
 
-        this.maps = {};
         maps.forEach(m => this.add(m));
 
         if (activeMap) {

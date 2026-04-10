@@ -1,7 +1,7 @@
-/// <reference path="../Model/CellIndex.ts" />
-/// <reference path="../UI/UIElement.ts" />
+import { CellIndex } from "../Model/CellIndex";
+import { UIElement } from "../UI/UIElement";
 
-interface DrawingLayer extends UIElement {
+export interface DrawingLayer extends UIElement {
     update(cell: CellIndex): void;
     zoom(): void;
 }

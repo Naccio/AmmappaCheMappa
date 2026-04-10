@@ -1,4 +1,6 @@
-class CanvasProvider {
+import { CanvasDrawer } from "../Rendering/CanvasDrawer";
+
+export class CanvasProvider {
     private readonly canvases: { [id: string]: CanvasDrawer } = {};
 
     public create(id: string, width: number, height: number, scale?: number) {

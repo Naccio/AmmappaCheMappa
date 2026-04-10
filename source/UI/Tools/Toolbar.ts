@@ -1,6 +1,11 @@
-/// <reference path="../UIElement.ts" />
+import { LayerAccessor } from "../../Layers/LayerAccessor";
+import { LayersManager } from "../../Layers/LayersManager";
+import { Localizer } from "../../Localization/Localizer";
+import { MapAccessor } from "../../MapAccessor";
+import { UIElement } from "../UIElement";
+import { Tool } from "./Tool";
 
-class Toolbar implements UIElement {
+export class Toolbar implements UIElement {
     private readonly container: HTMLDivElement;
 
     private _activeTool?: Tool;
@@ -84,7 +89,7 @@ class Toolbar implements UIElement {
 
         const layerTypes = tool.configuration.layerTypes;
 
-        return layerTypes.length === 0 || layerTypes.includes(layer.data.type);
+        return layerTypes.length === 0 || layerTypes.includes(layer.value.type);
     }
 
     private layerSelectHandle = (layer: LayerAccessor) => {

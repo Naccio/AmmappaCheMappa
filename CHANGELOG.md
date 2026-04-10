@@ -5,12 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 
+## [alpha.3] - 2026-04-10
+
+### Added
+
+- Commands:
+  - **Edit map**: allows to edit the active map
+  - **New layer**: allows to create a new layer in the active map
+  - **Edit layer**: allows to edit the selected layer in the active map
+  - **Delete layer**: allows to delete the selected layer in the active map
+- UI:
+  - **Main menu**:
+    - *Layer* menu: gives access to all layer commands
+- Architecture:
+  - Added `package.json` and all the other NPM shenanigans
+
+### Changed
+
+- UI:
+  - **Main menu**:
+    - *File* menu: added **Edit map** command
+  - **Layers Panel**:
+    - Layers have a "close" button
+- Architecture:
+  - Moved `tsconfig.json` to root folder
+  - Switched from `outFile` to webpack since the former got
+    deprecated
+    - This effectively changes my commitment of "no dependencies" to "no
+      frontend dependencies", since apparently it is not possible to transpile
+      TypeScript into a single file without having to install a plethora of
+      other things
+    - A nice thing about this is that now the output JavaScript is minimized
+
+
 ## [alpha.2] - 2026-03-29
 
 ### Added
 
 - Commands:
-  - **Close**: closes the active map
+  - **Close map**: closes the active map
 - UI:
   - **Drawing area**:
     - More than one map can be opened at once
@@ -19,15 +52,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ### Changed
 
-- BREAKING: Model changed, maps generated with previous versions will
-  no longer work
+- BREAKING: Model changed, maps generated with previous versions will no longer
+  work
 
 - Commands:
   - **New**: Maps can be given a title
 - UI:
   - **Drawing area**:
-    - Map default position is centered on main UI area instead of
-      whole window
+    - Map default position is centered on main UI area instead of whole window
 - Storage:
   - Data stored between sessions:
     - Opened maps
@@ -42,11 +74,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Added
 
 - Commands:
-  - **About**: opens a dialog containing the application's current
-    version and a link to its repository
+  - **About**: opens a dialog containing the application's current version and
+    a link to its repository
 - UI:
-  - **Layers panel**: allows to toggle a layer's visibility and to
-    choose which layer is active
+  - **Layers panel**: allows to toggle a layer's visibility and to choose which
+    layer is active
     - Layers can have different types: *terrain*, *text*, *grid*
     - At the moment one layer per type is generated
     - Layers management (CRUD operations) will be added in the future
@@ -54,18 +86,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - *Help* menu
 - Architecture:
   - Changelog
-  - HTML checkbox inputs are used for multiple selection (*e.g.*
-    visible layers)
+  - HTML checkbox inputs are used for multiple selection (*e.g.* visible layers)
 
 ### Changed
 
 - UI:
-  - **Toolbar**: Tools that are not available on the active layer are
-    hidden
+  - **Toolbar**: Tools that are not available on the active layer are hidden
 - Tools:
   - Tools work on specific layer types
-  - **Mountains**, **Places**, **River**, **Road** and **Trees** work
-    on *terrain* layers
+  - **Mountains**, **Places**, **River**, **Road** and **Trees** work on
+    *terrain* layers
   - **Text** works on *text* layers
   - **Eraser** works on *terrain* and *text* layers
 
@@ -75,40 +105,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Added
 
 - Commands:
-  - **New**: allows to create a new map with custom dimensions
-  - **Open**: allows to load a map from a JSON file
-  - **Save**: allows to download the current map as a JSON file
-  - **Export**: allows to download the current map as a PNG image
+  - **New map**: allows to create a new map with custom dimensions
+  - **Open map**: allows to load a map from a JSON file
+  - **Save map**: allows to download the current map as a JSON file
+  - **Export map**: allows to download the current map as a PNG image
 - UI:
   - **Drawing area**: main element of the UI, allows to draw the map
     - Scroll to zoom
     - Click and drag with auxiliary button to move
     - Double click auxiliary button to center
   - **Main menu**:
-    - *File* menu: gives access to all commands
+    - *File* menu: gives access to all map commands
     - *Language* menu: allows to change localization
   - **Toolbar**: allows to select a tool to use in the **drawing area**
 - Tools:
-  (can be used by clicking on a cell or clicking and dragging over
-  multiple cells)
+  (can be used by clicking on a cell or clicking and dragging over multiple
+  cells)
   - **Eraser**: allows to clear cells
   - **Mountains**: allows to draw mountains
     (4 mountains per cell will be randomly generated)
   - **Place**: allows to mark places of interest
     (one place per cell)
   - **River**: allows to draw rivers
-    (connected pieces of river will be generated in each cell using
-    bezier curves)
+    (connected pieces of river will be generated in each cell using bezier
+    curves)
   - **Road**: allows to draw roads
-    (connected pieces of road will be generated in each cell using
-    straight lines)
+    (connected pieces of road will be generated in each cell using straight
+    lines)
   - **Text**: allows to add labels to the map
   - **Trees**: allows to draw trees
     (24 trees per cell will be randomly generated)
 - Architecture:
   - No external libraries, NPM is used exclusively for tsc
-  - Trying to be as SOLID as possible while still maintaining
-    some agility
+  - Trying to be as SOLID as possible while still maintaining some agility
   - HTML canvas is used to draw the map
     - one canvas per layer
     - the grid is in a different layer

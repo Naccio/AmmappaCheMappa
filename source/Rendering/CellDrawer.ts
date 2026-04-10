@@ -1,6 +1,14 @@
-/// <reference path="Drawer.ts" />
+import { MapAccessor } from "../MapAccessor";
+import { MathHelper } from "../MathHelper";
+import { CellIndex } from "../Model/CellIndex";
+import { Point } from "../Model/Point";
+import { Vector } from "../Model/Vector";
+import { VectorMath } from "../VectorMath";
+import { Drawer } from "./Drawer";
+import { LineStyle } from "./LineStyle";
+import { ShapeStyle } from "./ShapeStyle";
 
-class CellDrawer {
+export class CellDrawer {
     constructor(private cellIndex: CellIndex, private mapAccessor: MapAccessor, private drawer: Drawer) {
     }
 

@@ -1,11 +1,11 @@
-/// <reference path="../MapAccessor.ts" />
-/// <reference path="../Rendering/LayerRenderer.ts" />
-/// <reference path="../UI/CanvasProvider.ts" />
-/// <reference path="DrawingLayer.ts" />
-/// <reference path="GridLayer.ts" />
-/// <reference path="LayerAbstractFactory.ts" />
+import { MapAccessor } from "../MapAccessor";
+import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { CanvasProvider } from "../UI/CanvasProvider";
+import { DrawingLayer } from "./DrawingLayer";
+import { GridLayer } from "./GridLayer";
+import { LayerAbstractFactory } from "./LayerAbstractFactory";
 
-class GridLayerFactory implements LayerAbstractFactory {
+export class GridLayerFactory implements LayerAbstractFactory {
 
     private readonly layers: { id: string, layer: GridLayer }[] = [];
 

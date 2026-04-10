@@ -1,14 +1,14 @@
-/// <reference path="../Commands/New.ts" />
-/// <reference path="../Commands/Open.ts" />
-/// <reference path="../Localization/Localizer.ts" />
-/// <reference path="UIElement.ts" />
+import { NewMap } from "../Commands/NewMap";
+import { OpenMap } from "../Commands/OpenMap";
+import { Localizer } from "../Localization/Localizer";
+import { UIElement } from "./UIElement";
 
-class Welcome implements UIElement {
+export class Welcome implements UIElement {
     private readonly container: HTMLDivElement;
 
     constructor(
-        openCommand: Open,
-        newCommand: New,
+        openCommand: OpenMap,
+        newCommand: NewMap,
         localizer: Localizer
     ) {
         const container = document.createElement('div'),
@@ -21,10 +21,10 @@ class Welcome implements UIElement {
 
         message.innerText = localizer['paragraph_about'];
 
-        openButton.innerText = localizer['command_label_open'];
+        openButton.innerText = localizer['command_label_open_map'];
         openButton.onclick = () => openCommand.execute();
 
-        newButton.innerText = localizer['command_label_new'];
+        newButton.innerText = localizer['command_label_new_map'];
         newButton.onclick = () => newCommand.execute();
 
         buttons.append(openButton, newButton);

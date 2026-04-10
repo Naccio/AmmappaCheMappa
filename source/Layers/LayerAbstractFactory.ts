@@ -1,6 +1,7 @@
-/// <reference path="DrawingLayer.ts" />
+import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { DrawingLayer } from "./DrawingLayer";
 
-interface LayerAbstractFactory {
+export interface LayerAbstractFactory {
     get type(): string;
     createRenderer(id: string): LayerRenderer;
     createDrawing(id: string): DrawingLayer;

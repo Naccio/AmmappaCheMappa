@@ -1,5 +1,8 @@
-class VectorCalculator {
-    constructor (public x: number, public y: number) {
+import { Vector } from "./Model/Vector";
+import { VectorMath } from "./VectorMath";
+
+export class VectorCalculator {
+    constructor(public x: number, public y: number) {
     }
 
     public add(v: Vector) {

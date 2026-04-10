@@ -1,7 +1,10 @@
-/// <reference path="../../Rendering/GenericObjectRenderer.ts" />
-/// <reference path="PlacesHelper.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { CellDrawer } from "../../Rendering/CellDrawer";
+import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
+import { Place } from "./Place";
+import { PlacesHelper } from "./PlacesHelper";
 
-class PlaceRenderer extends GenericObjectRenderer<Place> {
+export class PlaceRenderer extends GenericObjectRenderer<Place> {
 
     protected draw(place: Place, drawer: CellDrawer) {
         const iconSize = .25,
@@ -13,7 +16,7 @@ class PlaceRenderer extends GenericObjectRenderer<Place> {
         });
     }
 
-    protected is(object: MapObject) : object is Place {
+    protected is(object: MapObject): object is Place {
         return PlacesHelper.isPlace(object);
     }
 

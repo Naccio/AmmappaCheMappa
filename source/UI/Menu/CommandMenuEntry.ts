@@ -1,7 +1,7 @@
-/// <reference path="../../Commands/Command.ts" />
-/// <reference path="./ButtonMenuEntry.ts" />
+import { Command } from "../../Commands/Command";
+import { ButtonMenuEntry } from "./ButtonMenuEntry";
 
-class CommandMenuEntry extends ButtonMenuEntry {
+export class CommandMenuEntry extends ButtonMenuEntry {
     constructor(command: Command) {
         super(command.label, () => command.execute());
 

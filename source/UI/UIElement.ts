@@ -1,3 +1,3 @@
-interface UIElement {
+export interface UIElement {
     get html(): HTMLElement;
 }

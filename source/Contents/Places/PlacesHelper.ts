@@ -1,6 +1,7 @@
-/// <reference path="Place.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { Place } from "./Place";
 
-class PlacesHelper {
+export class PlacesHelper {
     public static readonly layer = 'terrain';
     public static readonly objectType = 'place';
 

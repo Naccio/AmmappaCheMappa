@@ -1,9 +1,13 @@
-/// <reference path="../../Rendering/GenericObjectRenderer.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { CellDrawer } from "../../Rendering/CellDrawer";
+import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
+import { Mountain } from "./Mountain";
+import { MountainsHelper } from "./MountainsHelper";
 
-class MountainsRenderer extends GenericObjectRenderer<Mountain> {
+export class MountainsRenderer extends GenericObjectRenderer<Mountain> {
     private readonly lineWidth = 4;
 
-    protected is(object: MapObject) : object is Mountain {
+    protected is(object: MapObject): object is Mountain {
         return MountainsHelper.isMountain(object);
     }
 

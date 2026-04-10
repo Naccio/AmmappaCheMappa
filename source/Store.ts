@@ -1,8 +1,8 @@
-/// <reference path="Model/ApplicationState.ts" />
-/// <reference path="Model/EditorMap.ts" />
+import { ApplicationState } from "./Model/ApplicationState";
+import { EditorMap } from "./Model/EditorMap";
 
 //TODO: Consider switching to IndexedDB
-class Store implements ApplicationState {
+export class Store implements ApplicationState {
     private _state?: ApplicationState;
 
     private get state() {

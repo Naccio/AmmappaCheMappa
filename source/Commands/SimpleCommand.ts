@@ -1,6 +1,6 @@
-/// <reference path="Command.ts" />
+import { Command } from "./Command";
 
-abstract class SimpleCommand implements Command {
+export abstract class SimpleCommand implements Command {
     private readonly _label: string;
 
     constructor(label: string) {

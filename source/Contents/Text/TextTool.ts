@@ -1,12 +1,15 @@
-/// <reference path='../../Localization/Localizer.ts'/>
-/// <reference path='../../MapAccessor.ts'/>
-/// <reference path='../../UI/ModalLauncher.ts'/>
-/// <reference path='../../UI/Tools/Tool.ts'/>
-/// <reference path='../../VectorMath.ts'/>
-/// <reference path='GridText.ts'/>
-/// <reference path='TextHelper.ts'/>
+import { LayersManager } from "../../Layers/LayersManager";
+import { Localizer } from "../../Localization/Localizer";
+import { MapAccessor } from "../../MapAccessor";
+import { Point } from "../../Model/Point";
+import { FormsHelper } from "../../UI/Forms/FormsHelper";
+import { ModalLauncher } from "../../UI/ModalLauncher";
+import { Tool } from "../../UI/Tools/Tool";
+import { VectorMath } from "../../VectorMath";
+import { GridText } from "./GridText";
+import { TextHelper } from "./TextHelper";
 
-class TextTool implements Tool {
+export class TextTool implements Tool {
     public readonly configuration = {
         id: 'text',
         labelResourceId: 'tool_label_text',
@@ -23,32 +26,17 @@ class TextTool implements Tool {
             return;
         }
 
-
-        const textInput = document.createElement('input'),
-            textLabel = document.createElement('label'),
-            sizeInput = document.createElement('input'),
-            sizeLabel = document.createElement('label'),
+        const textInput = FormsHelper.createTextInput(this.localizer['input_label_text']),
+            sizeInput = FormsHelper.createNumberInput(this.localizer['input_label_size'], 5, 100),
             title = this.localizer['form_title_new_text'];
 
-        textInput.id = 'text';
-        textInput.type = 'text';
         textInput.required = true;
 
-        textLabel.htmlFor = textInput.id;
-        textLabel.innerText = this.localizer['input_label_text'];
-
-        sizeInput.id = 'size';
-        sizeInput.type = 'number';
-        sizeInput.min = '5';
-        sizeInput.max = '100';
         sizeInput.value = '10';
         textInput.required = true;
 
-        sizeLabel.htmlFor = sizeInput.id;
-        sizeLabel.innerText = this.localizer['input_label_size'];
-
-        this.modal.launchForm(title, [textLabel, textInput, sizeLabel, sizeInput], () => {
-            const fontSize = parseInt(sizeInput.value) / 100,
+        this.modal.launchForm(title, [textInput.html, sizeInput.html], () => {
+            const fontSize = parseInt(sizeInput.value!) / 100,
                 layer = TextHelper.layer,
                 normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
                 position = VectorMath.round(normalizedPosition, 2),
@@ -56,7 +44,7 @@ class TextTool implements Tool {
                     type: TextHelper.objectType,
                     layer,
                     position,
-                    value: textInput.value,
+                    value: textInput.value!,
                     fontSize
                 };
 

@@ -1,10 +1,12 @@
-/// <reference path="../MapAccessor.ts" />
-/// <reference path="../Rendering/CanvasDrawer.ts" />
-/// <reference path="../Rendering/CellRenderer.ts" />
-/// <reference path="../Rendering/Drawer.ts" />
-/// <reference path="../Rendering/LayerRenderer.ts" />
+import { MapAccessor } from "../MapAccessor";
+import { CellIndex } from "../Model/CellIndex";
+import { CanvasDrawer } from "../Rendering/CanvasDrawer";
+import { CellRenderer } from "../Rendering/CellRenderer";
+import { Drawer } from "../Rendering/Drawer";
+import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { DrawingLayer } from "./DrawingLayer";
 
-class DefaultLayer implements DrawingLayer, LayerRenderer {
+export class DefaultLayer implements DrawingLayer, LayerRenderer {
 
     constructor(
         private id: string,

@@ -1,16 +1,29 @@
-class LayersPanel implements UIElement {
-    private container: HTMLDivElement;
+import { Localizer } from "../Localization/Localizer";
+import { MapLayer } from "../Model/MapLayer";
+import { UIElement } from "../UI/UIElement";
+import { UIFactory } from "../UI/UIFactory";
+import { LayerAccessor } from "./LayerAccessor";
+import { LayersManager } from "./LayersManager";
 
-    public constructor(private layers: LayersManager, private localizer: Localizer) {
+export class LayersPanel implements UIElement {
+    private readonly container: HTMLDivElement;
+    private readonly layers: Map<string, HTMLElement>;
+
+    public constructor(
+        private layersManager: LayersManager,
+        private uiFactory: UIFactory,
+        private localizer: Localizer
+    ) {
         const container = document.createElement('div');
 
         container.className = 'layers';
 
-        this.layers.onCreate(l => this.buildLayer(l));
-        this.layers.onDelete(l => this.removeLayer(l.id));
-        this.layers.onSelect(l => this.selectLayer(l));
+        layersManager.onCreate(l => this.buildLayer(l));
+        layersManager.onDelete(l => this.removeLayer(l.id));
+        layersManager.onSelect(l => this.selectLayer(l));
 
         this.container = container;
+        this.layers = new Map<string, HTMLElement>();
     }
 
     public get html() {
@@ -18,16 +31,19 @@ class LayersPanel implements UIElement {
     }
 
     private buildLayer(layer: LayerAccessor) {
-        const data = layer.data,
+        const data = layer.value,
             id = data.id,
-            mapId = this.layers.mapId,
+            name = this.getName(data),
+            mapId = this.layersManager.mapId,
             //HACK: Magic string layer_type_
             type = this.localizer[`layer_type_${data.type}`],
             wrapper = document.createElement('div'),
             check = document.createElement('input'),
             radio = document.createElement('input'),
             label = document.createElement('label'),
-            typeLabel = document.createElement('small');
+            labelText = document.createElement('span'),
+            typeLabel = document.createElement('small'),
+            deleteButton = this.uiFactory.createCloseButton(_ => this.layersManager.delete(id));
 
         check.type = 'checkbox';
         check.name = mapId + '-visible-layers';
@@ -35,7 +51,7 @@ class LayersPanel implements UIElement {
         check.id = id + '-visible';
         check.checked = !data.hidden;
 
-        check.onchange = () => this.layers.update(id, l => l.hidden = !check.checked);
+        check.onchange = () => this.layersManager.update(id, l => l.hidden = !check.checked);
 
         radio.type = 'radio';
         radio.name = mapId + '-active-layer';
@@ -43,38 +59,51 @@ class LayersPanel implements UIElement {
         radio.id = this.getRadioId(id);
         radio.className = 'label-radio';
 
-        radio.onchange = () => this.layers.select(id);
+        radio.onchange = () => this.layersManager.select(id);
 
         typeLabel.innerText = `(${type})`;
 
         label.htmlFor = radio.id;
-        label.innerText = data.name;
-        label.title = data.name;
+        label.append(labelText);
         label.append(typeLabel);
-
-        wrapper.id = this.getWrapperId(id);
+        label.append(deleteButton);
 
         wrapper.append(check);
         wrapper.append(radio);
         wrapper.append(label);
+
+        layer.subscribe(l => {
+            const name = this.getName(l);
+
+            label.title = name;
+            labelText.innerText = name;
+        });
+
         this.container.append(wrapper);
+        this.layers.set(id, wrapper);
+    }
+
+    private getName(layer: MapLayer) {
+        return layer.name ?? layer.id;
     }
 
     private getRadioId(id: string) {
         return id + '-active';
     }
 
-    private getWrapperId(id: string) {
-        return id + '-panel-controls';
-    }
-
     private removeLayer(id: string) {
-        id = this.getWrapperId(id);
-        document.getElementById(id)?.remove();
+        const layer = this.layers.get(id);
+
+        if (layer == undefined) {
+            return;
+        }
+
+        layer.remove();
+        this.layers.delete(id);
     }
 
     private selectLayer(layer: LayerAccessor) {
-        const id = this.getRadioId(layer.data.id);
+        const id = this.getRadioId(layer.id);
         document.getElementById(id)?.click();
     }
 }

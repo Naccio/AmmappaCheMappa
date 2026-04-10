@@ -1,6 +1,6 @@
-/// <reference path="LineStyle.ts" />
+import { LineStyle } from "./LineStyle";
 
-interface ShapeStyle {
+export interface ShapeStyle {
     line?: LineStyle,
     fillStyle?: string
 }

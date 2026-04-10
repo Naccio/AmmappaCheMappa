@@ -1,7 +1,8 @@
-/// <reference path="LayerAbstractFactory.ts" />
-/// <reference path="LayersHelper.ts" />
+import { MapLayer } from "../Model/MapLayer";
+import { LayerAbstractFactory } from "./LayerAbstractFactory";
+import { LayerAccessor } from "./LayerAccessor";
 
-class LayerFactory {
+export class LayerFactory {
 
     public constructor(private factories: LayerAbstractFactory[]) {
     }
@@ -9,11 +10,11 @@ class LayerFactory {
     public create(layer: MapLayer): LayerAccessor {
         const factory = this.getFactory(layer.type);
 
-        return {
-            data: layer,
-            renderer: factory.createRenderer(layer.id),
-            drawing: factory.createDrawing(layer.id)
-        };
+        return new LayerAccessor(
+            layer,
+            factory.createDrawing(layer.id),
+            factory.createRenderer(layer.id)
+        );
     }
 
     private getFactory(type: string) {

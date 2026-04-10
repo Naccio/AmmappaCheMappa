@@ -1,8 +1,12 @@
-/// <reference path='../../MapAccessor.ts'/>
-/// <reference path='../../UI/Tools/Tool.ts'/>
-/// <reference path='PlacesHelper.ts'/>
+import { LayersManager } from "../../Layers/LayersManager";
+import { MapAccessor } from "../../MapAccessor";
+import { Point } from "../../Model/Point";
+import { Tool } from "../../UI/Tools/Tool";
+import { VectorMath } from "../../VectorMath";
+import { Place } from "./Place";
+import { PlacesHelper } from "./PlacesHelper";
 
-class PlacesTool implements Tool {
+export class PlacesTool implements Tool {
     public readonly configuration = {
         id: 'places',
         labelResourceId: 'tool_label_places',

@@ -1,12 +1,16 @@
-/// <reference path="../Events/EventManager.ts" />
-/// <reference path="LayerAccessor.ts" />
-/// <reference path="LayerFactory.ts" />
+import { EventHandler } from "../Events/ApplicationEvent";
+import { InternalEvent } from "../Events/InternalEvent";
+import { MapAccessor } from "../MapAccessor";
+import { CellIndex } from "../Model/CellIndex";
+import { MapLayer } from "../Model/MapLayer";
+import { MapObject } from "../Model/MapObject";
+import { LayerAccessor } from "./LayerAccessor";
+import { LayerFactory } from "./LayerFactory";
 
-class LayersManager {
+export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
     private readonly deleteEvent = new InternalEvent<MapLayer>();
     private readonly selectEvent = new InternalEvent<LayerAccessor>();
-    private readonly updateEvent = new InternalEvent<CellIndex | MapLayer>();
 
     private _activeLayer?: LayerAccessor;
 
@@ -27,19 +31,26 @@ class LayersManager {
         const accessor = this.factory.create(layer);
 
         this.layers.push(accessor);
+        this.saveLayers();
         this.createEvent.trigger(accessor);
 
         return accessor;
     }
 
     public delete(id: string) {
+        if (this.layers.length === 1) {
+            return;
+        }
+
         const layer = this.getLayer(id);
 
-        this.layers = this.layers.filter(l => l.data.id !== id);
-        if (this.activeLayer?.data.id === id) {
+        this.layers = this.layers.filter(l => l.id !== id);
+        if (this.activeLayer?.id === id) {
             this._activeLayer = undefined;
+            this.select(this.layers[0].id);
         }
-        this.deleteEvent.trigger(layer.data);
+        this.saveLayers();
+        this.deleteEvent.trigger(layer.value);
     }
 
     public select(id: string) {
@@ -57,23 +68,17 @@ class LayersManager {
             return;
         }
 
-        objects.forEach(o => o.layer = this._activeLayer!.data.id);
+        objects.forEach(o => o.layer = this._activeLayer!.id);
 
         this.mapAccessor.setObjects(index, objects);
-
-        this.updateEvent.trigger(index);
+        this._activeLayer.drawing.update(index);
     }
 
     public update(id: string, action: (layer: MapLayer) => void) {
         const layer = this.getLayer(id);
 
-        action(layer.data);
+        layer.update(action);
         this.mapAccessor.save();
-        this.updateEvent.trigger(layer.data);
-    }
-
-    public onUpdate(handler: EventHandler<CellIndex | MapLayer>) {
-        this.updateEvent.subscribe(handler);
     }
 
     public onSelect(handler: EventHandler<LayerAccessor>) {
@@ -89,12 +94,17 @@ class LayersManager {
     }
 
     private getLayer(id: string) {
-        const layer = this.layers.find(l => l.data.id === id);
+        const layer = this.layers.find(l => l.id === id);
 
         if (layer === undefined) {
             throw new Error(`Layer '${id}' does not exist.`);
         }
 
         return layer;
+    }
+
+    private saveLayers() {
+        this.mapAccessor.map.data.layers = this.layers.map(l => l.value);
+        this.mapAccessor.save();
     }
 }

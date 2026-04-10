@@ -1,6 +1,7 @@
-/// <reference path='Toolbar.ts' />
+import { Vector } from "../../Model/Vector";
+import { Toolbar } from "./Toolbar";
 
-class ToolActivator {
+export class ToolActivator {
     //TODO: Should not depend on UI element
     constructor(private toolbar: Toolbar) {
     }

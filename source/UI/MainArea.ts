@@ -1,10 +1,13 @@
-/// <reference path="../MapManager.ts" />
-/// <reference path="MapUI.ts" />
-/// <reference path="MapUIFactory.ts" />
-/// <reference path="UIElement.ts" />
-/// <reference path="Welcome.ts" />
+import { MapManager } from "../MapManager";
+import { MapsManager } from "../MapsManager";
+import { MapData } from "../Model/MapData";
+import { MapUI } from "./MapUI";
+import { MapUIFactory } from "./MapUIFactory";
+import { UIElement } from "./UIElement";
+import { UIFactory } from "./UIFactory";
+import { Welcome } from "./Welcome";
 
-class MainArea implements UIElement {
+export class MainArea implements UIElement {
     private readonly container: HTMLElement;
     private readonly tabs: HTMLElement;
 
@@ -31,6 +34,7 @@ class MainArea implements UIElement {
 
         mapsManager.onActivate(map => this.activate(map));
         mapsManager.onAdd(map => this.add(map));
+        mapsManager.onUpdate(map => this.update(map));
         mapsManager.onRemove(id => this.remove(id));
     }
 
@@ -63,6 +67,10 @@ class MainArea implements UIElement {
         return map;
     }
 
+    private getTitle(map: MapData) {
+        return map.title ?? map.id;
+    }
+
     private add(map: MapManager) {
         const id = map.id,
             ui = this.mapUIFactory.create(map),
@@ -79,7 +87,7 @@ class MainArea implements UIElement {
         tab.className = 'tab';
 
         anchor.href = '#' + ui.id;
-        anchor.innerText = map.mapAccessor.map.data.title ?? id;
+        anchor.innerText = this.getTitle(map.mapAccessor.map.data);
         anchor.onclick = () => this.mapsManager.activate(id);
 
         tab.append(anchor, close);
@@ -103,5 +111,11 @@ class MainArea implements UIElement {
         map.ui.remove();
 
         this.maps.splice(this.maps.indexOf(map), 1);
+    }
+
+    private update(map: MapData) {
+        const mapStuff = this.getMap(map.id);
+
+        mapStuff.tab.getElementsByTagName('a')[0].innerText = this.getTitle(map);
     }
 }

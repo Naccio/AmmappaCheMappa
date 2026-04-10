@@ -1,6 +1,10 @@
-/// <reference path="Model/Line.ts" />
+import { MathHelper } from "./MathHelper";
+import { Line } from "./Model/Line";
+import { Point } from "./Model/Point";
+import { Vector } from "./Model/Vector";
+import { VectorCalculator } from "./VectorCalculator";
 
-class VectorMath {
+export class VectorMath {
     public static readonly zero = {
         x: 0,
         y: 0
@@ -45,7 +49,7 @@ class VectorMath {
     }
 
     // http://paulbourke.net/geometry/pointlineplane/
-    public static lineIntersection(line1: Line, line2: Line) : Point | undefined {
+    public static lineIntersection(line1: Line, line2: Line): Point | undefined {
         const p1 = line1.from,
             p2 = line1.to,
             p3 = line2.from,
@@ -69,15 +73,15 @@ class VectorMath {
         if (denominator === 0) {
             return undefined;
         }
-    
+
         const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator,
             ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
-    
+
         // Segments do not intersect
         if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
             return undefined;
         }
-        
+
         return {
             x: x1 + ua * (x2 - x1),
             y: y1 + ua * (y2 - y1)
@@ -101,7 +105,7 @@ class VectorMath {
     public static rotate(v: Vector, rad: number) {
         const cos = Math.cos(rad),
             sin = Math.sin(rad);
-            
+
         return new VectorCalculator(
             cos * v.x - sin * v.y,
             sin * v.x + cos * v.y

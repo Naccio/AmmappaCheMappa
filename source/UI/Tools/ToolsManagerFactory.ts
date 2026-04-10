@@ -1,16 +1,19 @@
-/// <reference path="Eraser.ts" />
-/// <reference path="ToolsManager.ts" />
-/// <reference path="../DrawingUI.ts" />
-/// <reference path="../../Contents/Mountains/MountainsTool.ts" />
-/// <reference path="../../Contents/Places/PlacesTool.ts" />
-/// <reference path="../../Contents/Rivers/RiversTool.ts" />
-/// <reference path="../../Contents/Roads/RoadsTool.ts" />
-/// <reference path="../../Contents/Text/TextTool.ts" />
-/// <reference path="../../Contents/Trees/TreesTool.ts" />
-/// <reference path="../../Layers/LayersManager.ts" />
-/// <reference path="../../MapAccessor.ts" />
+import { MountainFactory } from "../../Contents/Mountains/MountainFactory";
+import { MountainsTool } from "../../Contents/Mountains/MountainsTool";
+import { PlacesTool } from "../../Contents/Places/PlacesTool";
+import { RiversTool } from "../../Contents/Rivers/RiversTool";
+import { RoadsTool } from "../../Contents/Roads/RoadsTool";
+import { TextTool } from "../../Contents/Text/TextTool";
+import { TreesTool } from "../../Contents/Trees/TreesTool";
+import { LayersManager } from "../../Layers/LayersManager";
+import { Localizer } from "../../Localization/Localizer";
+import { MapAccessor } from "../../MapAccessor";
+import { DrawingUI } from "../DrawingUI";
+import { ModalLauncher } from "../ModalLauncher";
+import { Eraser } from "./Eraser";
+import { ToolsManager } from "./ToolsManager";
 
-class ToolsManagerFactory {
+export class ToolsManagerFactory {
     constructor(
         private modalLauncher: ModalLauncher,
         private mountainFactory: MountainFactory,

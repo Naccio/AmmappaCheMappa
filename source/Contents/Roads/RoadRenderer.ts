@@ -1,10 +1,14 @@
-/// <reference path="../../Rendering/GenericObjectRenderer.ts" />
-/// <reference path="Road.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { CellDrawer } from "../../Rendering/CellDrawer";
+import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
+import { LineStyle } from "../../Rendering/LineStyle";
+import { VectorMath } from "../../VectorMath";
+import { Road } from "./Road";
 
-class RoadRenderer extends GenericObjectRenderer<Road> {
+export class RoadRenderer extends GenericObjectRenderer<Road> {
     private readonly lineWidth = 2;
 
-    protected is(object: MapObject) : object is Road {
+    protected is(object: MapObject): object is Road {
         return object.type === 'road';
     }
 
@@ -18,7 +22,7 @@ class RoadRenderer extends GenericObjectRenderer<Road> {
             shift2 = shift1.invert(),
             from2 = shift2.add(from),
             to2 = shift2.add(to),
-            style : LineStyle = {
+            style: LineStyle = {
                 lineWidth: this.lineWidth,
                 ignoreBorders: true
             };

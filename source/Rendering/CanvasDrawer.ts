@@ -1,6 +1,9 @@
-/// <reference path="Drawer.ts" />
+import { Point } from "../Model/Point";
+import { Drawer } from "./Drawer";
+import { LineStyle } from "./LineStyle";
+import { ShapeStyle } from "./ShapeStyle";
 
-class CanvasDrawer implements Drawer{
+export class CanvasDrawer implements Drawer {
 
     private readonly context: CanvasRenderingContext2D;
 
@@ -27,18 +30,18 @@ class CanvasDrawer implements Drawer{
         const ignoreBorders = style.ignoreBorders ?? false,
             padding = ignoreBorders ? undefined : style.lineWidth ?? 1;
 
-            this.context.save();
-            this.context.beginPath();
-            this.context.moveTo(from.x, from.y);
-            this.context.bezierCurveTo(control1.x, control1.y, control2.x, control2.y, to.x, to.y);
-    
-            this.setLineStyle(style);
-            this.context.stroke();
-            this.context.restore();
+        this.context.save();
+        this.context.beginPath();
+        this.context.moveTo(from.x, from.y);
+        this.context.bezierCurveTo(control1.x, control1.y, control2.x, control2.y, to.x, to.y);
+
+        this.setLineStyle(style);
+        this.context.stroke();
+        this.context.restore();
     }
 
-    public clear() : void;
-    public clear(point: Point, width: number, height: number) : void;
+    public clear(): void;
+    public clear(point: Point, width: number, height: number): void;
     public clear(point?: Point, width?: number, height?: number) {
         const x = point?.x ?? 0,
             y = point?.y ?? 0;
@@ -131,5 +134,5 @@ class CanvasDrawer implements Drawer{
         this.context.lineWidth = lineWidth;
         this.context.strokeStyle = color;
     }
-    
+
 }

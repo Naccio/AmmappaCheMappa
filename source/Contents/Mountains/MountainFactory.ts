@@ -1,12 +1,13 @@
-/// <reference path='../../GridHelper.ts'/>
-/// <reference path='../../MathHelper.ts'/>
-/// <reference path='../../VectorMath.ts'/>
-/// <reference path='Mountain.ts'/>
+import { GridHelper } from "../../GridHelper";
+import { MathHelper } from "../../MathHelper";
+import { VectorMath } from "../../VectorMath";
+import { Mountain } from "./Mountain";
+import { MountainsHelper } from "./MountainsHelper";
 
-class MountainFactory {
-    public create() : Mountain;
-    public create(quadrant: number) : Mountain;
-    public create(quadrant?: number) : Mountain {
+export class MountainFactory {
+    public create(): Mountain;
+    public create(quadrant: number): Mountain;
+    public create(quadrant?: number): Mountain {
         const M = MathHelper,
             scale = quadrant === undefined ? 1 : .5,
             width = M.round(M.random(.8, .9) * scale, 2),

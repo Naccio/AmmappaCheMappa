@@ -1,8 +1,8 @@
-/// <reference path="ButtonMenuEntry.ts" />
-/// <reference path="../../Localization/ApplicationLanguage.ts" />
-/// <reference path="../../Model/ApplicationState.ts" />
+import { ApplicationLanguage } from "../../Localization/ApplicationLanguage";
+import { ApplicationState } from "../../Model/ApplicationState";
+import { ButtonMenuEntry } from "./ButtonMenuEntry";
 
-class LanguageMenuEntry extends ButtonMenuEntry {
+export class LanguageMenuEntry extends ButtonMenuEntry {
     public constructor(state: ApplicationState, private language: ApplicationLanguage) {
         super(language.name, () => {
             state.locale = language.locale;

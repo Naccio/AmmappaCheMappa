@@ -1,15 +1,15 @@
-/// <reference path="./MenuEntry.ts" />
+import { MenuEntry } from "./MenuEntry";
 
-interface SubmenuMenuSettings {
+export interface SubmenuMenuSettings {
     alwaysVisible?: boolean;
     align?: 'left' | 'right';
 }
 
-class SubmenuMenuEntry implements MenuEntry {
+export class SubmenuMenuEntry implements MenuEntry {
     constructor(private label: string, private entries: MenuEntry[], private settings?: SubmenuMenuSettings) {
     }
 
-    public build() : HTMLElement[] {
+    public build(): HTMLElement[] {
         const menu = document.createElement('menu'),
             alwaysVisible = this.settings?.alwaysVisible ?? false,
             align = this.settings?.align ?? 'left';

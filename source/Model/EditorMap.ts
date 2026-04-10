@@ -1,7 +1,7 @@
-/// <reference path="MapData.ts" />
-/// <reference path="Point.ts" />
+import { MapData } from "./MapData";
+import { Point } from "./Point";
 
-interface EditorMap {
+export interface EditorMap {
     data: MapData,
     zoom: number,
     position: Point,

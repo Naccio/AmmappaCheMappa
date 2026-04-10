@@ -1,7 +1,7 @@
-/// <reference path="../../Model/MapObject.ts" />
-/// <reference path="../../Model/Point.ts" />
+import { MapObject } from "../../Model/MapObject";
+import { Point } from "../../Model/Point";
 
-interface River extends MapObject {
+export interface River extends MapObject {
     from: Point,
     to: Point,
     bend1: Point,

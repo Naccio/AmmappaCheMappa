@@ -1,13 +1,14 @@
-/// <reference path="CanvasDrawer.ts" />
-/// <reference path="RenderedMap.ts" />
+import { MapManager } from "../MapManager";
+import { CanvasDrawer } from "./CanvasDrawer";
+import { RenderedMap } from "./RenderedMap";
 
-class MapRenderer {
+export class MapRenderer {
 
     render(mapManager: MapManager): RenderedMap {
 
         const map = mapManager.mapAccessor.map.data,
             canvas = document.createElement('canvas'),
-            layers = mapManager.layers.layers.filter(l => !l.data.hidden);
+            layers = mapManager.layers.layers.filter(l => !l.value.hidden);
 
         canvas.width = map.columns * map.pixelsPerCell;
         canvas.height = map.rows * map.pixelsPerCell;

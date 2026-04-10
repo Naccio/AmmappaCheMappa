@@ -1,7 +1,10 @@
-/// <reference path="LanguageMenuEntry.ts" />
-/// <reference path="SubmenuMenuEntry.ts" />
+import { LocalizationHelper } from "../../Localization/LocalizationHelper";
+import { Localizer } from "../../Localization/Localizer";
+import { ApplicationState } from "../../Model/ApplicationState";
+import { LanguageMenuEntry } from "./LanguageMenuEntry";
+import { SubmenuMenuEntry } from "./SubmenuMenuEntry";
 
-class LanguageMenu extends SubmenuMenuEntry {
+export class LanguageMenu extends SubmenuMenuEntry {
 
     public constructor(state: ApplicationState, localizer: Localizer) {
         const entries: LanguageMenuEntry[] = [];

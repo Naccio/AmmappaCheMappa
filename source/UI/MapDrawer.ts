@@ -1,7 +1,16 @@
-/// <reference path="../Model/EditorMap.ts" />
-/// <reference path="../VectorMath.ts" />
+import { DrawingLayer } from "../Layers/DrawingLayer";
+import { LayerAccessor } from "../Layers/LayerAccessor";
+import { MapManager } from "../MapManager";
+import { MathHelper } from "../MathHelper";
+import { MapLayer } from "../Model/MapLayer";
+import { Point } from "../Model/Point";
+import { Vector } from "../Model/Vector";
+import { Store } from "../Store";
+import { VectorMath } from "../VectorMath";
+import { DrawingUI } from "./DrawingUI";
+import { UIElement } from "./UIElement";
 
-class MapDrawer implements UIElement {
+export class MapDrawer implements UIElement {
     private actualShift: Vector = VectorMath.zero;
     private readonly container: HTMLDivElement;
 
@@ -19,7 +28,7 @@ class MapDrawer implements UIElement {
         this.container = container;
 
         mapManager.layers.onCreate(this.layerCreateHandler);
-        mapManager.layers.onUpdate(this.layerUpdateHandler);
+        mapManager.layers.onDelete(this.layerDeleteHandler);
     }
 
     public get html() {
@@ -103,22 +112,12 @@ class MapDrawer implements UIElement {
     private layerCreateHandler = (c: LayerAccessor) => {
         this.container.append(c.drawing.html);
         c.renderer.render();
-        this.layerDataUpdateHandler(c.data);
+        c.subscribe(l => c.drawing.html.style.display = l.hidden ? 'none' : 'block');
     }
 
-    private layerDataUpdateHandler = (c: MapLayer) => {
+    private layerDeleteHandler = (c: MapLayer) => {
         const element = document.getElementById(c.id);
 
-        if (element) {
-            element.style.display = c.hidden ? 'none' : 'block';
-        }
-    }
-
-    private layerUpdateHandler = (c: CellIndex | MapLayer) => {
-        if ('id' in c) {
-            this.layerDataUpdateHandler(c);
-        } else {
-            this.mapManager.layers.activeLayer?.drawing.update(c);
-        }
+        element?.remove();
     }
 }

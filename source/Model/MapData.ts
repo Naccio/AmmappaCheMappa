@@ -1,6 +1,7 @@
-/// <reference path="MapLayer.ts" />
+import { MapLayer } from "./MapLayer";
+import { MapObject } from "./MapObject";
 
-interface MapData {
+export interface MapData {
     id: string,
     title?: string,
     columns: number,

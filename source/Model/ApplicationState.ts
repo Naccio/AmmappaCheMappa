@@ -1,6 +1,6 @@
-/// <reference path="EditorMap.ts" />
+import { EditorMap } from "./EditorMap";
 
-interface ApplicationState {
+export interface ApplicationState {
     maps: EditorMap[];
     activeMap?: string;
     locale?: string;
