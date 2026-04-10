@@ -3,7 +3,6 @@ import { InternalEvent } from "./Events/InternalEvent";
 import { Localizer } from "./Localization/Localizer";
 import { MapManager } from "./MapManager";
 import { MapManagerFactory } from "./MapManagerFactory";
-import { Dictionary } from "./Model/Dictionary";
 import { EditorMap } from "./Model/EditorMap";
 import { MapData } from "./Model/MapData";
 import { Store } from "./Store";
@@ -15,7 +14,7 @@ export class MapsManager {
     private readonly removeEvent = new InternalEvent<string>();
     private readonly activateEvent = new InternalEvent<MapManager | undefined>();
 
-    private maps: Dictionary<MapManager> = {};
+    private maps: Map<string, MapManager> = new Map<string, MapManager>();
 
     private _activeMap?: MapManager;
 
@@ -34,7 +33,7 @@ export class MapsManager {
         const manager = this.factory.create(map),
             id = map.data.id;
 
-        this.maps[id] = manager;
+        this.maps.set(id, manager);
 
         this.addEvent.trigger(manager);
         this.activate(id);
@@ -46,7 +45,7 @@ export class MapsManager {
             this.localizer['confirm_close_map_title'],
             this.localizer['confirm_close_map_message'],
             () => {
-                delete this.maps[id];
+                this.maps.delete(id);
 
                 this.store.deleteMap(id);
                 this.removeEvent.trigger(id);
@@ -65,7 +64,7 @@ export class MapsManager {
     }
 
     public activate(id: string) {
-        const map = this.maps[id];
+        const map = this.maps.get(id);
 
         this._activeMap = map;
 
@@ -74,8 +73,13 @@ export class MapsManager {
     }
 
     public update(id: string, action: (map: MapData) => void) {
-        const mapManager = this.maps[id],
-            map = mapManager.mapAccessor.map;
+        const mapManager = this.maps.get(id);
+
+        if (mapManager === undefined) {
+            return;
+        }
+
+        const map = mapManager.mapAccessor.map;
 
         action(map.data);
         this.store.saveMap(map);
@@ -102,7 +106,6 @@ export class MapsManager {
         const maps = this.store.maps,
             activeMap = maps.find(m => m.data.id == this.store.activeMap);
 
-        this.maps = {};
         maps.forEach(m => this.add(m));
 
         if (activeMap) {

@@ -1,5 +1,4 @@
 import { Localizer } from "../Localization/Localizer";
-import { Dictionary } from "../Model/Dictionary";
 import { MapLayer } from "../Model/MapLayer";
 import { UIElement } from "../UI/UIElement";
 import { UIFactory } from "../UI/UIFactory";
@@ -8,7 +7,7 @@ import { LayersManager } from "./LayersManager";
 
 export class LayersPanel implements UIElement {
     private readonly container: HTMLDivElement;
-    private readonly layers: Dictionary<HTMLElement> = {};
+    private readonly layers: Map<string, HTMLElement>;
 
     public constructor(
         private layersManager: LayersManager,
@@ -24,6 +23,7 @@ export class LayersPanel implements UIElement {
         layersManager.onSelect(l => this.selectLayer(l));
 
         this.container = container;
+        this.layers = new Map<string, HTMLElement>();
     }
 
     public get html() {
@@ -80,7 +80,7 @@ export class LayersPanel implements UIElement {
         });
 
         this.container.append(wrapper);
-        this.layers[id] = wrapper;
+        this.layers.set(id, wrapper);
     }
 
     private getName(layer: MapLayer) {
@@ -92,8 +92,14 @@ export class LayersPanel implements UIElement {
     }
 
     private removeLayer(id: string) {
-        this.layers[id].remove();
-        delete this.layers[id];
+        const layer = this.layers.get(id);
+
+        if (layer == undefined) {
+            return;
+        }
+
+        layer.remove();
+        this.layers.delete(id);
     }
 
     private selectLayer(layer: LayerAccessor) {
