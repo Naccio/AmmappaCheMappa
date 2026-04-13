@@ -1,4 +1,4 @@
-import { MapAccessor } from "../MapAccessor";
+import { MapAccessor } from "../Engine/MapAccessor";
 import { Drawer } from "../Rendering/Drawer";
 import { LayerRenderer } from "../Rendering/LayerRenderer";
 import { LineStyle } from "../Rendering/LineStyle";

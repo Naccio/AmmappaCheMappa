@@ -1,6 +1,6 @@
-import { Localizer } from "../Localization/Localizer";
-import { MapsManager } from "../MapsManager";
-import { Utilities } from "../Utilities";
+import { Localizer } from "../Engine/Localization/Localizer";
+import { MapsManager } from "../Engine/MapsManager";
+import { Utilities } from "../Utilities/Utilities";
 import { SimpleCommand } from "./SimpleCommand";
 
 export class OpenMap extends SimpleCommand {

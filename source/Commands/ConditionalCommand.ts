@@ -1,5 +1,5 @@
-import { EventHandler } from "../Events/ApplicationEvent";
-import { InternalEvent } from "../Events/InternalEvent";
+import { EventHandler } from "../Engine/Events/ApplicationEvent";
+import { InternalEvent } from "../Engine/Events/InternalEvent";
 import { Command } from "./Command";
 
 export abstract class ConditionalCommand implements Command {

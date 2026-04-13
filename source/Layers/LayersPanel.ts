@@ -1,4 +1,4 @@
-import { Localizer } from "../Localization/Localizer";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { MapLayer } from "../Model/MapLayer";
 import { UIElement } from "../UI/UIElement";
 import { UIFactory } from "../UI/UIFactory";

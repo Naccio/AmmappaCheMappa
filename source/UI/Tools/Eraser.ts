@@ -1,5 +1,5 @@
 import { LayersManager } from "../../Layers/LayersManager";
-import { MapAccessor } from "../../MapAccessor";
+import { MapAccessor } from "../../Engine/MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
 import { CellTool } from "./CellTool";
 

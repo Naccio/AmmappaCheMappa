@@ -1,11 +1,11 @@
 import { LayersManager } from "../../Layers/LayersManager";
-import { Localizer } from "../../Localization/Localizer";
-import { MapAccessor } from "../../MapAccessor";
+import { Localizer } from "../../Engine/Localization/Localizer";
+import { MapAccessor } from "../../Engine/MapAccessor";
 import { Point } from "../../Model/Point";
 import { FormsHelper } from "../../UI/Forms/FormsHelper";
 import { ModalLauncher } from "../../UI/ModalLauncher";
 import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../VectorMath";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { GridText } from "./GridText";
 import { TextHelper } from "./TextHelper";
 

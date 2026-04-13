@@ -3,10 +3,10 @@ import { InternalEvent } from "./Events/InternalEvent";
 import { Localizer } from "./Localization/Localizer";
 import { MapManager } from "./MapManager";
 import { MapManagerFactory } from "./MapManagerFactory";
-import { EditorMap } from "./Model/EditorMap";
-import { MapData } from "./Model/MapData";
+import { EditorMap } from "../Model/EditorMap";
+import { MapData } from "../Model/MapData";
 import { Store } from "./Store";
-import { ModalLauncher } from "./UI/ModalLauncher";
+import { ModalLauncher } from "../UI/ModalLauncher";
 
 export class MapsManager {
     private readonly addEvent = new InternalEvent<MapManager>();

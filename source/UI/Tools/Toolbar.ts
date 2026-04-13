@@ -1,7 +1,7 @@
 import { LayerAccessor } from "../../Layers/LayerAccessor";
 import { LayersManager } from "../../Layers/LayersManager";
-import { Localizer } from "../../Localization/Localizer";
-import { MapAccessor } from "../../MapAccessor";
+import { Localizer } from "../../Engine/Localization/Localizer";
+import { MapAccessor } from "../../Engine/MapAccessor";
 import { UIElement } from "../UIElement";
 import { Tool } from "./Tool";
 

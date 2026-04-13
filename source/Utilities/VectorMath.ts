@@ -1,7 +1,7 @@
 import { MathHelper } from "./MathHelper";
-import { Line } from "./Model/Line";
-import { Point } from "./Model/Point";
-import { Vector } from "./Model/Vector";
+import { Line } from "../Model/Line";
+import { Point } from "../Model/Point";
+import { Vector } from "../Model/Vector";
 import { VectorCalculator } from "./VectorCalculator";
 
 export class VectorMath {

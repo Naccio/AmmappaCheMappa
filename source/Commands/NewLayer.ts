@@ -1,6 +1,6 @@
 import { LayersHelper } from "../Layers/LayersHelper";
-import { Localizer } from "../Localization/Localizer";
-import { MapsManager } from "../MapsManager";
+import { Localizer } from "../Engine/Localization/Localizer";
+import { MapsManager } from "../Engine/MapsManager";
 import { FormsHelper } from "../UI/Forms/FormsHelper";
 import { ModalLauncher } from "../UI/ModalLauncher";
 import { ActiveMapCommand } from "./ActiveMapCommand";

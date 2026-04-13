@@ -1,9 +1,9 @@
 import { LayersManager } from "../../Layers/LayersManager";
-import { MapAccessor } from "../../MapAccessor";
-import { MathHelper } from "../../MathHelper";
+import { MapAccessor } from "../../Engine/MapAccessor";
+import { MathHelper } from "../../Utilities/MathHelper";
 import { CellIndex } from "../../Model/CellIndex";
 import { CellTool } from "../../UI/Tools/CellTool";
-import { VectorMath } from "../../VectorMath";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { Tree } from "./Tree";
 import { TreesHelper } from "./TreesHelper";
 

@@ -1,11 +1,11 @@
-import { GridHelper } from "./GridHelper";
-import { CellIndex } from "./Model/CellIndex";
-import { EditorMap } from "./Model/EditorMap";
-import { GridCell } from "./Model/GridCell";
-import { MapObject } from "./Model/MapObject";
-import { Point } from "./Model/Point";
+import { GridHelper } from "../Utilities/GridHelper";
+import { CellIndex } from "../Model/CellIndex";
+import { EditorMap } from "../Model/EditorMap";
+import { GridCell } from "../Model/GridCell";
+import { MapObject } from "../Model/MapObject";
+import { Point } from "../Model/Point";
 import { Store } from "./Store";
-import { VectorMath } from "./VectorMath";
+import { VectorMath } from "../Utilities/VectorMath";
 
 export class MapAccessor {
     constructor(private _map: EditorMap, private store: Store) {

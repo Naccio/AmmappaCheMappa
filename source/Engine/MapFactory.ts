@@ -1,7 +1,7 @@
-import { LayersHelper } from "./Layers/LayersHelper";
+import { LayersHelper } from "../Layers/LayersHelper";
 import { Localizer } from "./Localization/Localizer";
-import { EditorMap } from "./Model/EditorMap";
-import { Utilities } from "./Utilities";
+import { EditorMap } from "../Model/EditorMap";
+import { Utilities } from "../Utilities/Utilities";
 
 export class MapFactory {
     public constructor(private localizer: Localizer) {

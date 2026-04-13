@@ -1,5 +1,5 @@
-import { MapManager } from "../MapManager";
-import { MapsManager } from "../MapsManager";
+import { MapManager } from "../Engine/MapManager";
+import { MapsManager } from "../Engine/MapsManager";
 import { ConditionalCommand } from "./ConditionalCommand";
 
 export abstract class ActiveMapCommand extends ConditionalCommand {

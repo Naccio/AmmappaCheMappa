@@ -1,5 +1,5 @@
-import { LocalizationHelper } from "../../Localization/LocalizationHelper";
-import { Localizer } from "../../Localization/Localizer";
+import { LocalizationHelper } from "../../Engine/Localization/LocalizationHelper";
+import { Localizer } from "../../Engine/Localization/Localizer";
 import { ApplicationState } from "../../Model/ApplicationState";
 import { LanguageMenuEntry } from "./LanguageMenuEntry";
 import { SubmenuMenuEntry } from "./SubmenuMenuEntry";

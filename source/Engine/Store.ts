@@ -1,5 +1,5 @@
-import { ApplicationState } from "./Model/ApplicationState";
-import { EditorMap } from "./Model/EditorMap";
+import { ApplicationState } from "../Model/ApplicationState";
+import { EditorMap } from "../Model/EditorMap";
 
 //TODO: Consider switching to IndexedDB
 export class Store implements ApplicationState {

@@ -1,4 +1,4 @@
-import { MapAccessor } from "../MapAccessor";
+import { MapAccessor } from "../Engine/MapAccessor";
 import { LayerRenderer } from "../Rendering/LayerRenderer";
 import { CanvasProvider } from "../UI/CanvasProvider";
 import { DrawingLayer } from "./DrawingLayer";

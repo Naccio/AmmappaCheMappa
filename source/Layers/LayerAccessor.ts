@@ -1,4 +1,4 @@
-import { Observable } from "../Events/Observable";
+import { Observable } from "../Engine/Events/Observable";
 import { MapLayer } from "../Model/MapLayer";
 import { LayerRenderer } from "../Rendering/LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";

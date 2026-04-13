@@ -1,4 +1,4 @@
-import { ApplicationState } from "../Model/ApplicationState";
+import { ApplicationState } from "../../Model/ApplicationState";
 import { LocalizationHelper } from "./LocalizationHelper";
 import { LocalizationResource } from "./LocalizationResource";
 import { Localizer } from "./Localizer";

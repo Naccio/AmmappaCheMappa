@@ -1,4 +1,4 @@
-import { MathHelper } from "../../MathHelper";
+import { MathHelper } from "../../Utilities/MathHelper";
 import { MapObject } from "../../Model/MapObject";
 import { Tree } from "./Tree";
 

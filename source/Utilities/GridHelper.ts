@@ -1,6 +1,6 @@
-import { CellIndex } from "./Model/CellIndex";
-import { Point } from "./Model/Point";
-import { Vector } from "./Model/Vector";
+import { CellIndex } from "../Model/CellIndex";
+import { Point } from "../Model/Point";
+import { Vector } from "../Model/Vector";
 import { VectorMath } from "./VectorMath";
 
 export class GridHelper {

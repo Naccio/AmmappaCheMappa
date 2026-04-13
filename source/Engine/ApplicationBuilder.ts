@@ -1,9 +1,9 @@
 import { Application } from "./Application";
-import { ApplicationUI } from "./UI/ApplicationUI";
-import { Menu } from "./UI/Menu/Menu";
-import { SubmenuBuilder } from "./UI/Menu/SubmenuBuilder";
-import { SubmenuMenuEntry } from "./UI/Menu/SubmenuMenuEntry";
-import { UIElement } from "./UI/UIElement";
+import { ApplicationUI } from "../UI/ApplicationUI";
+import { Menu } from "../UI/Menu/Menu";
+import { SubmenuBuilder } from "../UI/Menu/SubmenuBuilder";
+import { SubmenuMenuEntry } from "../UI/Menu/SubmenuMenuEntry";
+import { UIElement } from "../UI/UIElement";
 
 export class ApplicationBuilder {
     private readonly menu: SubmenuMenuEntry[] = [];

@@ -1,5 +1,5 @@
 import { DrawingLayer } from "../Layers/DrawingLayer";
-import { MapAccessor } from "../MapAccessor";
+import { MapAccessor } from "../Engine/MapAccessor";
 import { CanvasDrawer } from "../Rendering/CanvasDrawer";
 import { Drawer } from "../Rendering/Drawer";
 import { CanvasProvider } from "./CanvasProvider";

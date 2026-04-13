@@ -1,7 +1,7 @@
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
-import { Utilities } from "../Utilities";
-import { VectorMath } from "../VectorMath";
+import { Utilities } from "../Utilities/Utilities";
+import { VectorMath } from "../Utilities/VectorMath";
 import { MapDrawer } from "./MapDrawer";
 import { ToolActivator } from "./Tools/ToolActivator";
 import { UIElement } from "./UIElement";

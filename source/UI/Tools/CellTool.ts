@@ -1,5 +1,5 @@
-import { GridHelper } from "../../GridHelper";
-import { MapAccessor } from "../../MapAccessor";
+import { GridHelper } from "../../Utilities/GridHelper";
+import { MapAccessor } from "../../Engine/MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { Tool } from "./Tool";

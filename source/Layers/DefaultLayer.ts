@@ -1,4 +1,4 @@
-import { MapAccessor } from "../MapAccessor";
+import { MapAccessor } from "../Engine/MapAccessor";
 import { CellIndex } from "../Model/CellIndex";
 import { CanvasDrawer } from "../Rendering/CanvasDrawer";
 import { CellRenderer } from "../Rendering/CellRenderer";

@@ -2,7 +2,7 @@ import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "../../Rendering/CellDrawer";
 import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
 import { LineStyle } from "../../Rendering/LineStyle";
-import { VectorMath } from "../../VectorMath";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { Road } from "./Road";
 
 export class RoadRenderer extends GenericObjectRenderer<Road> {

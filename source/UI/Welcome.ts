@@ -1,6 +1,6 @@
 import { NewMap } from "../Commands/NewMap";
 import { OpenMap } from "../Commands/OpenMap";
-import { Localizer } from "../Localization/Localizer";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { UIElement } from "./UIElement";
 
 export class Welcome implements UIElement {

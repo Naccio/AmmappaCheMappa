@@ -1,7 +1,7 @@
-import { Localizer } from "../Localization/Localizer";
-import { MapsManager } from "../MapsManager";
+import { Localizer } from "../Engine/Localization/Localizer";
+import { MapsManager } from "../Engine/MapsManager";
 import { MapRenderer } from "../Rendering/MapRenderer";
-import { Utilities } from "../Utilities";
+import { Utilities } from "../Utilities/Utilities";
 import { ActiveMapCommand } from "./ActiveMapCommand";
 
 export class ExportMap extends ActiveMapCommand {

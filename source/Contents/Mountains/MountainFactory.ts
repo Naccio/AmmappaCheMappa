@@ -1,6 +1,6 @@
-import { GridHelper } from "../../GridHelper";
-import { MathHelper } from "../../MathHelper";
-import { VectorMath } from "../../VectorMath";
+import { GridHelper } from "../../Utilities/GridHelper";
+import { MathHelper } from "../../Utilities/MathHelper";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { Mountain } from "./Mountain";
 import { MountainsHelper } from "./MountainsHelper";
 

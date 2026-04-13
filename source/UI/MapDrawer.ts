@@ -1,12 +1,12 @@
 import { DrawingLayer } from "../Layers/DrawingLayer";
 import { LayerAccessor } from "../Layers/LayerAccessor";
-import { MapManager } from "../MapManager";
-import { MathHelper } from "../MathHelper";
+import { MapManager } from "../Engine/MapManager";
+import { MathHelper } from "../Utilities/MathHelper";
 import { MapLayer } from "../Model/MapLayer";
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
-import { Store } from "../Store";
-import { VectorMath } from "../VectorMath";
+import { Store } from "../Engine/Store";
+import { VectorMath } from "../Utilities/VectorMath";
 import { DrawingUI } from "./DrawingUI";
 import { UIElement } from "./UIElement";
 

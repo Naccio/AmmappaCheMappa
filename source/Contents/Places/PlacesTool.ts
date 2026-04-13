@@ -1,8 +1,8 @@
 import { LayersManager } from "../../Layers/LayersManager";
-import { MapAccessor } from "../../MapAccessor";
+import { MapAccessor } from "../../Engine/MapAccessor";
 import { Point } from "../../Model/Point";
 import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../VectorMath";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { Place } from "./Place";
 import { PlacesHelper } from "./PlacesHelper";
 

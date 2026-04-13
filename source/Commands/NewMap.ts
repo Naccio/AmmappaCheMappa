@@ -1,6 +1,6 @@
-import { Localizer } from "../Localization/Localizer";
-import { MapFactory } from "../MapFactory";
-import { MapsManager } from "../MapsManager";
+import { Localizer } from "../Engine/Localization/Localizer";
+import { MapFactory } from "../Engine/MapFactory";
+import { MapsManager } from "../Engine/MapsManager";
 import { FormsHelper } from "../UI/Forms/FormsHelper";
 import { ModalLauncher } from "../UI/ModalLauncher";
 import { SimpleCommand } from "./SimpleCommand";

@@ -1,4 +1,4 @@
-import { EditorMap } from "./Model/EditorMap";
+import { EditorMap } from "../Model/EditorMap";
 
 export class Utilities {
 

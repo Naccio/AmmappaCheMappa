@@ -1,4 +1,4 @@
-import { Localizer } from "../Localization/Localizer";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { ModalLauncher } from "../UI/ModalLauncher";
 import { SimpleCommand } from "./SimpleCommand";
 

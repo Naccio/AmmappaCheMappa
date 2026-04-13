@@ -1,6 +1,6 @@
-import { EventHandler } from "../Events/ApplicationEvent";
-import { InternalEvent } from "../Events/InternalEvent";
-import { MapAccessor } from "../MapAccessor";
+import { EventHandler } from "../Engine/Events/ApplicationEvent";
+import { InternalEvent } from "../Engine/Events/InternalEvent";
+import { MapAccessor } from "../Engine/MapAccessor";
 import { CellIndex } from "../Model/CellIndex";
 import { MapLayer } from "../Model/MapLayer";
 import { MapObject } from "../Model/MapObject";

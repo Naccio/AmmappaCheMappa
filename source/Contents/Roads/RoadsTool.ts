@@ -1,11 +1,11 @@
-import { GridHelper } from "../../GridHelper";
+import { GridHelper } from "../../Utilities/GridHelper";
 import { LayersManager } from "../../Layers/LayersManager";
-import { MapAccessor } from "../../MapAccessor";
+import { MapAccessor } from "../../Engine/MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { DrawingUI } from "../../UI/DrawingUI";
 import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../VectorMath";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { Road } from "./Road";
 
 export class RoadsTool implements Tool {

@@ -1,5 +1,5 @@
-import { MapManager } from "../MapManager";
-import { MapsManager } from "../MapsManager";
+import { MapManager } from "../Engine/MapManager";
+import { MapsManager } from "../Engine/MapsManager";
 import { MapData } from "../Model/MapData";
 import { MapUI } from "./MapUI";
 import { MapUIFactory } from "./MapUIFactory";

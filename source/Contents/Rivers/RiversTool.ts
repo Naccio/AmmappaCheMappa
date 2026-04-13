@@ -1,11 +1,11 @@
-import { GridHelper } from "../../GridHelper";
+import { GridHelper } from "../../Utilities/GridHelper";
 import { LayersManager } from "../../Layers/LayersManager";
-import { MapAccessor } from "../../MapAccessor";
-import { MathHelper } from "../../MathHelper";
+import { MapAccessor } from "../../Engine/MapAccessor";
+import { MathHelper } from "../../Utilities/MathHelper";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../VectorMath";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { River } from "./River";
 import { RiversHelper } from "./RiversHelper";
 

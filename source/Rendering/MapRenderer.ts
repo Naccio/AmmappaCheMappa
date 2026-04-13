@@ -1,4 +1,4 @@
-import { MapManager } from "../MapManager";
+import { MapManager } from "../Engine/MapManager";
 import { CanvasDrawer } from "./CanvasDrawer";
 import { RenderedMap } from "./RenderedMap";
 
