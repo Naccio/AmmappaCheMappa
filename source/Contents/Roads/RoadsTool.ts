@@ -1,6 +1,6 @@
 import { GridHelper } from "../../Utilities/GridHelper";
-import { LayersManager } from "../../Layers/LayersManager";
-import { MapAccessor } from "../../Engine/MapAccessor";
+import { LayersManager } from "../../Maps/Layers/LayersManager";
+import { MapAccessor } from "../../Maps/MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { DrawingUI } from "../../UI/DrawingUI";

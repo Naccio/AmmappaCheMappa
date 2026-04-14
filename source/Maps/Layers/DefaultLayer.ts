@@ -1,9 +1,9 @@
-import { MapAccessor } from "../Engine/MapAccessor";
-import { CellIndex } from "../Model/CellIndex";
-import { CanvasDrawer } from "../Rendering/CanvasDrawer";
-import { CellRenderer } from "../Rendering/CellRenderer";
-import { Drawer } from "../Rendering/Drawer";
-import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { MapAccessor } from "../MapAccessor";
+import { CellIndex } from "../../Model/CellIndex";
+import { CanvasDrawer } from "../../Engine/Rendering/CanvasDrawer";
+import { CellRenderer } from "../Cells/CellRenderer";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
 
 export class DefaultLayer implements DrawingLayer, LayerRenderer {

@@ -1,4 +1,4 @@
-import { CanvasDrawer } from "../Rendering/CanvasDrawer";
+import { CanvasDrawer } from "../Engine/Rendering/CanvasDrawer";
 
 export class CanvasProvider {
     private readonly canvases: { [id: string]: CanvasDrawer } = {};

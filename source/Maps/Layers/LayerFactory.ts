@@ -1,4 +1,4 @@
-import { MapLayer } from "../Model/MapLayer";
+import { MapLayer } from "../../Model/MapLayer";
 import { LayerAbstractFactory } from "./LayerAbstractFactory";
 import { LayerAccessor } from "./LayerAccessor";
 

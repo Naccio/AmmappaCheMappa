@@ -1,9 +1,9 @@
-import { CellIndex } from "../Model/CellIndex";
-import { MapObject } from "../Model/MapObject";
+import { CellIndex } from "../../Model/CellIndex";
+import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "./CellDrawer";
 import { CellDrawerFactory } from "./CellDrawerFactory";
-import { Drawer } from "./Drawer";
-import { ObjectRenderer } from "./ObjectRenderer";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { ObjectRenderer } from "../../Engine/Rendering/ObjectRenderer";
 
 export class CellRenderer {
     constructor(private drawerFactory: CellDrawerFactory, private renderers: ObjectRenderer[]) {

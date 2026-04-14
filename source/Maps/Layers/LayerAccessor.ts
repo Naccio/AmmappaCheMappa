@@ -1,6 +1,6 @@
-import { Observable } from "../Engine/Events/Observable";
-import { MapLayer } from "../Model/MapLayer";
-import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { Observable } from "../../Engine/Events/Observable";
+import { MapLayer } from "../../Model/MapLayer";
+import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
 
 export class LayerAccessor extends Observable<MapLayer> {

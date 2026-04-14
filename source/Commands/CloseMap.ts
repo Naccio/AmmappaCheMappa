@@ -1,5 +1,5 @@
 import { Localizer } from "../Engine/Localization/Localizer";
-import { MapsManager } from "../Engine/MapsManager";
+import { MapsManager } from "../Maps/MapsManager";
 import { ActiveMapCommand } from "./ActiveMapCommand";
 
 export class CloseMap extends ActiveMapCommand {

@@ -1,6 +1,6 @@
-import { LayersManager } from "../../Layers/LayersManager";
+import { LayersManager } from "../../Maps/Layers/LayersManager";
 import { Localizer } from "../../Engine/Localization/Localizer";
-import { MapAccessor } from "../../Engine/MapAccessor";
+import { MapAccessor } from "../../Maps/MapAccessor";
 import { Point } from "../../Model/Point";
 import { FormsHelper } from "../../UI/Forms/FormsHelper";
 import { ModalLauncher } from "../../UI/ModalLauncher";

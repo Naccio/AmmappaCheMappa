@@ -1,7 +1,7 @@
-import { DrawingLayer } from "../Layers/DrawingLayer";
-import { MapAccessor } from "../Engine/MapAccessor";
-import { CanvasDrawer } from "../Rendering/CanvasDrawer";
-import { Drawer } from "../Rendering/Drawer";
+import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
+import { MapAccessor } from "../Maps/MapAccessor";
+import { CanvasDrawer } from "../Engine/Rendering/CanvasDrawer";
+import { Drawer } from "../Engine/Rendering/Drawer";
 import { CanvasProvider } from "./CanvasProvider";
 
 export class DrawingUI implements DrawingLayer {

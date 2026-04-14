@@ -1,4 +1,4 @@
-import { LayersManager } from "../Layers/LayersManager";
+import { LayersManager } from "./Layers/LayersManager";
 import { MapAccessor } from "./MapAccessor";
 
 export class MapManager {

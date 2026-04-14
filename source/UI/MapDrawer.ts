@@ -1,6 +1,6 @@
-import { DrawingLayer } from "../Layers/DrawingLayer";
-import { LayerAccessor } from "../Layers/LayerAccessor";
-import { MapManager } from "../Engine/MapManager";
+import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
+import { LayerAccessor } from "../Maps/Layers/LayerAccessor";
+import { MapManager } from "../Maps/MapManager";
 import { MathHelper } from "../Utilities/MathHelper";
 import { MapLayer } from "../Model/MapLayer";
 import { Point } from "../Model/Point";

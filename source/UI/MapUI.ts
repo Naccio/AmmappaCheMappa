@@ -1,5 +1,5 @@
-import { LayersPanel } from "../Layers/LayersPanel";
-import { MapManager } from "../Engine/MapManager";
+import { LayersPanel } from "../Maps/Layers/LayersPanel";
+import { MapManager } from "../Maps/MapManager";
 import { DrawingArea } from "./DrawingArea";
 import { Toolbar } from "./Tools/Toolbar";
 import { UIElement } from "./UIElement";

@@ -1,4 +1,4 @@
-import { Point } from "../Model/Point";
+import { Point } from "../../Model/Point";
 import { Drawer } from "./Drawer";
 import { LineStyle } from "./LineStyle";
 import { ShapeStyle } from "./ShapeStyle";

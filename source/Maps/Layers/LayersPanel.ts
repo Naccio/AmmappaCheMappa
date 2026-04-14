@@ -1,7 +1,7 @@
-import { Localizer } from "../Engine/Localization/Localizer";
-import { MapLayer } from "../Model/MapLayer";
-import { UIElement } from "../UI/UIElement";
-import { UIFactory } from "../UI/UIFactory";
+import { Localizer } from "../../Engine/Localization/Localizer";
+import { MapLayer } from "../../Model/MapLayer";
+import { UIElement } from "../../UI/UIElement";
+import { UIFactory } from "../../UI/UIFactory";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayersManager } from "./LayersManager";
 

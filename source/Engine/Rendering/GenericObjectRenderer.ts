@@ -1,5 +1,5 @@
-import { MapObject } from "../Model/MapObject";
-import { CellDrawer } from "./CellDrawer";
+import { MapObject } from "../../Model/MapObject";
+import { CellDrawer } from "../../Maps/Cells/CellDrawer";
 import { ObjectRenderer } from "./ObjectRenderer";
 
 export abstract class GenericObjectRenderer<T extends MapObject> implements ObjectRenderer {

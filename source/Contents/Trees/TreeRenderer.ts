@@ -1,7 +1,7 @@
 import { MapObject } from "../../Model/MapObject";
-import { CellDrawer } from "../../Rendering/CellDrawer";
-import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
-import { LineStyle } from "../../Rendering/LineStyle";
+import { CellDrawer } from "../../Maps/Cells/CellDrawer";
+import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
+import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { Tree } from "./Tree";
 import { TreesHelper } from "./TreesHelper";
 

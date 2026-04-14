@@ -1,6 +1,6 @@
-import { MapAccessor } from "../Engine/MapAccessor";
-import { LayerRenderer } from "../Rendering/LayerRenderer";
-import { CanvasProvider } from "../UI/CanvasProvider";
+import { MapAccessor } from "../MapAccessor";
+import { LayerRenderer } from "./LayerRenderer";
+import { CanvasProvider } from "../../UI/CanvasProvider";
 import { DrawingLayer } from "./DrawingLayer";
 import { GridLayer } from "./GridLayer";
 import { LayerAbstractFactory } from "./LayerAbstractFactory";

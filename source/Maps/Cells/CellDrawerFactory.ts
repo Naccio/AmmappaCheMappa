@@ -1,7 +1,7 @@
-import { MapAccessor } from "../Engine/MapAccessor";
-import { CellIndex } from "../Model/CellIndex";
+import { MapAccessor } from "../MapAccessor";
+import { CellIndex } from "../../Model/CellIndex";
 import { CellDrawer } from "./CellDrawer";
-import { Drawer } from "./Drawer";
+import { Drawer } from "../../Engine/Rendering/Drawer";
 
 export class CellDrawerFactory {
     constructor(private mapAccessor: MapAccessor) {

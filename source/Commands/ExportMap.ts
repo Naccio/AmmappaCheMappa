@@ -1,6 +1,6 @@
 import { Localizer } from "../Engine/Localization/Localizer";
-import { MapsManager } from "../Engine/MapsManager";
-import { MapRenderer } from "../Rendering/MapRenderer";
+import { MapsManager } from "../Maps/MapsManager";
+import { MapRenderer } from "../Maps/MapRenderer";
 import { Utilities } from "../Utilities/Utilities";
 import { ActiveMapCommand } from "./ActiveMapCommand";
 

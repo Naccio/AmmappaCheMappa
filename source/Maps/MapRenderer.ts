@@ -1,6 +1,6 @@
-import { MapManager } from "../Engine/MapManager";
-import { CanvasDrawer } from "./CanvasDrawer";
-import { RenderedMap } from "./RenderedMap";
+import { MapManager } from "./MapManager";
+import { CanvasDrawer } from "../Engine/Rendering/CanvasDrawer";
+import { RenderedMap } from "../Engine/Rendering/RenderedMap";
 
 export class MapRenderer {
 

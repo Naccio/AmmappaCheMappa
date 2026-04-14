@@ -1,14 +1,14 @@
-import { DefaultLayerFactory } from "../Layers/DefaultLayerFactory";
-import { GridLayerFactory } from "../Layers/GridLayerFactory";
-import { LayerFactory } from "../Layers/LayerFactory";
-import { LayersManager } from "../Layers/LayersManager";
+import { DefaultLayerFactory } from "./Layers/DefaultLayerFactory";
+import { GridLayerFactory } from "./Layers/GridLayerFactory";
+import { LayerFactory } from "./Layers/LayerFactory";
+import { LayersManager } from "./Layers/LayersManager";
 import { MapAccessor } from "./MapAccessor";
 import { MapManager } from "./MapManager";
 import { EditorMap } from "../Model/EditorMap";
-import { CellDrawerFactory } from "../Rendering/CellDrawerFactory";
-import { CellRenderer } from "../Rendering/CellRenderer";
-import { ObjectRenderer } from "../Rendering/ObjectRenderer";
-import { Store } from "./Store";
+import { CellDrawerFactory } from "./Cells/CellDrawerFactory";
+import { CellRenderer } from "./Cells/CellRenderer";
+import { ObjectRenderer } from "../Engine/Rendering/ObjectRenderer";
+import { Store } from "../Engine/Store";
 import { CanvasProvider } from "../UI/CanvasProvider";
 
 export class MapManagerFactory {

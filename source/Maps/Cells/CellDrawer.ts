@@ -1,12 +1,12 @@
-import { MapAccessor } from "../Engine/MapAccessor";
-import { MathHelper } from "../Utilities/MathHelper";
-import { CellIndex } from "../Model/CellIndex";
-import { Point } from "../Model/Point";
-import { Vector } from "../Model/Vector";
-import { VectorMath } from "../Utilities/VectorMath";
-import { Drawer } from "./Drawer";
-import { LineStyle } from "./LineStyle";
-import { ShapeStyle } from "./ShapeStyle";
+import { MapAccessor } from "../MapAccessor";
+import { MathHelper } from "../../Utilities/MathHelper";
+import { CellIndex } from "../../Model/CellIndex";
+import { Point } from "../../Model/Point";
+import { Vector } from "../../Model/Vector";
+import { VectorMath } from "../../Utilities/VectorMath";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { LineStyle } from "../../Engine/Rendering/LineStyle";
+import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
 
 export class CellDrawer {
     constructor(private cellIndex: CellIndex, private mapAccessor: MapAccessor, private drawer: Drawer) {

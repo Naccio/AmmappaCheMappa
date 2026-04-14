@@ -4,7 +4,7 @@ import { EditorMap } from "../Model/EditorMap";
 import { GridCell } from "../Model/GridCell";
 import { MapObject } from "../Model/MapObject";
 import { Point } from "../Model/Point";
-import { Store } from "./Store";
+import { Store } from "../Engine/Store";
 import { VectorMath } from "../Utilities/VectorMath";
 
 export class MapAccessor {

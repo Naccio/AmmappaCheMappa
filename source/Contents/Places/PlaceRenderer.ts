@@ -1,6 +1,6 @@
 import { MapObject } from "../../Model/MapObject";
-import { CellDrawer } from "../../Rendering/CellDrawer";
-import { GenericObjectRenderer } from "../../Rendering/GenericObjectRenderer";
+import { CellDrawer } from "../../Maps/Cells/CellDrawer";
+import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { Place } from "./Place";
 import { PlacesHelper } from "./PlacesHelper";
 

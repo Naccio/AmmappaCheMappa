@@ -1,11 +1,11 @@
-import { EventHandler } from "./Events/ApplicationEvent";
-import { InternalEvent } from "./Events/InternalEvent";
-import { Localizer } from "./Localization/Localizer";
+import { EventHandler } from "../Engine/Events/ApplicationEvent";
+import { InternalEvent } from "../Engine/Events/InternalEvent";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { MapManager } from "./MapManager";
 import { MapManagerFactory } from "./MapManagerFactory";
 import { EditorMap } from "../Model/EditorMap";
 import { MapData } from "../Model/MapData";
-import { Store } from "./Store";
+import { Store } from "../Engine/Store";
 import { ModalLauncher } from "../UI/ModalLauncher";
 
 export class MapsManager {

@@ -1,8 +1,8 @@
-import { MapAccessor } from "../Engine/MapAccessor";
-import { Drawer } from "../Rendering/Drawer";
-import { LayerRenderer } from "../Rendering/LayerRenderer";
-import { LineStyle } from "../Rendering/LineStyle";
-import { CanvasProvider } from "../UI/CanvasProvider";
+import { MapAccessor } from "../MapAccessor";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { LayerRenderer } from "./LayerRenderer";
+import { LineStyle } from "../../Engine/Rendering/LineStyle";
+import { CanvasProvider } from "../../UI/CanvasProvider";
 import { DrawingLayer } from "./DrawingLayer";
 
 export class GridLayer implements DrawingLayer, LayerRenderer {

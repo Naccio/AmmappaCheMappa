@@ -1,5 +1,5 @@
-import { LayersHelper } from "../Layers/LayersHelper";
-import { Localizer } from "./Localization/Localizer";
+import { LayersHelper } from "./Layers/LayersHelper";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { EditorMap } from "../Model/EditorMap";
 import { Utilities } from "../Utilities/Utilities";
 

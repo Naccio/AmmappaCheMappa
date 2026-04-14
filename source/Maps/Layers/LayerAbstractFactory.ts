@@ -1,4 +1,4 @@
-import { LayerRenderer } from "../Rendering/LayerRenderer";
+import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
 
 export interface LayerAbstractFactory {

@@ -1,6 +1,6 @@
-import { LayersPanel } from "../Layers/LayersPanel";
+import { LayersPanel } from "../Maps/Layers/LayersPanel";
 import { Localizer } from "../Engine/Localization/Localizer";
-import { MapManager } from "../Engine/MapManager";
+import { MapManager } from "../Maps/MapManager";
 import { Store } from "../Engine/Store";
 import { CanvasProvider } from "./CanvasProvider";
 import { DrawingArea } from "./DrawingArea";
