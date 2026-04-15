@@ -1,16 +1,12 @@
-import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "../../Maps/Cells/CellDrawer";
 import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { River } from "./River";
-import { RiversHelper } from "./RiversHelper";
 
 export class RiverRenderer extends GenericObjectRenderer<River> {
     private readonly lineWidth = 6;
 
-    protected is(object: MapObject): object is River {
-        return RiversHelper.isRiver(object);
-    }
+    protected get type() { return 'river'; }
 
     protected draw(river: River, drawer: CellDrawer) {
         const from = river.from,

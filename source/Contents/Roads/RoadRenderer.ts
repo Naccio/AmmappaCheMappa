@@ -1,4 +1,3 @@
-import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "../../Maps/Cells/CellDrawer";
 import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
@@ -8,9 +7,7 @@ import { Road } from "./Road";
 export class RoadRenderer extends GenericObjectRenderer<Road> {
     private readonly lineWidth = 2;
 
-    protected is(object: MapObject): object is Road {
-        return object.type === 'road';
-    }
+    protected get type() { return 'road'; }
 
     protected draw(road: Road, drawer: CellDrawer) {
         const from = road.from,

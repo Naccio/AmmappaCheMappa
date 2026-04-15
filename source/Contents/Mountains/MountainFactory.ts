@@ -2,7 +2,6 @@ import { GridHelper } from "../../Utilities/GridHelper";
 import { MathHelper } from "../../Utilities/MathHelper";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { Mountain } from "./Mountain";
-import { MountainsHelper } from "./MountainsHelper";
 
 export class MountainFactory {
     public create(): Mountain;
@@ -21,8 +20,6 @@ export class MountainFactory {
                 .round(2);
 
         return {
-            type: MountainsHelper.objectType,
-            layer: 'terrain',
             position,
             width,
             height

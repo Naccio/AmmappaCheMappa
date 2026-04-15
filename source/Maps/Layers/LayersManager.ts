@@ -3,7 +3,6 @@ import { InternalEvent } from "../../Engine/Events/InternalEvent";
 import { MapAccessor } from "../MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
 import { MapLayer } from "../../Model/MapLayer";
-import { MapObject } from "../../Model/MapObject";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayerFactory } from "./LayerFactory";
 
@@ -63,14 +62,20 @@ export class LayersManager {
         this.selectEvent.trigger(layer);
     }
 
-    public setObjects(index: CellIndex, objects: MapObject[]) {
+    public setObjects<T>(type: string, index: CellIndex, objects: T[]) {
         if (this._activeLayer === undefined) {
             return;
         }
 
-        objects.forEach(o => o.layer = this._activeLayer!.id);
+        const mapObjects = objects.map(o => {
+            return {
+                type,
+                layer: this._activeLayer!.id,
+                data: o
+            }
+        });
 
-        this.mapAccessor.setObjects(index, objects);
+        this.mapAccessor.setObjects(index, mapObjects);
         this._activeLayer.drawing.update(index);
     }
 

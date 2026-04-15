@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 
+## [alpha.4] - UNRELEASED
+
+### Changed
+
+- ***BREAKING***: Model changed, maps generated with previous versions will no
+  longer work
+
+
 ## [alpha.3] - 2026-04-10
 
 ### Added
@@ -52,9 +60,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ### Changed
 
-- BREAKING: Model changed, maps generated with previous versions will no longer
-  work
-
+- ***BREAKING***: Model changed, maps generated with previous versions will no
+  longer work
 - Commands:
   - **New**: Maps can be given a title
 - UI:

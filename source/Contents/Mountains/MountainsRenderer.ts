@@ -1,15 +1,11 @@
-import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "../../Maps/Cells/CellDrawer";
 import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { Mountain } from "./Mountain";
-import { MountainsHelper } from "./MountainsHelper";
 
 export class MountainsRenderer extends GenericObjectRenderer<Mountain> {
     private readonly lineWidth = 4;
 
-    protected is(object: MapObject): object is Mountain {
-        return MountainsHelper.isMountain(object);
-    }
+    protected get type() { return 'mountain'; }
 
     protected draw(mountain: Mountain, drawer: CellDrawer) {
         const halfWidth = mountain.width / 2,

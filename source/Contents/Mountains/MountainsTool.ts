@@ -25,6 +25,6 @@ export class MountainsTool extends CellTool {
             mountains.push(mountain);
         }
 
-        this.layers.setObjects(cell, mountains);
+        this.layers.setObjects('mountain', cell, mountains);
     }
 }

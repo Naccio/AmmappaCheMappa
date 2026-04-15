@@ -95,11 +95,9 @@ export class RoadsTool implements Tool {
 
     private createRoad(cell: CellIndex, from: Point, to: Point) {
         const road: Road = {
-            type: 'road',
-            layer: 'terrain',
             from: VectorMath.round(from, 4),
             to: VectorMath.round(to, 4)
         };
-        this.layers.setObjects(cell, [road]);
+        this.layers.setObjects('road', cell, [road]);
     }
 }

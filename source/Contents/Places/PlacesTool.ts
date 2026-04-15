@@ -4,7 +4,6 @@ import { Point } from "../../Model/Point";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { Place } from "./Place";
-import { PlacesHelper } from "./PlacesHelper";
 
 export class PlacesTool implements Tool {
     public readonly configuration = {
@@ -23,16 +22,11 @@ export class PlacesTool implements Tool {
             return;
         }
 
-        const layer = PlacesHelper.layer,
-            normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
+        const normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
             position = VectorMath.round(normalizedPosition, 2),
-            place: Place = {
-                type: PlacesHelper.objectType,
-                layer,
-                position
-            };
+            place: Place = { position };
 
-        this.layers.setObjects(cell, [place]);
+        this.layers.setObjects('place', cell, [place]);
     }
 
     public move() {

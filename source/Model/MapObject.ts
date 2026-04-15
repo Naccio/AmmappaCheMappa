@@ -1,4 +1,5 @@
 export interface MapObject {
     type: string,
-    layer: string
+    layer: string,
+    data: any
 }

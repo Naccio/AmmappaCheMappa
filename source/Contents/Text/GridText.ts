@@ -1,7 +1,6 @@
-import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
 
-export interface GridText extends MapObject {
+export interface GridText {
     position: Point,
     value: string,
     fontSize: number

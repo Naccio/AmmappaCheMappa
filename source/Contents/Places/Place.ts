@@ -1,6 +1,9 @@
-import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
 
-export interface Place extends MapObject {
+export interface Place {
     position: Point
+}
+
+export function isPlace(object: any): object is Place {
+    return 'position' in object;
 }

@@ -1,7 +1,6 @@
-import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
 
-export interface Road extends MapObject {
+export interface Road {
     from: Point,
     to: Point
 }

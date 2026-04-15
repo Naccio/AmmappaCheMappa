@@ -1,16 +1,12 @@
-import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "../../Maps/Cells/CellDrawer";
 import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { Tree } from "./Tree";
-import { TreesHelper } from "./TreesHelper";
 
 export class TreeRenderer extends GenericObjectRenderer<Tree> {
     private readonly lineWidth = 2;
 
-    protected is(object: MapObject): object is Tree {
-        return TreesHelper.isTree(object);
-    }
+    protected get type() { return 'tree'; }
 
     protected draw(tree: Tree, drawer: CellDrawer) {
         const position = tree.position,

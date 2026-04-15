@@ -5,7 +5,6 @@ import { CellIndex } from "../../Model/CellIndex";
 import { CellTool } from "../../UI/Tools/CellTool";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { Tree } from "./Tree";
-import { TreesHelper } from "./TreesHelper";
 
 export class TreesTool extends CellTool {
     public readonly configuration = {
@@ -27,7 +26,7 @@ export class TreesTool extends CellTool {
 
         for (let x = 0; x < perColumn; x++) {
             for (let y = 0; y < perRow; y++) {
-                const tree = TreesHelper.create(),
+                const tree = this.create(),
                     position = VectorMath.add({ x, y }, tree.position);
 
                 tree.crownHeight = MathHelper.round(tree.crownHeight * yScale, 2);
@@ -42,6 +41,25 @@ export class TreesTool extends CellTool {
             }
         }
 
-        this.layers.setObjects(cell, trees);
+        this.layers.setObjects('tree', cell, trees);
+    }
+
+    private create(): Tree {
+        const crownWidth = MathHelper.random(.4, .6),
+            height = MathHelper.random(.8, .95),
+            crownTrunkRatio = MathHelper.random(.2, .35),
+            trunkHeight = height * crownTrunkRatio,
+            crownHeight = height * (1 - crownTrunkRatio),
+            position = {
+                x: MathHelper.random(.35, .65),
+                y: MathHelper.random(.8, 1)
+            };
+
+        return {
+            position,
+            crownWidth,
+            crownHeight,
+            trunkHeight
+        }
     }
 }

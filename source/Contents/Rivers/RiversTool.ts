@@ -7,7 +7,6 @@ import { Point } from "../../Model/Point";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { River } from "./River";
-import { RiversHelper } from "./RiversHelper";
 
 export class RiversTool implements Tool {
     public readonly configuration = {
@@ -43,7 +42,7 @@ export class RiversTool implements Tool {
 
         if (!GridHelper.cellIsEqual(activeCell, cell)) {
             const map = this.mapAccessor.map,
-                river = this.getRiver(cell)!,
+                river = this.getRiver(activeCell)!,
                 cellPosition = this.mapAccessor.getPosition(cell);
 
             this.createRivers(activeCell, this.startPosition, cell, position)
@@ -63,7 +62,7 @@ export class RiversTool implements Tool {
                 this.createRiver(cell, from, to);
             } else {
                 river.to = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
-                this.layers.setObjects(cell, [river]);
+                this.layers.setObjects('river', cell, [river]);
 
                 this.startPosition = this.mapAccessor.absolutePosition(cell, river.from);
             }
@@ -112,8 +111,6 @@ export class RiversTool implements Tool {
         }
 
         const river: River = {
-            type: RiversHelper.objectType,
-            layer: 'terrain',
             from: VectorMath.round(from, 4),
             to: VectorMath.round(to, 4),
             bend1: VectorMath.round(bend1, 2),
@@ -122,12 +119,13 @@ export class RiversTool implements Tool {
                 y: MathHelper.round(MathHelper.random(.2, .8), 2)
             }
         };
-        this.layers.setObjects(cell, [river]);
+        this.layers.setObjects('river', cell, [river]);
 
         return river;
     }
 
     private getRiver(cell: CellIndex): River | undefined {
-        return this.mapAccessor.getCell(cell).objects[0] as River;
+        //TODO: Should not assume that it's a river
+        return this.mapAccessor.getCell(cell).objects[0]?.data as River;
     }
 }

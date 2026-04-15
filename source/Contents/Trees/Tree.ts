@@ -1,7 +1,6 @@
-import { MapObject } from "../../Model/MapObject"
 import { Point } from "../../Model/Point"
 
-export interface Tree extends MapObject {
+export interface Tree {
     position: Point,
     crownWidth: number,
     crownHeight: number

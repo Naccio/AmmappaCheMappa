@@ -7,7 +7,6 @@ import { ModalLauncher } from "../../UI/ModalLauncher";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { GridText } from "./GridText";
-import { TextHelper } from "./TextHelper";
 
 export class TextTool implements Tool {
     public readonly configuration = {
@@ -37,18 +36,15 @@ export class TextTool implements Tool {
 
         this.modal.launchForm(title, [textInput.html, sizeInput.html], () => {
             const fontSize = parseInt(sizeInput.value!) / 100,
-                layer = TextHelper.layer,
                 normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
                 position = VectorMath.round(normalizedPosition, 2),
                 text: GridText = {
-                    type: TextHelper.objectType,
-                    layer,
                     position,
                     value: textInput.value!,
                     fontSize
                 };
 
-            this.layers.setObjects(cell, [text]);
+            this.layers.setObjects('text', cell, [text]);
         });
     }
 
