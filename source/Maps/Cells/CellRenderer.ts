@@ -3,10 +3,12 @@ import { MapObject } from "../../Model/MapObject";
 import { CellDrawer } from "./CellDrawer";
 import { CellDrawerFactory } from "./CellDrawerFactory";
 import { Drawer } from "../../Engine/Rendering/Drawer";
-import { ObjectRenderer } from "../../Engine/Rendering/ObjectRenderer";
+import { ObjectGraphicsFactory } from "../../Engine/Rendering/ObjectGraphicsFactory";
 
 export class CellRenderer {
-    constructor(private drawerFactory: CellDrawerFactory, private renderers: ObjectRenderer[]) {
+    constructor(
+        private drawerFactory: CellDrawerFactory,
+        private graphicFactories: ObjectGraphicsFactory[]) {
     }
 
     public render(cell: CellIndex, drawer: Drawer, layer: string) {
@@ -21,8 +23,12 @@ export class CellRenderer {
     }
 
     private renderObject(object: MapObject, drawer: CellDrawer) {
-        for (let strategy of this.renderers) {
-            strategy.render(object, drawer);
+        const factory = this.graphicFactories.find(f => f.type === object.type);
+
+        if (factory) {
+            const graphics = factory.create(object);
+
+            graphics.render(drawer);
         }
     }
 }

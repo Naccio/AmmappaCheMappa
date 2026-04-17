@@ -27,9 +27,6 @@ export class CanvasDrawer implements Drawer {
     }
 
     public bezier(from: Point, to: Point, control1: Point, control2: Point, style: LineStyle) {
-        const ignoreBorders = style.ignoreBorders ?? false,
-            padding = ignoreBorders ? undefined : style.lineWidth ?? 1;
-
         this.context.save();
         this.context.beginPath();
         this.context.moveTo(from.x, from.y);

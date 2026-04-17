@@ -1,16 +1,17 @@
-import { CellDrawer } from "../../Maps/Cells/CellDrawer";
-import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { Graphics } from "../../Engine/Rendering/Graphics";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { Road } from "./Road";
 
-export class RoadRenderer extends GenericObjectRenderer<Road> {
+export class RoadGraphics implements Graphics {
     private readonly lineWidth = 2;
 
-    protected get type() { return 'road'; }
+    public constructor(private road: Road) { }
 
-    protected draw(road: Road, drawer: CellDrawer) {
-        const from = road.from,
+    public render(drawer: Drawer) {
+        const road = this.road,
+            from = road.from,
             to = road.to,
             direction = VectorMath.direction(from, to),
             shift1 = direction.multiply(.025).rotate(Math.PI / 2),

@@ -8,7 +8,7 @@ import { Drawer } from "../../Engine/Rendering/Drawer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
 
-export class CellDrawer {
+export class CellDrawer implements Drawer {
     constructor(private cellIndex: CellIndex, private mapAccessor: MapAccessor, private drawer: Drawer) {
     }
 
@@ -18,6 +18,14 @@ export class CellDrawer {
 
     public get cell() {
         return this.mapAccessor.getCell(this.cellIndex);
+    }
+
+    public get height() {
+        return this.pixelsPerCell;
+    }
+
+    public get width() {
+        return this.pixelsPerCell
     }
 
     public bezier(from: Point, to: Point, control1: Point, control2: Point, style: LineStyle) {
@@ -65,7 +73,7 @@ export class CellDrawer {
         this.drawer.ellipse(point, radiusX, radiusY, rotation, style);
     }
 
-    public line(points: readonly [Point, Point, ...Point[]], style: LineStyle) {
+    public line(points: Point[], style: LineStyle) {
         const ignoreBorders = style.ignoreBorders ?? false,
             padding = ignoreBorders ? undefined : style.lineWidth ?? 1,
             mapPoints = points.map(p => this.cellPointToMapPoint(p, padding));
@@ -80,10 +88,18 @@ export class CellDrawer {
         this.drawer.text(point, text, fontSize);
     }
 
+    public image(drawer: Drawer) {
+        this.drawer.image(drawer);
+    }
+
+    public scale() {
+        throw new Error('Cannot scale cell drawer');
+    }
+
 
     // PRIVATE
 
-    private cellPointToMapPoint = (point: Point, padding?: number | Vector) => {
+    private cellPointToMapPoint = (point: Point, padding?: number | Vector): Point => {
         const pixels = this.pixelsPerCell,
             cellShift = this.mapAccessor.getPosition(this.cellIndex);
 
@@ -95,10 +111,10 @@ export class CellDrawer {
 
             if (typeof padding === 'number') {
                 paddingX = padding;
-                paddingY = padding
+                paddingY = padding;
             } else {
                 paddingX = padding.x;
-                paddingY = padding.y
+                paddingY = padding.y;
             }
 
             point = {

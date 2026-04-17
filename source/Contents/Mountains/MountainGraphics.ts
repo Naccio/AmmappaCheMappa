@@ -1,14 +1,15 @@
-import { CellDrawer } from "../../Maps/Cells/CellDrawer";
-import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { Mountain } from "./Mountain";
+import { Graphics } from "../../Engine/Rendering/Graphics";
+import { Drawer } from "../../Engine/Rendering/Drawer";
 
-export class MountainsRenderer extends GenericObjectRenderer<Mountain> {
+export class MountainGraphics implements Graphics {
     private readonly lineWidth = 4;
 
-    protected get type() { return 'mountain'; }
+    public constructor(private mountain: Mountain) { }
 
-    protected draw(mountain: Mountain, drawer: CellDrawer) {
-        const halfWidth = mountain.width / 2,
+    public render(drawer: Drawer) {
+        const mountain = this.mountain,
+            halfWidth = mountain.width / 2,
             height = mountain.height,
             position = mountain.position,
             p1 = {

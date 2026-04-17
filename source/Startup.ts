@@ -10,12 +10,12 @@ import { NewMap } from "./Commands/NewMap";
 import { OpenMap } from "./Commands/OpenMap";
 import { SaveMap } from "./Commands/SaveMap";
 import { MountainFactory } from "./Contents/Mountains/MountainFactory";
-import { MountainsRenderer } from "./Contents/Mountains/MountainsRenderer";
-import { PlaceRenderer } from "./Contents/Places/PlaceRenderer";
-import { RiverRenderer } from "./Contents/Rivers/RiverRenderer";
-import { RoadRenderer } from "./Contents/Roads/RoadRenderer";
-import { TextRenderer } from "./Contents/Text/TextRenderer";
-import { TreeRenderer } from "./Contents/Trees/TreeRenderer";
+import { MountainGraphics } from "./Contents/Mountains/MountainGraphics";
+import { PlaceGraphics } from "./Contents/Places/PlaceGraphics";
+import { RiverGraphics } from "./Contents/Rivers/RiverGraphics";
+import { RoadGraphics } from "./Contents/Roads/RoadGraphics";
+import { TextGraphics } from "./Contents/Text/TextGraphics";
+import { TreeGraphics } from "./Contents/Trees/TreeGraphics";
 import { LocalizationHelper } from "./Engine/Localization/LocalizationHelper";
 import { LocalizerFactory } from "./Engine/Localization/LocalizerFactory";
 import { MapFactory } from "./Maps/MapFactory";
@@ -31,6 +31,13 @@ import { ModalLauncher } from "./UI/ModalLauncher";
 import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
 import { UIFactory } from "./UI/UIFactory";
 import { Welcome } from "./UI/Welcome";
+import { GenericObjectGraphicsFactory } from "./Engine/Rendering/GenericObjectGraphicsFactory";
+import { Mountain } from "./Contents/Mountains/Mountain";
+import { Place } from "./Contents/Places/Place";
+import { River } from "./Contents/Rivers/River";
+import { Road } from "./Contents/Roads/Road";
+import { GridText } from "./Contents/Text/GridText";
+import { Tree } from "./Contents/Trees/Tree";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -41,12 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapFactory = new MapFactory(localizer);
     const canvasProvider = new CanvasProvider();
     const mountainFactory = new MountainFactory();
-    const mountainsRenderer = new MountainsRenderer();
-    const placeRenderer = new PlaceRenderer();
-    const riverRenderer = new RiverRenderer();
-    const roadRenderer = new RoadRenderer();
-    const textRenderer = new TextRenderer();
-    const treeRenderer = new TreeRenderer();
+    const mountainsRenderer = new GenericObjectGraphicsFactory<Mountain>('mountain', m => new MountainGraphics(m));
+    const placeRenderer = new GenericObjectGraphicsFactory<Place>('place', p => new PlaceGraphics(p));
+    const riverRenderer = new GenericObjectGraphicsFactory<River>('river', r => new RiverGraphics(r));
+    const roadRenderer = new GenericObjectGraphicsFactory<Road>('road', r => new RoadGraphics(r));
+    const textRenderer = new GenericObjectGraphicsFactory<GridText>('text', t => new TextGraphics(t));
+    const treeRenderer = new GenericObjectGraphicsFactory<Tree>('tree', t => new TreeGraphics(t));
     const renderingStrategies = [
         mountainsRenderer,
         placeRenderer,

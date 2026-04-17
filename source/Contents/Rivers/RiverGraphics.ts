@@ -1,15 +1,16 @@
-import { CellDrawer } from "../../Maps/Cells/CellDrawer";
-import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { River } from "./River";
+import { Graphics } from "../../Engine/Rendering/Graphics";
+import { Drawer } from "../../Engine/Rendering/Drawer";
 
-export class RiverRenderer extends GenericObjectRenderer<River> {
+export class RiverGraphics implements Graphics {
     private readonly lineWidth = 6;
 
-    protected get type() { return 'river'; }
+    public constructor(private river: River) { }
 
-    protected draw(river: River, drawer: CellDrawer) {
-        const from = river.from,
+    public render(drawer: Drawer) {
+        const river = this.river,
+            from = river.from,
             to = river.to,
             style: LineStyle = {
                 lineWidth: this.lineWidth,

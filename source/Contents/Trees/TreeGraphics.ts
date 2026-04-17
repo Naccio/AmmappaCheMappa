@@ -1,15 +1,16 @@
-import { CellDrawer } from "../../Maps/Cells/CellDrawer";
-import { GenericObjectRenderer } from "../../Engine/Rendering/GenericObjectRenderer";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { Graphics } from "../../Engine/Rendering/Graphics";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { Tree } from "./Tree";
 
-export class TreeRenderer extends GenericObjectRenderer<Tree> {
+export class TreeGraphics implements Graphics {
     private readonly lineWidth = 2;
 
-    protected get type() { return 'tree'; }
+    public constructor(private tree: Tree) { }
 
-    protected draw(tree: Tree, drawer: CellDrawer) {
-        const position = tree.position,
+    public render(drawer: Drawer) {
+        const tree = this.tree,
+            position = tree.position,
             radiusX = tree.crownWidth / 2,
             radiusY = tree.crownHeight / 2,
             trunkTop = {

@@ -7,15 +7,15 @@ import { MapManager } from "./MapManager";
 import { EditorMap } from "../Model/EditorMap";
 import { CellDrawerFactory } from "./Cells/CellDrawerFactory";
 import { CellRenderer } from "./Cells/CellRenderer";
-import { ObjectRenderer } from "../Engine/Rendering/ObjectRenderer";
 import { Store } from "../Engine/Store";
 import { CanvasProvider } from "../UI/CanvasProvider";
+import { ObjectGraphicsFactory } from "../Engine/Rendering/ObjectGraphicsFactory";
 
 export class MapManagerFactory {
     constructor(
         private store: Store,
         private canvasProvider: CanvasProvider,
-        private renderingStrategies: ObjectRenderer[]
+        private renderingStrategies: ObjectGraphicsFactory[]
     ) { }
 
     public create(map: EditorMap) {
