@@ -37,7 +37,7 @@ export class MapAccessor {
 
     public getCell(index: CellIndex): GridCell {
         const name = GridHelper.cellIndexToName(index),
-            objects = this.map.data.objects[name] ?? [];
+            objects = this.map.data.objects.filter(o => o.cell === name);
 
         return {
             index,
@@ -137,13 +137,14 @@ export class MapAccessor {
     }
 
     public setObjects(index: CellIndex, objects: MapObject[]) {
-        const cellName = GridHelper.cellIndexToName(index);
+        const cellName = GridHelper.cellIndexToName(index),
+            map = this.map.data;
 
-        if (objects.length === 0) {
-            delete this.map.data.objects[cellName];
-        } else {
-            this.map.data.objects[cellName] = objects;
-        }
+
+        map.objects = map.objects
+            //TODO: Eventually more than one object per cell will be allowed
+            .filter(o => o.cell !== cellName)
+            .concat(objects);
 
         this.save();
     }

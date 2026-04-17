@@ -24,7 +24,7 @@ export class MapFactory {
                 columns: width,
                 rows: height,
                 pixelsPerCell: 100,
-                objects: {},
+                objects: [],
                 layers
             }
         };

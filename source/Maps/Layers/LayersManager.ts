@@ -5,6 +5,7 @@ import { CellIndex } from "../../Model/CellIndex";
 import { MapLayer } from "../../Model/MapLayer";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayerFactory } from "./LayerFactory";
+import { GridHelper } from "../../Utilities/GridHelper";
 
 export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
@@ -71,6 +72,7 @@ export class LayersManager {
             return {
                 type,
                 layer: this._activeLayer!.id,
+                cell: GridHelper.cellIndexToName(index),
                 data: o
             }
         });
