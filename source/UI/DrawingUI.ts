@@ -28,6 +28,5 @@ export class DrawingUI implements DrawingLayer {
     }
 
     public zoom() {
-        this._drawer.scale(1 / this.mapAccessor.map.zoom);
     }
 }

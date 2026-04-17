@@ -12,6 +12,5 @@ export interface Drawer {
     ellipse(point: Point, radiusX: number, radiusY: number, rotation: number, style: ShapeStyle): void;
     image(drawer: Drawer): void;
     line(points: Point[], style: LineStyle): void;
-    scale(scale: number): void;
     text(point: Point, text: string, fontSize: number): void;
 }

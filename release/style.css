@@ -64,10 +64,6 @@ button:hover {
     background: var(--btn-bg-hover);
 }
 
-canvas {
-    position: absolute;
-}
-
 dialog {
     border: var(--border);
     padding: 0;
@@ -226,6 +222,12 @@ small {
     grid-area: center;
     position: relative;
     overflow: hidden;
+}
+
+.drawing-area canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .layers {

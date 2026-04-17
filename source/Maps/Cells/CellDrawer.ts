@@ -92,10 +92,6 @@ export class CellDrawer implements Drawer {
         this.drawer.image(drawer);
     }
 
-    public scale() {
-        throw new Error('Cannot scale cell drawer');
-    }
-
 
     // PRIVATE
 

@@ -97,13 +97,6 @@ export class CanvasDrawer implements Drawer {
         this.context.restore();
     }
 
-    public scale(scale: number) {
-        const canvas = this.canvas;
-
-        canvas.style.width = canvas.width * scale + 'px';
-        canvas.style.height = canvas.height * scale + 'px';
-    }
-
     public text(point: Point, text: string, fontSize: number) {
         this.context.save();
         this.context.font = fontSize + 'px serif';

@@ -17,8 +17,6 @@ export class CanvasProvider {
 
         this.canvases[id] = drawer;
 
-        drawer.scale(scale);
-
         return drawer;
     }
 }

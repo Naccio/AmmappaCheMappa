@@ -30,7 +30,6 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
     }
 
     public zoom() {
-        this.drawer.scale(1 / this.mapAccessor.map.zoom);
     }
 
     private draw(drawer: Drawer) {
