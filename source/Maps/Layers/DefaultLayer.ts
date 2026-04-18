@@ -5,6 +5,7 @@ import { CellRenderer } from "../Cells/CellRenderer";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
+import { VectorMath } from "../../Utilities/VectorMath";
 
 export class DefaultLayer implements DrawingLayer, LayerRenderer {
 
@@ -22,7 +23,7 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
 
     public render(drawer?: Drawer) {
         this.draw(this.drawer);
-        drawer?.image(this.drawer);
+        drawer?.image(this.drawer, VectorMath.zero);
     }
 
     public update(cell: CellIndex) {

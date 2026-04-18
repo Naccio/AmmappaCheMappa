@@ -79,8 +79,8 @@ export class CanvasDrawer implements Drawer {
         this.context.restore();
     }
 
-    public image(drawer: CanvasDrawer) {
-        this.context.drawImage(drawer.canvas, 0, 0);
+    public image(drawer: CanvasDrawer, point: Point) {
+        this.context.drawImage(drawer.canvas, point.x, point.y);
     }
 
     public line(points: Point[], style: LineStyle) {

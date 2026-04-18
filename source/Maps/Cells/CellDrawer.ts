@@ -88,8 +88,8 @@ export class CellDrawer implements Drawer {
         this.drawer.text(point, text, fontSize);
     }
 
-    public image(drawer: Drawer) {
-        this.drawer.image(drawer);
+    public image(drawer: Drawer, point: Point) {
+        this.drawer.image(drawer, point);
     }
 
 

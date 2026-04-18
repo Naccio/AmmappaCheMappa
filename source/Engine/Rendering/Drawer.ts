@@ -10,7 +10,7 @@ export interface Drawer {
     clear(point: Point, width: number, height: number): void;
     circle(point: Point, radius: number, style: ShapeStyle): void;
     ellipse(point: Point, radiusX: number, radiusY: number, rotation: number, style: ShapeStyle): void;
-    image(drawer: Drawer): void;
+    image(drawer: Drawer, point: Point): void;
     line(points: Point[], style: LineStyle): void;
     text(point: Point, text: string, fontSize: number): void;
 }
