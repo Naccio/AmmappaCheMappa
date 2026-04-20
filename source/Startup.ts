@@ -38,6 +38,7 @@ import { River } from "./Contents/Rivers/River";
 import { Road } from "./Contents/Roads/Road";
 import { GridText } from "./Contents/Text/GridText";
 import { Tree } from "./Contents/Trees/Tree";
+import { CellRenderer } from "./Maps/Cells/CellRenderer";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
     const mapManagerFactory = new MapManagerFactory(store, drawerFactory, renderingStrategies);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
-    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
+    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, drawerFactory, localizer);
     const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory);
     const mapRenderer = new MapRenderer(drawerFactory);
 

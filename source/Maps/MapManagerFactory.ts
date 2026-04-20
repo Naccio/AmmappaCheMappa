@@ -31,6 +31,6 @@ export class MapManagerFactory {
         const layerFactory = new LayerFactory(layers);
         const layersManager = new LayersManager(layerFactory, mapAccessor);
 
-        return new MapManager(mapAccessor, layersManager);
+        return new MapManager(mapAccessor, layersManager, cellRenderer);
     }
 }
