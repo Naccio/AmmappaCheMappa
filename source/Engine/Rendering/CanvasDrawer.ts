@@ -148,8 +148,8 @@ export class CanvasDrawer implements Drawer {
         this.context.restore();
     }
 
-    public toDataURL() {
-        return this.canvas.toDataURL();
+    public toBlob(callback: BlobCallback) {
+        return this.canvas.toBlob(callback);
     }
 
 
@@ -177,7 +177,7 @@ export class CanvasDrawer implements Drawer {
 
     private setShapeStyle(style?: ShapeStyle) {
         const fillStyle = style?.fillStyle ?? '#fff';
-        
+
         this.context.fillStyle = fillStyle;
         this.setLineStyle(style?.line);
     }

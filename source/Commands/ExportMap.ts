@@ -16,7 +16,17 @@ export class ExportMap extends ActiveMapCommand {
         if (map) {
             const renderedMap = this.renderer.render(map);
 
-            Utilities.download('map.png', renderedMap.toDataURL());
+            renderedMap.toBlob(b => {
+                const fileName = 'map.png';
+
+                if (b) {
+                    const url = URL.createObjectURL(b);
+                    Utilities.download(fileName, url);
+                    URL.revokeObjectURL(url);
+                } else {
+                    Utilities.download(fileName, '');
+                }
+            });
         }
     }
 }

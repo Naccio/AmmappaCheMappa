@@ -15,5 +15,5 @@ export interface Drawer extends UIElement {
     line(points: Point[], style: LineStyle): void;
     rectangle(point: Point, width: number, height: number, style: ShapeStyle): void;
     text(point: Point, text: string, fontSize: number): void;
-    toDataURL(): string;
+    toBlob(callback: BlobCallback): void;
 }

@@ -1,3 +1,3 @@
 export interface RenderedMap {
-    toDataURL(): string;
+    toBlob(callback: BlobCallback): void;
 }
