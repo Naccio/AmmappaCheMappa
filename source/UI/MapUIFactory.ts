@@ -2,7 +2,6 @@ import { LayersPanel } from "../Maps/Layers/LayersPanel";
 import { Localizer } from "../Engine/Localization/Localizer";
 import { MapManager } from "../Maps/MapManager";
 import { Store } from "../Engine/Store";
-import { CanvasProvider } from "./CanvasProvider";
 import { DrawingArea } from "./DrawingArea";
 import { DrawingUI } from "./DrawingUI";
 import { MapDrawer } from "./MapDrawer";
@@ -11,11 +10,12 @@ import { ToolActivator } from "./Tools/ToolActivator";
 import { Toolbar } from "./Tools/Toolbar";
 import { ToolsManagerFactory } from "./Tools/ToolsManagerFactory";
 import { UIFactory } from "./UIFactory";
+import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
 
 export class MapUIFactory {
 
     constructor(
-        private canvasProvider: CanvasProvider,
+        private drawerFactory: DrawerFactory,
         private toolsFactory: ToolsManagerFactory,
         private localizer: Localizer,
         private store: Store,
@@ -26,7 +26,7 @@ export class MapUIFactory {
         const mapAccessor = mapManager.mapAccessor,
             layersManager = mapManager.layers;
 
-        const uiLayer = new DrawingUI(mapAccessor, this.canvasProvider);
+        const uiLayer = new DrawingUI(mapAccessor, this.drawerFactory);
         const tools = this.toolsFactory.create(mapAccessor, layersManager, uiLayer);
         const toolbar = new Toolbar(tools.tools, this.localizer, mapAccessor, layersManager);
         const toolActivator = new ToolActivator(toolbar);

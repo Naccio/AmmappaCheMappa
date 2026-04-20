@@ -10,7 +10,7 @@ export class CanvasDrawer implements Drawer {
 
     //HACK: Leaky abstraction
     public constructor(
-        public readonly canvas: HTMLCanvasElement,
+        private readonly canvas: HTMLCanvasElement,
         private readonly scale: number
     ) {
         const context = canvas.getContext('2d');
@@ -28,6 +28,10 @@ export class CanvasDrawer implements Drawer {
 
     public get width() {
         return this.canvas.width;
+    }
+
+    public get html() {
+        return this.canvas;
     }
 
     public bezier(from: Point, to: Point, control1: Point, control2: Point, style: LineStyle) {

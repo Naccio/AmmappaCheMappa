@@ -2,15 +2,15 @@ import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { ObjectGraphicsFactory } from "../../Engine/Rendering/ObjectGraphicsFactory";
-import { CanvasProvider } from "../../UI/CanvasProvider";
 import { Utilities } from "../../Utilities/Utilities";
 import { MapAccessor } from "../MapAccessor";
 import { GridHelper } from "../../Utilities/GridHelper";
+import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 
 export class CellRenderer {
     constructor(
         private mapAccessor: MapAccessor,
-        private canvasProvider: CanvasProvider,
+        private drawerFactory: DrawerFactory,
         private graphicFactories: ObjectGraphicsFactory[]) {
     }
 
@@ -18,7 +18,7 @@ export class CellRenderer {
         const map = this.mapAccessor.map.data,
             scale = map.pixelsPerCell,
             cellName = GridHelper.cellIndexToName(cell),
-            canvas = this.canvasProvider.create(Utilities.generateId('cell'), scale, scale, scale),
+            cellDrawer = this.drawerFactory.create(Utilities.generateId('cell'), scale, scale, scale),
             objects = map.objects.filter(o => o.layer === layer && o.cell == cellName),
             origin = {
                 x: cell.column * scale,
@@ -26,11 +26,11 @@ export class CellRenderer {
             };
 
         for (let object of objects) {
-            this.renderObject(object, canvas);
+            this.renderObject(object, cellDrawer);
         }
 
         drawer.clear(origin, scale, scale);
-        drawer.image(canvas, origin);
+        drawer.image(cellDrawer, origin);
     }
 
     private renderObject(object: MapObject, drawer: Drawer) {

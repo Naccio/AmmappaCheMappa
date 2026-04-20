@@ -1,8 +1,7 @@
 import { CanvasDrawer } from "../Engine/Rendering/CanvasDrawer";
+import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
 
-export class CanvasProvider {
-    private readonly canvases: { [id: string]: CanvasDrawer } = {};
-
+export class CanvasProvider implements DrawerFactory {
     public create(id: string, width: number, height: number, scale?: number) {
         const canvas = document.createElement('canvas'),
             drawer = new CanvasDrawer(canvas, scale ?? 1);
@@ -12,8 +11,6 @@ export class CanvasProvider {
         canvas.id = id;
         canvas.width = width;
         canvas.height = height;
-
-        this.canvases[id] = drawer;
 
         return drawer;
     }

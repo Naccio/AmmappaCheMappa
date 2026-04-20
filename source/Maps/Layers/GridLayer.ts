@@ -2,8 +2,8 @@ import { MapAccessor } from "../MapAccessor";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { LayerRenderer } from "./LayerRenderer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
-import { CanvasProvider } from "../../UI/CanvasProvider";
 import { DrawingLayer } from "./DrawingLayer";
+import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 
 export class GridLayer implements DrawingLayer, LayerRenderer {
     private wrapper: HTMLElement;
@@ -11,7 +11,7 @@ export class GridLayer implements DrawingLayer, LayerRenderer {
     constructor(
         private id: string,
         private mapAccessor: MapAccessor,
-        private canvasProvider: CanvasProvider
+        private drawerFactory: DrawerFactory
     ) {
         const wrapper = document.createElement('div');
 
@@ -62,12 +62,12 @@ export class GridLayer implements DrawingLayer, LayerRenderer {
     public setupCanvas() {
         const map = this.mapAccessor.map,
             spacing = map.data.pixelsPerCell / map.zoom,
-            drawer = this.canvasProvider.create(this.id + '-canvas', map.data.columns * spacing, map.data.rows * spacing);
+            drawer = this.drawerFactory.create(this.id + '-canvas', map.data.columns * spacing, map.data.rows * spacing);
 
         this.renderAtScale(drawer, spacing);
 
         this.wrapper.innerHTML = '';
-        this.wrapper.append(drawer.canvas);
+        this.wrapper.append(drawer.html);
 
         return drawer;
     }

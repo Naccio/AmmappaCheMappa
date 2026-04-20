@@ -1,9 +1,9 @@
 import { MapAccessor } from "../MapAccessor";
 import { LayerRenderer } from "./LayerRenderer";
-import { CanvasProvider } from "../../UI/CanvasProvider";
 import { DrawingLayer } from "./DrawingLayer";
 import { GridLayer } from "./GridLayer";
 import { LayerAbstractFactory } from "./LayerAbstractFactory";
+import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 
 export class GridLayerFactory implements LayerAbstractFactory {
 
@@ -11,7 +11,7 @@ export class GridLayerFactory implements LayerAbstractFactory {
 
     constructor(
         private mapAccessor: MapAccessor,
-        private canvasProvider: CanvasProvider
+        private drawerFactory: DrawerFactory
     ) {
     }
 
@@ -33,7 +33,7 @@ export class GridLayerFactory implements LayerAbstractFactory {
         if (!layer) {
             layer = {
                 id,
-                layer: new GridLayer(id, this.mapAccessor, this.canvasProvider)
+                layer: new GridLayer(id, this.mapAccessor, this.drawerFactory)
             };
 
             this.layers.push(layer);

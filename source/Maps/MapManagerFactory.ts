@@ -7,22 +7,22 @@ import { MapManager } from "./MapManager";
 import { EditorMap } from "../Model/EditorMap";
 import { CellRenderer } from "./Cells/CellRenderer";
 import { Store } from "../Engine/Store";
-import { CanvasProvider } from "../UI/CanvasProvider";
 import { ObjectGraphicsFactory } from "../Engine/Rendering/ObjectGraphicsFactory";
+import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
 
 export class MapManagerFactory {
     constructor(
         private store: Store,
-        private canvasProvider: CanvasProvider,
+        private drawerFactory: DrawerFactory,
         private renderingStrategies: ObjectGraphicsFactory[]
     ) { }
 
     public create(map: EditorMap) {
         const mapAccessor = new MapAccessor(map, this.store);
-        const grid = new GridLayerFactory(mapAccessor, this.canvasProvider);
-        const cellRenderer = new CellRenderer(mapAccessor, this.canvasProvider, this.renderingStrategies);
-        const terrainLayer = new DefaultLayerFactory('terrain', mapAccessor, this.canvasProvider, cellRenderer);
-        const textLayer = new DefaultLayerFactory('text', mapAccessor, this.canvasProvider, cellRenderer);
+        const grid = new GridLayerFactory(mapAccessor, this.drawerFactory);
+        const cellRenderer = new CellRenderer(mapAccessor, this.drawerFactory, this.renderingStrategies);
+        const terrainLayer = new DefaultLayerFactory('terrain', mapAccessor, this.drawerFactory, cellRenderer);
+        const textLayer = new DefaultLayerFactory('text', mapAccessor, this.drawerFactory, cellRenderer);
         const layers = [
             terrainLayer,
             textLayer,

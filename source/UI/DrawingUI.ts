@@ -1,17 +1,19 @@
 import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
 import { MapAccessor } from "../Maps/MapAccessor";
-import { CanvasDrawer } from "../Engine/Rendering/CanvasDrawer";
 import { Drawer } from "../Engine/Rendering/Drawer";
-import { CanvasProvider } from "./CanvasProvider";
+import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
 
 export class DrawingUI implements DrawingLayer {
-    private readonly _drawer: CanvasDrawer;
+    private readonly _drawer: Drawer;
 
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
+    constructor(
+        private mapAccessor: MapAccessor,
+        private drawerFactory: DrawerFactory
+    ) {
         const map = this.mapAccessor.map,
             mapData = map.data,
             id = mapData.id + '-ui-layer',
-            drawer = this.canvasProvider.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
+            drawer = this.drawerFactory.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
 
         this._drawer = drawer;
     }
@@ -21,7 +23,7 @@ export class DrawingUI implements DrawingLayer {
     }
 
     public get html() {
-        return this._drawer.canvas;
+        return this._drawer.html;
     }
 
     public update() {

@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const localizerFactory = new LocalizerFactory(store);
     const localizer = await localizerFactory.create();
     const mapFactory = new MapFactory(localizer);
-    const canvasProvider = new CanvasProvider();
+    const drawerFactory = new CanvasProvider();
     const mountainFactory = new MountainFactory();
     const mountainsRenderer = new GenericObjectGraphicsFactory<Mountain>('mountain', m => new MountainGraphics(m));
     const placeRenderer = new GenericObjectGraphicsFactory<Place>('place', p => new PlaceGraphics(p));
@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     ];
     const uiFactory = new UIFactory();
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
-    const mapManagerFactory = new MapManagerFactory(store, canvasProvider, renderingStrategies);
+    const mapManagerFactory = new MapManagerFactory(store, drawerFactory, renderingStrategies);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
     const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
-    const mapUIFactory = new MapUIFactory(canvasProvider, toolsManagerFactory, localizer, store, uiFactory);
+    const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory);
     const mapRenderer = new MapRenderer();
 
     const newMapCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);

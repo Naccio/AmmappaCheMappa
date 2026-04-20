@@ -1,6 +1,5 @@
 import { MapAccessor } from "../MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
-import { CanvasDrawer } from "../../Engine/Rendering/CanvasDrawer";
 import { CellRenderer } from "../Cells/CellRenderer";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { LayerRenderer } from "./LayerRenderer";
@@ -12,13 +11,13 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
     constructor(
         private id: string,
         private mapAccessor: MapAccessor,
-        private drawer: CanvasDrawer,
+        private drawer: Drawer,
         private renderer: CellRenderer
     ) {
     }
 
     public get html() {
-        return this.drawer.canvas;
+        return this.drawer.html;
     }
 
     public render(drawer?: Drawer) {
