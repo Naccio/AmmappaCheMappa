@@ -23,7 +23,7 @@ import { MapManagerFactory } from "./Maps/MapManagerFactory";
 import { MapsManager } from "./Maps/MapsManager";
 import { MapRenderer } from "./Maps/MapRenderer";
 import { Store } from "./Engine/Store";
-import { CanvasProvider } from "./UI/CanvasProvider";
+import { CanvasDrawerFactory } from "./Engine/Rendering/CanvasDrawerFactory";
 import { MainArea } from "./UI/MainArea";
 import { MapUIFactory } from "./UI/MapUIFactory";
 import { LanguageMenuEntry } from "./UI/Menu/LanguageMenuEntry";
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const localizerFactory = new LocalizerFactory(store);
     const localizer = await localizerFactory.create();
     const mapFactory = new MapFactory(localizer);
-    const drawerFactory = new CanvasProvider();
+    const drawerFactory = new CanvasDrawerFactory();
     const mountainFactory = new MountainFactory();
     const mountainsRenderer = new GenericObjectGraphicsFactory<Mountain>('mountain', m => new MountainGraphics(m));
     const placeRenderer = new GenericObjectGraphicsFactory<Place>('place', p => new PlaceGraphics(p));

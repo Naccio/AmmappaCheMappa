@@ -1,7 +1,7 @@
-import { CanvasDrawer } from "../Engine/Rendering/CanvasDrawer";
-import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
+import { CanvasDrawer } from "./CanvasDrawer";
+import { DrawerFactory } from "./DrawerFactory";
 
-export class CanvasProvider implements DrawerFactory {
+export class CanvasDrawerFactory implements DrawerFactory {
     public create(id: string, width: number, height: number, scale?: number) {
         const canvas = document.createElement('canvas'),
             drawer = new CanvasDrawer(canvas, scale ?? 1);
