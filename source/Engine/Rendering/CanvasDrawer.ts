@@ -71,37 +71,33 @@ export class CanvasDrawer implements Drawer {
     }
 
     public circle(point: Point, radius: number, style: ShapeStyle) {
-        const fillStyle = style.fillStyle ?? '#fff';
-
         point = this.getActualPoint(point);
         radius = this.getActualValue(radius);
 
+        this.setShapeStyle(style);
+
         this.context.save();
-        this.context.fillStyle = fillStyle;
         this.context.beginPath();
         this.context.arc(point.x, point.y, radius, 0, Math.PI * 2);
         this.context.fill();
         if (style.line !== undefined) {
-            this.setLineStyle(style.line);
             this.context.stroke();
         }
         this.context.restore();
     }
 
     public ellipse(point: Point, radiusX: number, radiusY: number, rotation: number, style: ShapeStyle) {
-        const fillStyle = style.fillStyle ?? '#fff';
-
         point = this.getActualPoint(point);
         radiusX = this.getActualValue(radiusX);
         radiusY = this.getActualValue(radiusY);
 
+        this.setShapeStyle(style);
+
         this.context.save();
-        this.context.fillStyle = fillStyle;
         this.context.beginPath();
         this.context.ellipse(point.x, point.y, radiusX, radiusY, rotation, 0, Math.PI * 2);
         this.context.fill();
         if (style.line !== undefined) {
-            this.setLineStyle(style.line);
             this.context.stroke();
         }
         this.context.restore();
@@ -127,6 +123,16 @@ export class CanvasDrawer implements Drawer {
         this.context.restore();
     }
 
+    public rectangle(point: Point, width: number, height: number, style: ShapeStyle) {
+        point = this.getActualPoint(point);
+        width = this.getActualValue(width);
+        height = this.getActualValue(height);
+
+        this.setShapeStyle(style);
+
+        this.context.fillRect(point.x, point.y, width, height);
+    }
+
     public text(point: Point, text: string, fontSize: number) {
         point = this.getActualPoint(point);
 
@@ -140,6 +146,10 @@ export class CanvasDrawer implements Drawer {
         this.context.fillText(text, x, y);
 
         this.context.restore();
+    }
+
+    public toDataURL() {
+        return this.canvas.toDataURL();
     }
 
 
@@ -165,4 +175,10 @@ export class CanvasDrawer implements Drawer {
         this.context.strokeStyle = color;
     }
 
+    private setShapeStyle(style?: ShapeStyle) {
+        const fillStyle = style?.fillStyle ?? '#fff';
+        
+        this.context.fillStyle = fillStyle;
+        this.setLineStyle(style?.line);
+    }
 }

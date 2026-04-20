@@ -13,5 +13,7 @@ export interface Drawer extends UIElement {
     ellipse(point: Point, radiusX: number, radiusY: number, rotation: number, style: ShapeStyle): void;
     image(drawer: Drawer, point: Point): void;
     line(points: Point[], style: LineStyle): void;
+    rectangle(point: Point, width: number, height: number, style: ShapeStyle): void;
     text(point: Point, text: string, fontSize: number): void;
+    toDataURL(): string;
 }

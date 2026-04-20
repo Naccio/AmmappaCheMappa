@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
     const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, localizer);
     const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory);
-    const mapRenderer = new MapRenderer();
+    const mapRenderer = new MapRenderer(drawerFactory);
 
     const newMapCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);
     const openMapCommand = new OpenMap(mapsManager, localizer);
