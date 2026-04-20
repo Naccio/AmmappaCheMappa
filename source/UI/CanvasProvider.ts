@@ -5,9 +5,7 @@ export class CanvasProvider {
 
     public create(id: string, width: number, height: number, scale?: number) {
         const canvas = document.createElement('canvas'),
-            drawer = new CanvasDrawer(canvas);
-
-        scale ??= 1;
+            drawer = new CanvasDrawer(canvas, scale ?? 1);
 
         document.getElementById(id)?.remove();
 

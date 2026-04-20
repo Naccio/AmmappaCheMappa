@@ -78,7 +78,9 @@ export class LayersManager {
         });
 
         this.mapAccessor.setObjects(index, mapObjects);
-        this._activeLayer.drawing.update(index);
+        //this._activeLayer.drawing.update(index);
+        //HACK: Temporarily updating all layers because of one-item-per-cell rule
+        this.layers.forEach(l => l.drawing.update(index));
     }
 
     public update(id: string, action: (layer: MapLayer) => void) {

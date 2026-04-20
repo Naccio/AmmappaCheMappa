@@ -17,7 +17,7 @@ export class MapRenderer {
         ctx.fillStyle = "#FFF";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const drawer = new CanvasDrawer(canvas);
+        const drawer = new CanvasDrawer(canvas, 1);
 
         for (let layer of layers) {
             layer.renderer.render(drawer);

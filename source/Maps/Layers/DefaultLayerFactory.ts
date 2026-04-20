@@ -35,7 +35,7 @@ export class DefaultLayerFactory implements LayerAbstractFactory {
         if (!layer) {
             const map = this.mapAccessor.map,
                 mapData = map.data,
-                drawer = this.canvasProvider.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell, 1 / map.zoom);
+                drawer = this.canvasProvider.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
 
             layer = {
                 id,
