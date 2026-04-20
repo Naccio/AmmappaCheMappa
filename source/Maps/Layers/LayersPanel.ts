@@ -33,7 +33,6 @@ export class LayersPanel implements UIElement {
     private buildLayer(layer: LayerAccessor) {
         const data = layer.value,
             id = data.id,
-            name = this.getName(data),
             mapId = this.layersManager.mapId,
             //HACK: Magic string layer_type_
             type = this.localizer[`layer_type_${data.type}`],

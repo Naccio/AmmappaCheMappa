@@ -14,23 +14,18 @@ export class CellRenderer {
         private graphicFactories: ObjectGraphicsFactory[]) {
     }
 
-    public render(cell: CellIndex, drawer: Drawer, layer: string) {
+    public render(cell: CellIndex, layer: string) {
         const map = this.mapAccessor.map.data,
             scale = map.pixelsPerCell,
             cellName = GridHelper.cellIndexToName(cell),
-            cellDrawer = this.drawerFactory.create(Utilities.generateId('cell'), scale, scale, scale),
-            objects = map.objects.filter(o => o.layer === layer && o.cell == cellName),
-            origin = {
-                x: cell.column * scale,
-                y: cell.row * scale
-            };
+            drawer = this.drawerFactory.create(Utilities.generateId('cell'), scale, scale, scale),
+            objects = map.objects.filter(o => o.layer === layer && o.cell == cellName);
 
         for (let object of objects) {
-            this.renderObject(object, cellDrawer);
+            this.renderObject(object, drawer);
         }
 
-        drawer.clear(origin, scale, scale);
-        drawer.image(cellDrawer, origin);
+        return drawer;
     }
 
     private renderObject(object: MapObject, drawer: Drawer) {

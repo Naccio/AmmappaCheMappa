@@ -21,24 +21,36 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
     }
 
     public render(drawer?: Drawer) {
-        this.draw(this.drawer);
+        this.draw();
         drawer?.image(this.drawer, VectorMath.zero);
     }
 
     public update(cell: CellIndex) {
-        this.renderer.render(cell, this.drawer, this.id);
+        this.renderCell(cell);
     }
 
     public zoom() {
     }
 
-    private draw(drawer: Drawer) {
+    private draw() {
         const map = this.mapAccessor.map.data;
 
         for (let column = 0; column < map.columns; column++) {
             for (let row = 0; row < map.rows; row++) {
-                this.renderer.render({ column, row }, drawer, this.id);
+                this.renderCell({ column, row });
             }
         }
+    }
+
+    private renderCell(cell: CellIndex) {
+        const scale = this.mapAccessor.map.data.pixelsPerCell,
+            origin = {
+                x: cell.column * scale,
+                y: cell.row * scale
+            },
+            cellImage = this.renderer.render(cell, this.id);
+
+        this.drawer.clear(origin, scale, scale);
+        this.drawer.image(cellImage, origin);
     }
 }
