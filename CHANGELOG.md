@@ -12,6 +12,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - ***BREAKING***: Model changed, maps generated with previous versions will no
   longer work
 
+### Fixed
+
+- **Drawing area**: Closing a map shows the welcome message even if there is
+  another map open
+
 
 ## [alpha.3] - 2026-04-10
 

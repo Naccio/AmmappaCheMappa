@@ -56,9 +56,11 @@ export class MapsManager {
                 }
 
                 if (this._activeMap?.id === id) {
-                    this._activeMap = undefined;
-                    this.store.activeMap = undefined;
-                    this.activateEvent.trigger(undefined);
+                    const activeMap = this.maps.values().find(_ => true);
+
+                    this._activeMap = activeMap;
+                    this.store.activeMap = activeMap?.id;
+                    this.activateEvent.trigger(activeMap);
                 }
             });
     }
