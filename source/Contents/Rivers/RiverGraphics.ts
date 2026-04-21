@@ -13,8 +13,7 @@ export class RiverGraphics implements Graphics {
             from = river.from,
             to = river.to,
             style: LineStyle = {
-                lineWidth: this.lineWidth,
-                ignoreBorders: true
+                lineWidth: this.lineWidth
             };
         // directionFrom = VectorMath.direction(from, river.bend1),
         // directionTo = VectorMath.direction(river.bend2, river.to);

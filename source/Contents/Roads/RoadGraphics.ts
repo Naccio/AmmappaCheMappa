@@ -21,8 +21,7 @@ export class RoadGraphics implements Graphics {
             from2 = shift2.add(from),
             to2 = shift2.add(to),
             style: LineStyle = {
-                lineWidth: this.lineWidth,
-                ignoreBorders: true
+                lineWidth: this.lineWidth
             };
 
         drawer.line([from1, to1], style);
