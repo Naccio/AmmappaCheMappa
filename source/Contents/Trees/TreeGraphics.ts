@@ -4,7 +4,7 @@ import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { Tree } from "./Tree";
 
 export class TreeGraphics implements Graphics {
-    private readonly lineWidth = 2;
+    private readonly lineWidth = .02;
 
     public constructor(private tree: Tree) { }
 

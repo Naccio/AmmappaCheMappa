@@ -26,12 +26,13 @@ export class SelectTool implements Tool {
             return;
         }
 
-        const cellName = GridHelper.cellIndexToName(cell),
-            size = this.mapManager.mapAccessor.map.data.pixelsPerCell,
+        const scale = 3,
+            cellName = GridHelper.cellIndexToName(cell),
+            size = this.mapManager.mapAccessor.map.data.pixelsPerCell * scale,
             drawer = this.drawerFactory.create(cellName + '-modal', size, size);
 
         this.mapManager.layers.layers.forEach(l => {
-            const cellDrawer = this.mapManager.cells.render(cell, l.id);
+            const cellDrawer = this.mapManager.cells.render(cell, l.id, scale);
 
             drawer.image(cellDrawer, VectorMath.zero);
         });

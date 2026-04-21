@@ -2,7 +2,6 @@ import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { ObjectGraphicsFactory } from "../../Engine/Rendering/ObjectGraphicsFactory";
-import { Utilities } from "../../Utilities/Utilities";
 import { MapAccessor } from "../MapAccessor";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
@@ -14,11 +13,13 @@ export class CellRenderer {
         private graphicFactories: ObjectGraphicsFactory[]) {
     }
 
-    public render(cell: CellIndex, layer: string) {
+    public render(cell: CellIndex, layer: string, scale?: number) {
+        scale ??= 1;
+
         const map = this.mapAccessor.map.data,
-            scale = map.pixelsPerCell,
+            size = map.pixelsPerCell * scale,
             cellName = GridHelper.cellIndexToName(cell),
-            drawer = this.drawerFactory.create(Utilities.generateId('cell'), scale, scale, scale),
+            drawer = this.drawerFactory.create(map.id + '-' + cellName, size, size, size),
             objects = map.objects.filter(o => o.layer === layer && o.cell == cellName);
 
         for (let object of objects) {

@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [alpha.4] - UNRELEASED
 
+### Added
+
+- Tools:
+  - **Select**: Allows to click on a cell to access its details
+
 ### Changed
 
 - ***BREAKING***: Model changed, maps generated with previous versions will no

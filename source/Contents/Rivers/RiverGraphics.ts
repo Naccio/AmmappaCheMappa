@@ -4,7 +4,7 @@ import { Graphics } from "../../Engine/Rendering/Graphics";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 
 export class RiverGraphics implements Graphics {
-    private readonly lineWidth = 6;
+    private readonly lineWidth = .06;
 
     public constructor(private river: River) { }
 

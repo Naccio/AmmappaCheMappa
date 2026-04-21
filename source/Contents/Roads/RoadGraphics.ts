@@ -5,7 +5,7 @@ import { VectorMath } from "../../Utilities/VectorMath";
 import { Road } from "./Road";
 
 export class RoadGraphics implements Graphics {
-    private readonly lineWidth = 2;
+    private readonly lineWidth = .02;
 
     public constructor(private road: Road) { }
 

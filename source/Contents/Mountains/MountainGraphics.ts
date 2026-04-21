@@ -3,7 +3,7 @@ import { Graphics } from "../../Engine/Rendering/Graphics";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 
 export class MountainGraphics implements Graphics {
-    private readonly lineWidth = 4;
+    private readonly lineWidth = .04;
 
     public constructor(private mountain: Mountain) { }
 

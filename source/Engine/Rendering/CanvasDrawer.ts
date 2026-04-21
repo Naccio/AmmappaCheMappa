@@ -8,7 +8,6 @@ export class CanvasDrawer implements Drawer {
 
     private readonly context: CanvasRenderingContext2D;
 
-    //HACK: Leaky abstraction
     public constructor(
         private readonly canvas: HTMLCanvasElement,
         private readonly scale: number
@@ -104,9 +103,12 @@ export class CanvasDrawer implements Drawer {
     }
 
     public image(drawer: CanvasDrawer, point: Point) {
+        const width = this.getActualValue(drawer.width),
+            height = this.getActualValue(drawer.height)
+
         point = this.getActualPoint(point);
 
-        this.context.drawImage(drawer.canvas, point.x, point.y);
+        this.context.drawImage(drawer.canvas, point.x, point.y, width, height);
     }
 
     public line(points: Point[], style: LineStyle) {
@@ -166,7 +168,7 @@ export class CanvasDrawer implements Drawer {
     private setLineStyle(style?: LineStyle) {
         const lineCap = style?.lineCap ?? 'square',
             lineJoin = style?.lineJoin ?? 'round',
-            lineWidth = style?.lineWidth ?? 1,
+            lineWidth = this.getActualValue(style?.lineWidth ?? 1 / this.scale),
             color = style?.color ?? '#000';
 
         this.context.lineCap = lineCap;
