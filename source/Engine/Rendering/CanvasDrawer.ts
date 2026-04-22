@@ -40,12 +40,13 @@ export class CanvasDrawer implements Drawer {
         control2 = this.getActualPoint(control2);
 
         this.context.save();
+
+        this.setLineStyle(style);
         this.context.beginPath();
         this.context.moveTo(from.x, from.y);
         this.context.bezierCurveTo(control1.x, control1.y, control2.x, control2.y, to.x, to.y);
-
-        this.setLineStyle(style);
         this.context.stroke();
+
         this.context.restore();
     }
 
@@ -73,15 +74,16 @@ export class CanvasDrawer implements Drawer {
         point = this.getActualPoint(point);
         radius = this.getActualValue(radius);
 
-        this.setShapeStyle(style);
-
         this.context.save();
+
+        this.setShapeStyle(style);
         this.context.beginPath();
         this.context.arc(point.x, point.y, radius, 0, Math.PI * 2);
         this.context.fill();
         if (style.line !== undefined) {
             this.context.stroke();
         }
+
         this.context.restore();
     }
 
@@ -90,15 +92,16 @@ export class CanvasDrawer implements Drawer {
         radiusX = this.getActualValue(radiusX);
         radiusY = this.getActualValue(radiusY);
 
-        this.setShapeStyle(style);
-
         this.context.save();
+
+        this.setShapeStyle(style);
         this.context.beginPath();
         this.context.ellipse(point.x, point.y, radiusX, radiusY, rotation, 0, Math.PI * 2);
         this.context.fill();
         if (style.line !== undefined) {
             this.context.stroke();
         }
+
         this.context.restore();
     }
 
@@ -116,12 +119,13 @@ export class CanvasDrawer implements Drawer {
             start = mapPoints.shift()!;
 
         this.context.save();
+
+        this.setLineStyle(style);
         this.context.beginPath();
         this.context.moveTo(start.x, start.y);
         mapPoints.forEach(p => this.context.lineTo(p.x, p.y));
-
-        this.setLineStyle(style);
         this.context.stroke();
+
         this.context.restore();
     }
 
@@ -130,16 +134,22 @@ export class CanvasDrawer implements Drawer {
         width = this.getActualValue(width);
         height = this.getActualValue(height);
 
-        this.setShapeStyle(style);
+        this.context.save();
 
+        this.setShapeStyle(style);
         this.context.fillRect(point.x, point.y, width, height);
+
+        this.context.restore();
     }
 
     public text(point: Point, text: string, fontSize: number) {
         point = this.getActualPoint(point);
+        fontSize = this.getActualValue(fontSize);
 
         this.context.save();
+
         this.context.font = fontSize + 'px serif';
+        this.context.fillStyle = '#000';
         const measurement = this.context.measureText(text),
             width = measurement.width,
             x = point.x - width / 2,
