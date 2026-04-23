@@ -13,6 +13,11 @@ export class Observable<T> {
         return this._value;
     }
 
+    public set value(value: T) {
+        this._value = value;
+        this.trigger();
+    }
+
     public subscribe(action: (value: T) => void) {
         action(this._value);
         this.event.subscribe(action);
@@ -20,6 +25,10 @@ export class Observable<T> {
 
     public update(action: (value: T) => void) {
         action(this._value);
+        this.trigger();
+    }
+
+    private trigger() {
         this.event.trigger(this._value);
     }
 }

@@ -120,6 +120,10 @@ small {
     display: none;
 }
 
+.label-radio+label {
+    display: block;
+}
+
 .label-radio:disabled+label {
     display: none;
 }
@@ -334,6 +338,5 @@ small {
 
 .toolbar :not(:disabled)+label {
     font-size: 3rem;
-    display: block;
     text-align: center;
 }
