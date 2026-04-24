@@ -17,9 +17,9 @@ export class RadioSelect<T> implements UIElement {
     private selected = -1;
 
     public constructor(
-        target: Observable<T | undefined>,
+        private readonly target: Observable<T | undefined>,
         items: T[],
-        labelFactory: (item: T) => HTMLElement
+        labelFactory: (item: T, label: HTMLLabelElement) => void
     ) {
         const container = document.createElement('div'),
             name = Utilities.generateId('select'),
@@ -45,8 +45,9 @@ export class RadioSelect<T> implements UIElement {
                 }
             };
 
+            labelFactory(item, label);
+
             label.htmlFor = radio.id;
-            label.append(labelFactory(item));
 
             wrapper.append(radio);
             wrapper.append(label);
@@ -76,5 +77,30 @@ export class RadioSelect<T> implements UIElement {
 
     public get html() {
         return this.container;
+    }
+
+    public disable(check: (item: T) => boolean) {
+        let first: T | undefined = undefined,
+            swap = false;
+
+        this.items.forEach(item => {
+            const disabled = check(item.value);
+
+            item.radio.disabled = disabled;
+
+            if (disabled) {
+                if (item.value === this.target.value) {
+                    swap = true;
+                }
+            } else {
+                if (first === undefined) {
+                    first = item.value;
+                }
+            }
+        });
+
+        if (this.target.value === undefined || swap) {
+            this.target.value = first;
+        }
     }
 }

@@ -59,12 +59,8 @@ export class SelectTool implements Tool {
 
     private buildList(context: CellContext) {
         const selected = new Observable<MapObject | undefined>(undefined),
-            list = new RadioSelect(selected, context.objects, o => {
-                const p = document.createElement('p');
-
-                p.innerText = o.type;
-
-                return p;
+            list = new RadioSelect(selected, context.objects, (item, label) => {
+                label.innerText = item.type;
             });
 
         return list;
