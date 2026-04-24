@@ -42,15 +42,6 @@ export class MapUI implements UIElement {
         this.container.remove();
     }
 
-    public setup() {
-        const mapAccessor = this.map.mapAccessor,
-            layersManager = this.map.layers,
-            map = mapAccessor.map;
-
-        mapAccessor.map.data.layers.forEach(l => layersManager.add(l));
-        layersManager.select(map.activeLayer);
-    }
-
     public show() {
         this.container.style.display = 'grid';
         this.drawingArea.setup();

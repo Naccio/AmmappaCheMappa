@@ -2,7 +2,6 @@ import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
 import { LayerAccessor } from "../Maps/Layers/LayerAccessor";
 import { MapManager } from "../Maps/MapManager";
 import { MathHelper } from "../Utilities/MathHelper";
-import { MapLayer } from "../Model/MapLayer";
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
 import { Store } from "../Engine/Store";
@@ -29,6 +28,10 @@ export class MapDrawer implements UIElement {
 
         mapManager.layers.onCreate(this.layerCreateHandler);
         mapManager.layers.onDelete(this.layerDeleteHandler);
+
+        mapManager.layers.layers.forEach(l => {
+            this.layerCreateHandler(l);
+        })
     }
 
     public get html() {
@@ -115,7 +118,7 @@ export class MapDrawer implements UIElement {
         c.subscribe(l => c.drawing.html.style.display = l.hidden ? 'none' : 'block');
     }
 
-    private layerDeleteHandler = (c: MapLayer) => {
+    private layerDeleteHandler = (c: LayerAccessor) => {
         const element = document.getElementById(c.id);
 
         element?.remove();

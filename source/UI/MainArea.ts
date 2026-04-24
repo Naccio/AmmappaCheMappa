@@ -100,8 +100,6 @@ export class MainArea implements UIElement {
         });
         this.container.append(ui.html);
         this.tabs.append(tab);
-
-        ui.setup();
     }
 
     private remove(id: string) {

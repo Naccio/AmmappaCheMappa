@@ -8,7 +8,6 @@ import { RadioSelect } from "../RadioSelect";
 
 export class Toolbar implements UIElement {
     private readonly container: HTMLDivElement;
-    private readonly select: RadioSelect<Tool>;
 
     private _activeTool: Observable<Tool | undefined>;
 
@@ -31,10 +30,10 @@ export class Toolbar implements UIElement {
         container.append(select.html);
 
         this.container = container;
-        this.select = select;
         this._activeTool = activeTool;
 
-        layers.onSelect(this.layerSelectHandle);
+        layers.activeLayerObservable.subscribe(l =>
+            select.disable(t => !this.isCompatibleWith(t, l)));
     }
 
     public get activeTool() {
@@ -53,9 +52,5 @@ export class Toolbar implements UIElement {
         const layerTypes = tool.configuration.layerTypes;
 
         return layerTypes.length === 0 || layerTypes.includes(layer.value.type);
-    }
-
-    private layerSelectHandle = (layer: LayerAccessor) => {
-        this.select.disable(tool => !this.isCompatibleWith(tool, layer));
     }
 }

@@ -1,108 +1,70 @@
 import { Localizer } from "../../Engine/Localization/Localizer";
-import { MapLayer } from "../../Model/MapLayer";
+import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
 import { UIFactory } from "../../UI/UIFactory";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayersManager } from "./LayersManager";
 
 export class LayersPanel implements UIElement {
-    private readonly container: HTMLDivElement;
-    private readonly layers: Map<string, HTMLElement>;
+    private readonly select: RadioSelect<LayerAccessor>;
 
     public constructor(
         private layersManager: LayersManager,
         private uiFactory: UIFactory,
         private localizer: Localizer
     ) {
-        const container = document.createElement('div');
+        const select = new RadioSelect(
+            layersManager.activeLayerObservable,
+            layersManager.layers,
+            (layer, label) => {
+                const data = layer.value,
+                    id = data.id,
+                    //HACK: Magic string layer_type_
+                    type = this.localizer[`layer_type_${data.type}`],
+                    labelText = document.createElement('span'),
+                    typeLabel = document.createElement('small'),
+                    deleteButton = this.uiFactory.createCloseButton(_ => this.layersManager.delete(id));
 
-        container.className = 'layers';
+                typeLabel.innerText = `(${type})`;
 
-        layersManager.onCreate(l => this.buildLayer(l));
-        layersManager.onDelete(l => this.removeLayer(l.id));
-        layersManager.onSelect(l => this.selectLayer(l));
+                layer.subscribe(l => {
+                    const name = l.name ?? l.id;
 
-        this.container = container;
-        this.layers = new Map<string, HTMLElement>();
+                    label.title = name;
+                    labelText.innerText = name;
+                });
+
+                label.append(labelText);
+                label.append(typeLabel);
+                label.append(deleteButton);
+            },
+            (layer, wrapper) => {
+                const data = layer.value,
+                    id = data.id,
+                    mapId = this.layersManager.mapId,
+                    check = document.createElement('input');
+
+                check.type = 'checkbox';
+                check.name = mapId + '-visible-layers';
+                check.value = id;
+                check.id = id + '-visible';
+                check.checked = !data.hidden;
+
+                check.onchange = () => this.layersManager.update(id, l => l.hidden = !check.checked);
+
+                wrapper.append(check);
+            }
+        );
+
+        select.html.className = 'layers';
+
+        layersManager.onCreate(l => select.add(l));
+        layersManager.onDelete(l => select.remove(l));
+
+        this.select = select;
     }
 
     public get html() {
-        return this.container;
-    }
-
-    private buildLayer(layer: LayerAccessor) {
-        const data = layer.value,
-            id = data.id,
-            mapId = this.layersManager.mapId,
-            //HACK: Magic string layer_type_
-            type = this.localizer[`layer_type_${data.type}`],
-            wrapper = document.createElement('div'),
-            check = document.createElement('input'),
-            radio = document.createElement('input'),
-            label = document.createElement('label'),
-            labelText = document.createElement('span'),
-            typeLabel = document.createElement('small'),
-            deleteButton = this.uiFactory.createCloseButton(_ => this.layersManager.delete(id));
-
-        check.type = 'checkbox';
-        check.name = mapId + '-visible-layers';
-        check.value = id;
-        check.id = id + '-visible';
-        check.checked = !data.hidden;
-
-        check.onchange = () => this.layersManager.update(id, l => l.hidden = !check.checked);
-
-        radio.type = 'radio';
-        radio.name = mapId + '-active-layer';
-        radio.value = id;
-        radio.id = this.getRadioId(id);
-        radio.className = 'label-radio';
-
-        radio.onchange = () => this.layersManager.select(id);
-
-        typeLabel.innerText = `(${type})`;
-
-        label.htmlFor = radio.id;
-        label.append(labelText);
-        label.append(typeLabel);
-        label.append(deleteButton);
-
-        wrapper.append(check);
-        wrapper.append(radio);
-        wrapper.append(label);
-
-        layer.subscribe(l => {
-            const name = this.getName(l);
-
-            label.title = name;
-            labelText.innerText = name;
-        });
-
-        this.container.append(wrapper);
-        this.layers.set(id, wrapper);
-    }
-
-    private getName(layer: MapLayer) {
-        return layer.name ?? layer.id;
-    }
-
-    private getRadioId(id: string) {
-        return id + '-active';
-    }
-
-    private removeLayer(id: string) {
-        const layer = this.layers.get(id);
-
-        if (layer == undefined) {
-            return;
-        }
-
-        layer.remove();
-        this.layers.delete(id);
-    }
-
-    private selectLayer(layer: LayerAccessor) {
-        const id = this.getRadioId(layer.id);
-        document.getElementById(id)?.click();
+        return this.select.html;
     }
 }

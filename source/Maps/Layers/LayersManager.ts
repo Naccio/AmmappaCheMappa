@@ -6,20 +6,50 @@ import { MapLayer } from "../../Model/MapLayer";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayerFactory } from "./LayerFactory";
 import { GridHelper } from "../../Utilities/GridHelper";
+import { Observable } from "../../Engine/Events/Observable";
 
 export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
-    private readonly deleteEvent = new InternalEvent<MapLayer>();
-    private readonly selectEvent = new InternalEvent<LayerAccessor>();
+    private readonly deleteEvent = new InternalEvent<LayerAccessor>();
 
-    private _activeLayer?: LayerAccessor;
+    private _activeLayer: Observable<LayerAccessor | undefined>;
 
-    public layers: LayerAccessor[] = [];
+    public layers: LayerAccessor[];
 
     public constructor(private factory: LayerFactory, private mapAccessor: MapAccessor) {
+        const map = mapAccessor.map,
+            layers: LayerAccessor[] = [];
+
+        let selected: LayerAccessor | undefined = undefined;
+
+        map.data.layers.forEach(l => {
+            const layer = factory.create(l);
+
+            if (map.activeLayer === l.id) {
+                selected = layer;
+            }
+
+            layers.push(layer);
+        });
+
+        selected ??= layers[0];
+
+        this.layers = layers;
+        this._activeLayer = new Observable<LayerAccessor | undefined>(selected);
+
+        this._activeLayer.subscribe(l => {
+            if (l) {
+                this.mapAccessor.map.activeLayer = l.id;
+                this.mapAccessor.save();
+            }
+        });
     }
 
     public get activeLayer() {
+        return this._activeLayer.value;
+    }
+
+    public get activeLayerObservable() {
         return this._activeLayer;
     }
 
@@ -46,32 +76,27 @@ export class LayersManager {
 
         this.layers = this.layers.filter(l => l.id !== id);
         if (this.activeLayer?.id === id) {
-            this._activeLayer = undefined;
             this.select(this.layers[0].id);
         }
         this.saveLayers();
-        this.deleteEvent.trigger(layer.value);
+        this.deleteEvent.trigger(layer);
     }
 
     public select(id: string) {
         const layer = this.getLayer(id);
 
-        this._activeLayer = layer;
-        this.mapAccessor.map.activeLayer = id;
-
-        this.mapAccessor.save();
-        this.selectEvent.trigger(layer);
+        this._activeLayer.value = layer;
     }
 
     public setObjects<T>(type: string, index: CellIndex, objects: T[]) {
-        if (this._activeLayer === undefined) {
+        if (this.activeLayer === undefined) {
             return;
         }
 
         const mapObjects = objects.map(o => {
             return {
                 type,
-                layer: this._activeLayer!.id,
+                layer: this.activeLayer!.id,
                 cell: GridHelper.cellIndexToName(index),
                 data: o
             }
@@ -91,14 +116,18 @@ export class LayersManager {
     }
 
     public onSelect(handler: EventHandler<LayerAccessor>) {
-        this.selectEvent.subscribe(handler);
+        this._activeLayer.subscribe(layer => {
+            if (layer) {
+                handler(layer);
+            }
+        });
     }
 
     public onCreate(handler: EventHandler<LayerAccessor>) {
         this.createEvent.subscribe(handler);
     }
 
-    public onDelete(handler: EventHandler<MapLayer>) {
+    public onDelete(handler: EventHandler<LayerAccessor>) {
         this.deleteEvent.subscribe(handler);
     }
 
