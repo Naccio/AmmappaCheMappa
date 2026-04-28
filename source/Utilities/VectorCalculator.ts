@@ -5,7 +5,11 @@ export class VectorCalculator {
     constructor(public x: number, public y: number) {
     }
 
-    public add(v: Vector) {
+    public add(x: number, y: number): VectorCalculator;
+    public add(v: Vector): VectorCalculator;
+    public add(xOrV: number | Vector, y?: number) {
+        const v = this.getVector(xOrV, y);
+
         return VectorMath.add(this, v);
     }
 
@@ -57,7 +61,22 @@ export class VectorCalculator {
         return VectorMath.round(this, places);
     }
 
-    public subtract(v: Vector) {
-        return VectorMath.subtract(this, v)
+    public subtract(x: number, y: number): VectorCalculator;
+    public subtract(v: Vector): VectorCalculator;
+    public subtract(xOrV: number | Vector, y?: number) {
+        const v = this.getVector(xOrV, y);
+
+        return VectorMath.subtract(this, v);
+    }
+
+    private getVector(xOrV: number | Vector, y?: number): Vector {
+        if (typeof xOrV === 'number') {
+            return {
+                x: xOrV,
+                y: y ?? 0
+            };
+        } else {
+            return xOrV;
+        }
     }
 }

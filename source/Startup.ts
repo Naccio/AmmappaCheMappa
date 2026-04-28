@@ -30,7 +30,6 @@ import { ModalLauncher } from "./UI/ModalLauncher";
 import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
 import { UIFactory } from "./UI/UIFactory";
 import { Welcome } from "./UI/Welcome";
-import { GenericObjectGraphicsFactory } from "./Engine/Rendering/GenericObjectGraphicsFactory";
 import { Mountain } from "./Contents/Mountains/Mountain";
 import { Place } from "./Contents/Places/Place";
 import { River } from "./Contents/Rivers/River";
@@ -38,6 +37,7 @@ import { Road } from "./Contents/Roads/Road";
 import { GridText } from "./Contents/Text/GridText";
 import { Tree } from "./Contents/Trees/Tree";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
+import { VectorMath } from "./Utilities/VectorMath";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -48,30 +48,80 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapFactory = new MapFactory(localizer);
     const drawerFactory = new CanvasDrawerFactory();
     const contents = new ContentsConfigurationBuilder()
-        .add<Mountain>('mountain', b => {
-            b.setGraphics(m => new MountainGraphics(m));
-        })
-        .add<Place>('place', b => {
-            b.setGraphics(p => new PlaceGraphics(p));
-        })
-        .add<River>('river', b => {
-            b.setGraphics(r => new RiverGraphics(r));
-        })
-        .add<Road>('road', b => {
-            b.setGraphics(r => new RoadGraphics(r));
-        })
-        .add<GridText>('text', b => {
-            b.setGraphics(t => new TextGraphics(t));
-        })
-        .add<Tree>('tree', b => {
-            b.setGraphics(t => new TreeGraphics(t));
-        })
+        .add<Mountain>('mountain', b => b
+            .setGraphics(m => new MountainGraphics(m))
+            .setPoints(m => {
+                const position = VectorMath.startOperation(m.position),
+                    halfWidth = m.width / 2,
+                    top = position.subtract(0, m.height),
+                    left = position.subtract(halfWidth, 0),
+                    right = position.add(halfWidth, 0);
+
+                return {
+                    position,
+                    mainPoints: [top, left, right]
+                }
+            })
+        )
+        .add<Place>('place', b => b
+            .setGraphics(p => new PlaceGraphics(p))
+            .setPoints(p => {
+                const position = VectorMath.startOperation(p.position),
+                    radius = position.add(p.radius, 0);
+
+                return {
+                    position,
+                    helperPoints: [radius]
+                }
+            })
+        )
+        .add<River>('river', b => b
+            .setGraphics(r => new RiverGraphics(r))
+            .setPoints(r => {
+                return {
+                    mainPoints: [r.from, r.to],
+                    helperPoints: [r.bend1, r.bend2]
+                }
+            })
+        )
+        .add<Road>('road', b => b
+            .setGraphics(r => new RoadGraphics(r))
+            .setPoints(r => {
+                return {
+                    mainPoints: [r.from, r.to]
+                }
+            })
+        )
+        .add<GridText>('text', b => b
+            .setGraphics(t => new TextGraphics(t))
+            .setPoints(t => {
+                return {
+                    position: t.position
+                }
+            })
+        )
+        .add<Tree>('tree', b => b
+            .setGraphics(t => new TreeGraphics(t))
+            .setPoints(t => {
+                const position = VectorMath.startOperation(t.position),
+                    trunkTop = position.subtract(0, t.trunkHeight),
+                    crownCenter = trunkTop.subtract(0, t.crownHeight / 2),
+                    radiusX = crownCenter.subtract(t.crownWidth / 2, 0),
+                    radiusY = crownCenter.subtract(0, t.crownHeight / 2);
+
+                return {
+                    position,
+                    mainPoints: [trunkTop],
+                    helperPoints: [crownCenter, radiusX, radiusY]
+                };
+            })
+        )
         .build();
     const uiFactory = new UIFactory();
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
     const mapManagerFactory = new MapManagerFactory(store, drawerFactory, contents);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
-    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, drawerFactory, localizer);
+    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, drawerFactory, localizer, contents);
     const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory);
     const mapRenderer = new MapRenderer(drawerFactory);
 

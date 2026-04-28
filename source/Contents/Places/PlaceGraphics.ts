@@ -7,8 +7,7 @@ export class PlaceGraphics implements Graphics {
     public constructor(private place: Place) { }
 
     public render(drawer: Drawer) {
-        const iconSize = .25,
-            radius = iconSize / 2,
+        const radius = this.place.radius,
             center = this.place.position;
 
         drawer.circle(center, radius, {

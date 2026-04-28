@@ -24,7 +24,10 @@ export class PlacesTool implements Tool {
 
         const normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
             position = VectorMath.round(normalizedPosition, 2),
-            place: Place = { position };
+            place: Place = {
+                position,
+                radius: .2
+            };
 
         this.layers.setObjects('place', cell, [place]);
     }

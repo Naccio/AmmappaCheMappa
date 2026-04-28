@@ -12,12 +12,14 @@ import { ToolsManager } from "./ToolsManager";
 import { SelectTool } from "./SelectTool";
 import { MapManager } from "../../Maps/MapManager";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
+import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 
 export class ToolsManagerFactory {
     constructor(
         private modalLauncher: ModalLauncher,
         private drawerFactory: DrawerFactory,
-        private localizer: Localizer
+        private localizer: Localizer,
+        private contents: ContentConfiguration[],
     ) { }
 
     public create(mapManager: MapManager, uiLayer: DrawingUI) {
@@ -29,7 +31,7 @@ export class ToolsManagerFactory {
         const placesTool = new PlacesTool(mapAccessor, layersManager);
         const riversTool = new RiversTool(mapAccessor, layersManager);
         const roadsTool = new RoadsTool(uiLayer, mapAccessor, layersManager);
-        const selectTool = new SelectTool(mapManager, this.drawerFactory, this.modalLauncher);
+        const selectTool = new SelectTool(mapManager, this.drawerFactory, this.modalLauncher, this.contents);
         const textTool = new TextTool(mapAccessor, layersManager, this.modalLauncher, this.localizer);
         const treesTool = new TreesTool(mapAccessor, layersManager);
         const tools = [

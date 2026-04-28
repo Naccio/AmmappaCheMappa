@@ -1,5 +1,6 @@
 import { Point } from "../../Model/Point";
 
 export interface Place {
-    position: Point
+    position: Point,
+    radius: number
 }
