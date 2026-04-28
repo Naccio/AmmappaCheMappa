@@ -1,4 +1,3 @@
-import { MountainFactory } from "../../Contents/Mountains/MountainFactory";
 import { MountainsTool } from "../../Contents/Mountains/MountainsTool";
 import { PlacesTool } from "../../Contents/Places/PlacesTool";
 import { RiversTool } from "../../Contents/Rivers/RiversTool";
@@ -17,7 +16,6 @@ import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 export class ToolsManagerFactory {
     constructor(
         private modalLauncher: ModalLauncher,
-        private mountainFactory: MountainFactory,
         private drawerFactory: DrawerFactory,
         private localizer: Localizer
     ) { }
@@ -27,7 +25,7 @@ export class ToolsManagerFactory {
             layersManager = mapManager.layers;
 
         const eraser = new Eraser(mapAccessor, layersManager);
-        const mountainsTool = new MountainsTool(mapAccessor, this.mountainFactory, layersManager);
+        const mountainsTool = new MountainsTool(mapAccessor, layersManager);
         const placesTool = new PlacesTool(mapAccessor, layersManager);
         const riversTool = new RiversTool(mapAccessor, layersManager);
         const roadsTool = new RoadsTool(uiLayer, mapAccessor, layersManager);

@@ -9,7 +9,6 @@ import { NewLayer } from "./Commands/NewLayer";
 import { NewMap } from "./Commands/NewMap";
 import { OpenMap } from "./Commands/OpenMap";
 import { SaveMap } from "./Commands/SaveMap";
-import { MountainFactory } from "./Contents/Mountains/MountainFactory";
 import { MountainGraphics } from "./Contents/Mountains/MountainGraphics";
 import { PlaceGraphics } from "./Contents/Places/PlaceGraphics";
 import { RiverGraphics } from "./Contents/Rivers/RiverGraphics";
@@ -38,7 +37,6 @@ import { River } from "./Contents/Rivers/River";
 import { Road } from "./Contents/Roads/Road";
 import { GridText } from "./Contents/Text/GridText";
 import { Tree } from "./Contents/Trees/Tree";
-import { CellRenderer } from "./Maps/Cells/CellRenderer";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -48,7 +46,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const localizer = await localizerFactory.create();
     const mapFactory = new MapFactory(localizer);
     const drawerFactory = new CanvasDrawerFactory();
-    const mountainFactory = new MountainFactory();
     const mountainsRenderer = new GenericObjectGraphicsFactory<Mountain>('mountain', m => new MountainGraphics(m));
     const placeRenderer = new GenericObjectGraphicsFactory<Place>('place', p => new PlaceGraphics(p));
     const riverRenderer = new GenericObjectGraphicsFactory<River>('river', r => new RiverGraphics(r));
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
     const mapManagerFactory = new MapManagerFactory(store, drawerFactory, renderingStrategies);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
-    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, mountainFactory, drawerFactory, localizer);
+    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, drawerFactory, localizer);
     const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory);
     const mapRenderer = new MapRenderer(drawerFactory);
 
