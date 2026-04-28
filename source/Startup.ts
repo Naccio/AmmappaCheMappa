@@ -37,6 +37,7 @@ import { River } from "./Contents/Rivers/River";
 import { Road } from "./Contents/Roads/Road";
 import { GridText } from "./Contents/Text/GridText";
 import { Tree } from "./Contents/Trees/Tree";
+import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -46,23 +47,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     const localizer = await localizerFactory.create();
     const mapFactory = new MapFactory(localizer);
     const drawerFactory = new CanvasDrawerFactory();
-    const mountainsRenderer = new GenericObjectGraphicsFactory<Mountain>('mountain', m => new MountainGraphics(m));
-    const placeRenderer = new GenericObjectGraphicsFactory<Place>('place', p => new PlaceGraphics(p));
-    const riverRenderer = new GenericObjectGraphicsFactory<River>('river', r => new RiverGraphics(r));
-    const roadRenderer = new GenericObjectGraphicsFactory<Road>('road', r => new RoadGraphics(r));
-    const textRenderer = new GenericObjectGraphicsFactory<GridText>('text', t => new TextGraphics(t));
-    const treeRenderer = new GenericObjectGraphicsFactory<Tree>('tree', t => new TreeGraphics(t));
-    const renderingStrategies = [
-        mountainsRenderer,
-        placeRenderer,
-        riverRenderer,
-        roadRenderer,
-        textRenderer,
-        treeRenderer
-    ];
+    const contents = new ContentsConfigurationBuilder()
+        .add<Mountain>('mountain', b => {
+            b.setGraphics(m => new MountainGraphics(m));
+        })
+        .add<Place>('place', b => {
+            b.setGraphics(p => new PlaceGraphics(p));
+        })
+        .add<River>('river', b => {
+            b.setGraphics(r => new RiverGraphics(r));
+        })
+        .add<Road>('road', b => {
+            b.setGraphics(r => new RoadGraphics(r));
+        })
+        .add<GridText>('text', b => {
+            b.setGraphics(t => new TextGraphics(t));
+        })
+        .add<Tree>('tree', b => {
+            b.setGraphics(t => new TreeGraphics(t));
+        })
+        .build();
     const uiFactory = new UIFactory();
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
-    const mapManagerFactory = new MapManagerFactory(store, drawerFactory, renderingStrategies);
+    const mapManagerFactory = new MapManagerFactory(store, drawerFactory, contents);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
     const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, drawerFactory, localizer);
     const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory);

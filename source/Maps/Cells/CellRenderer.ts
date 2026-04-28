@@ -1,16 +1,16 @@
 import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
 import { Drawer } from "../../Engine/Rendering/Drawer";
-import { ObjectGraphicsFactory } from "../../Engine/Rendering/ObjectGraphicsFactory";
 import { MapAccessor } from "../MapAccessor";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
+import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 
 export class CellRenderer {
     constructor(
         private mapAccessor: MapAccessor,
         private drawerFactory: DrawerFactory,
-        private graphicFactories: ObjectGraphicsFactory[]) {
+        private contents: ContentConfiguration[]) {
     }
 
     public render(cell: CellIndex, layer: string, scale?: number) {
@@ -30,10 +30,10 @@ export class CellRenderer {
     }
 
     private renderObject(object: MapObject, drawer: Drawer) {
-        const factory = this.graphicFactories.find(f => f.type === object.type);
+        const content = this.contents.find(c => c.type === object.type);
 
-        if (factory) {
-            const graphics = factory.create(object);
+        if (content) {
+            const graphics = content.graphics.create(object);
 
             graphics.render(drawer);
         }
