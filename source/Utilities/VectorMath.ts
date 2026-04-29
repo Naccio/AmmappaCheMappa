@@ -44,7 +44,11 @@ export class VectorMath {
         return this.multiply(v, -1);
     }
 
-    public static isEqual(v1: Vector, v2: Vector) {
+    public static isEqual(v1?: Vector, v2?: Vector) {
+        if (v1 === undefined || v2 === undefined) {
+            return false;
+        }
+
         return v1.x === v2.x && v1.y === v2.y;
     }
 

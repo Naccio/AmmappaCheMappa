@@ -1,44 +1,37 @@
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
-import { Utilities } from "../Utilities/Utilities";
 import { VectorMath } from "../Utilities/VectorMath";
 import { MapDrawer } from "./MapDrawer";
+import { ClickEvent, PointerButtons, PointerStatus, PointerTarget, ZoomEvent } from "./PointerTarget";
 import { ToolActivator } from "./Tools/ToolActivator";
 import { UIElement } from "./UIElement";
 
 export class DrawingArea implements UIElement {
-    private readonly doubleClickThreshold = 250;
-    private readonly wrapper: HTMLElement;
+    private readonly pointerTarget: PointerTarget;
 
-    private isShifting: boolean = false;
-    private isDrawing: boolean = false;
-    private lastShift: Point = VectorMath.zero;
-    private lastWheelClick = 0;
+    private started: boolean = false;
+    private lastShift?: Point;
 
     constructor(
         private tool: ToolActivator,
         private drawer: MapDrawer
     ) {
-        const wrapper = document.createElement('div');
+        const target = new PointerTarget();
 
-        wrapper.className = 'drawing-area';
-        wrapper.append(drawer.html);
+        target.html.className = 'drawing-area';
+        target.html.append(drawer.html);
 
-        wrapper.addEventListener('mousedown', this.mouseDownHandler);
-        wrapper.addEventListener('mouseleave', this.mouseLeaveHandler);
-        wrapper.addEventListener('mousemove', this.mouseMoveHandler);
-        wrapper.addEventListener('wheel', this.wheelHandler);
+        target.status.subscribe(this.mouseMoveHandler);
+        target.onClick(this.clickHandler);
+        target.onZoom(this.zoomHandler);
 
-        document.addEventListener('mouseup', this.mouseUpHandler);
-
-        window.addEventListener('blur', this.blurHandler);
         window.addEventListener('resize', this.resizeHandler);
 
-        this.wrapper = wrapper;
+        this.pointerTarget = target;
     }
 
     public get html() {
-        return this.wrapper;
+        return this.pointerTarget.html;
     }
 
     public setup() {
@@ -49,31 +42,26 @@ export class DrawingArea implements UIElement {
     // PRIVATE
 
     private getMapPoint(viewPortPoint: Point) {
-        const boundingRectangle = this.wrapper.getBoundingClientRect(),
+        const boundingRectangle = this.html.getBoundingClientRect(),
             point = VectorMath.subtract(viewPortPoint, boundingRectangle);
 
         return this.drawer.getMapPoint(point);
     }
 
-    private startDraw(coordinates: Vector) {
-        this.isDrawing = true;
-        this.tool.start(coordinates);
-    }
-
-    private startShift(coordinates: Vector) {
-        this.isShifting = true;
-        this.lastShift = coordinates;
-    }
-
-    private stop(coordinates?: Vector) {
-        if (this.isDrawing) {
-            this.tool.stop(coordinates);
-            this.isDrawing = false;
+    private stop(position?: Point) {
+        if (this.started) {
+            this.tool.stop(position);
         }
-        this.isShifting = false;
+        this.started = false;
+        this.lastShift = undefined;
     }
 
     private updateShift(coordinates: Vector) {
+        if (this.lastShift === undefined) {
+            this.lastShift = coordinates;
+            return;
+        }
+
         const shift = VectorMath.subtract(coordinates, this.lastShift);
 
         this.lastShift = coordinates;
@@ -87,69 +75,52 @@ export class DrawingArea implements UIElement {
 
     // HANDLERS
 
-    private blurHandler = () => {
-        this.stop(undefined);
-    }
+    private clickHandler = (e: ClickEvent) => {
+        if (e.clicks === 1 && e.status.button === PointerButtons.primary && !this.started) {
+            const position = this.getMapPoint(e.status.position);
 
-    private mouseDownHandler = (e: MouseEvent) => {
-        const coordinates = {
-            x: e.clientX,
-            y: e.clientY
-        };
+            this.tool.start(position);
+            this.tool.stop(position);
+        }
 
-        if (Utilities.hasFlag(e.buttons, 4)) {
-
-            // dblclick event is not fired with auxiliary buttons and
-            // auxclixk event is still a bit finicky, so I do it
-            // manually, the old fashioned way.
-            //TODO: move trigger to mouseup
-            const now = Date.now();
-            if (now - this.lastWheelClick < this.doubleClickThreshold) {
-                this.drawer.center();
-            }
-            this.lastWheelClick = now;
-
-            this.startShift(coordinates);
-        } else if (Utilities.hasFlag(e.buttons, 1)) {
-            const mapCoordinates = this.getMapPoint(coordinates);
-            this.startDraw(mapCoordinates);
+        if (e.clicks === 2 && e.status.button === PointerButtons.auxiliary) {
+            this.drawer.center();
         }
     }
 
-    private mouseLeaveHandler = () => {
-        this.tool.move(undefined);
-    }
+    private mouseMoveHandler = (s?: PointerStatus) => {
 
-    private mouseMoveHandler = (e: MouseEvent) => {
-        const coordinates = {
-            x: e.clientX,
-            y: e.clientY
-        };
+        switch (s?.button) {
+            case PointerButtons.auxiliary:
+                this.updateShift(s.position);
+                break;
 
-        if (this.isShifting) {
-            this.updateShift(coordinates);
-        } else if (this.isDrawing) {
-            const mapCoordinates = this.getMapPoint(coordinates);
-            this.tool.move(mapCoordinates);
+            case PointerButtons.primary:
+                const mapCoordinates = this.getMapPoint(s.position);
+
+                if (this.started) {
+                    this.tool.move(mapCoordinates);
+                } else {
+                    this.tool.start(mapCoordinates);
+                    this.started = true;
+                }
+                break;
+
+            case undefined:
+                const position = s?.position
+                    ? this.getMapPoint(s.position)
+                    : undefined;
+
+                this.stop(position);
+                break;
         }
-    }
-
-    private mouseUpHandler = (e: MouseEvent) => {
-        const coordinates = this.getMapPoint({
-            x: e.clientX,
-            y: e.clientY
-        });
-
-        this.stop(coordinates);
     }
 
     private resizeHandler = () => {
         this.setup();
     }
 
-    private wheelHandler = (e: WheelEvent) => {
-        const direction = Math.sign(e.deltaY);
-
-        this.zoom(direction);
+    private zoomHandler = (e: ZoomEvent) => {
+        this.zoom(e.direction);
     }
 }
