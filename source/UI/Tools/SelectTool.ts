@@ -11,6 +11,8 @@ import { ModalLauncher } from "../ModalLauncher";
 import { Tool } from "./Tool";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
+import { ContentPoints } from "../../Contents/ContentPoints";
+import { PointerButtons, PointerStatus, PointerTarget } from "../PointerTarget";
 
 class CellContext {
     public constructor(
@@ -20,8 +22,10 @@ class CellContext {
 }
 
 export class SelectTool implements Tool {
+    private readonly radius = .03;
     private readonly scale = 3;
     private readonly ui: Drawer;
+    private readonly pointer: PointerTarget;
 
     public readonly configuration = {
         id: 'select',
@@ -29,8 +33,10 @@ export class SelectTool implements Tool {
         layerTypes: []
     };
 
-    private selected = new Observable<MapObject | undefined>(undefined);
+    private selectedObject = new Observable<MapObject | undefined>(undefined);
     private drawer?: Drawer;
+    private points: ContentPoints = {};
+    private activePoint?: Point;
 
     public constructor(
         private readonly mapManager: MapManager,
@@ -41,6 +47,7 @@ export class SelectTool implements Tool {
         const scale = this.scale * mapManager.mapAccessor.map.data.pixelsPerCell;
 
         this.ui = drawerFactory.create('select-modal-ui', scale, scale, scale);
+        this.pointer = new PointerTarget();
     }
 
     public start(point: Point) {
@@ -60,7 +67,11 @@ export class SelectTool implements Tool {
         container.style.display = 'flex';
         container.style.alignItems = 'start';
 
-        container.append(this.drawer.html, list.html);
+        this.pointer.html.innerHTML = '';
+        this.pointer.html.append(this.drawer.html);
+        container.append(this.pointer.html, list.html);
+
+        this.pointer.status.subscribe(s => this.mouseMoveHandler(s, context));
 
         this.modal.launch(cellName, [container]);
     }
@@ -72,13 +83,16 @@ export class SelectTool implements Tool {
     }
 
     private buildList(context: CellContext) {
-        this.selected = new Observable<MapObject | undefined>(undefined);
+        this.selectedObject = new Observable<MapObject | undefined>(undefined);
 
-        const list = new RadioSelect(this.selected, context.objects, (item, label) => {
+        const list = new RadioSelect(this.selectedObject, context.objects, (item, label) => {
             label.innerText = item.type;
         });
 
-        this.selected.subscribe(_ => this.draw(context));
+        this.selectedObject.subscribe(_ => {
+            this.getPoints();
+            this.draw(context);
+        });
 
         return list;
     }
@@ -90,8 +104,7 @@ export class SelectTool implements Tool {
     }
 
     private draw(context: CellContext) {
-        const selected = this.selected.value,
-            content = this.contents.find(c => c.type === selected?.type),
+        const points = this.points,
             drawer = this.drawer!;
 
         drawer.clear();
@@ -102,22 +115,64 @@ export class SelectTool implements Tool {
             drawer.image(cellDrawer, VectorMath.zero);
         });
 
-        if (selected !== undefined && content !== undefined) {
-            const points = content.points(selected);
+        if (points.position) {
+            this.ui.circle(points.position, this.radius, { fillStyle: 'red' });
+        }
 
-            if (points.position) {
-                this.ui.circle(points.position, .03, { fillStyle: 'red' });
-            }
+        if (points.mainPoints) {
+            points.mainPoints.forEach(p => this.ui.circle(p, this.radius, { fillStyle: 'blue' }));
+        }
 
-            if (points.mainPoints) {
-                points.mainPoints.forEach(p => this.ui.circle(p, .03, { fillStyle: 'blue' }));
-            }
-
-            if (points.helperPoints) {
-                points.helperPoints.forEach(p => this.ui.circle(p, .03, { fillStyle: 'green' }));
-            }
+        if (points.helperPoints) {
+            points.helperPoints.forEach(p => this.ui.circle(p, this.radius, { fillStyle: 'green' }));
         }
 
         drawer.image(this.ui, VectorMath.zero);
+    }
+
+    private getPoints() {
+        const selected = this.selectedObject.value,
+            content = this.contents.find(c => c.type === selected?.type);
+
+        this.points = selected !== undefined && content !== undefined
+            ? content.points(selected)
+            : {};
+    }
+
+    private mouseMoveHandler(s: PointerStatus | undefined, context: CellContext) {
+        if (s === undefined || s.button !== PointerButtons.primary) {
+            this.activePoint = undefined;
+            return;
+        }
+
+        const scale = this.scale * this.mapManager.mapAccessor.map.data.pixelsPerCell,
+            pointer = VectorMath.divide(s.position, scale);
+
+        if (this.activePoint) {
+            this.activePoint.x = pointer.x;
+            this.activePoint.y = pointer.y;
+            this.draw(context);
+        } else {
+            let points: Point[] = [];
+
+            if (this.points.helperPoints) {
+                points = [...this.points.helperPoints];
+            }
+
+            if (this.points.mainPoints) {
+                points = [...points, ...this.points.mainPoints];
+            }
+
+            if (this.points.position) {
+                points.push(this.points.position);
+            }
+
+            this.activePoint = points.find(p =>
+                p.x - this.radius < pointer.x &&
+                p.x + this.radius > pointer.x &&
+                p.y - this.radius < pointer.y &&
+                p.y + this.radius > pointer.y
+            );
+        }
     }
 }

@@ -91,6 +91,13 @@ export class PointerTarget implements UIElement {
         this.stop();
     }
 
+    private getCoordinates(e: MouseEvent): Point {
+        const clientPoint = { x: e.clientX, y: e.clientY },
+            boundingRectangle = this.html.getBoundingClientRect();
+            
+        return VectorMath.subtract(clientPoint, boundingRectangle);
+    }
+
     private mouseDownHandler = (e: MouseEvent) => {
         // A button is being clicked when one is already active.
         // For now we don't support such scenarios.
@@ -98,19 +105,13 @@ export class PointerTarget implements UIElement {
             return;
         }
 
-        this.mouseDownPosition = {
-            x: e.clientX,
-            y: e.clientY
-        };
+        this.mouseDownPosition = this.getCoordinates(e);
         this.activeButton = e.button;
     }
 
     private mouseMoveHandler = (e: MouseEvent) => {
         this._status.value = {
-            position: {
-                x: e.clientX,
-                y: e.clientY
-            },
+            position: this.getCoordinates(e),
             button: this.activeButton
         };
     }
@@ -121,10 +122,7 @@ export class PointerTarget implements UIElement {
             return;
         }
 
-        const coordinates = {
-            x: e.clientX,
-            y: e.clientY
-        };
+        const coordinates = this.getCoordinates(e);
 
         if (
             // The pointer did not move between its activation and its release
