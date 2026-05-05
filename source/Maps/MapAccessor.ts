@@ -45,7 +45,7 @@ export class MapAccessor {
         };
     }
 
-    public getIndex(position?: Point) {
+    public getIndex(position?: Point): CellIndex | undefined {
         if (position === undefined) {
             return undefined;
         }
