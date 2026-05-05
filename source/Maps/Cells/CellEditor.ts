@@ -12,22 +12,16 @@ import { UIElement } from "../../UI/UIElement";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { MapManager } from "../MapManager";
-
-class CellContext {
-    public constructor(
-        public readonly cell: CellIndex,
-        public readonly objects: MapObject[]
-    ) { }
-}
+import { CellContext } from "./CellContext";
+import { CellGraphics } from "./CellGraphics";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
     private readonly scale = 3;
 
     private readonly drawer: Drawer;
-    private readonly ui: Drawer;
+    private readonly graphics: CellGraphics;
     private readonly pointer: PointerTarget;
-    private readonly context: CellContext;
     private readonly container: HTMLDivElement;
 
     private readonly selectedObject: Observable<MapObject | undefined>;
@@ -52,8 +46,7 @@ export class CellEditor implements UIElement {
             scale = this.scale * mapManager.mapAccessor.map.data.pixelsPerCell,
             context = new CellContext(cell, this.mapManager.mapAccessor.map.data.objects.filter(o => o.cell === cellName)),
             container = document.createElement('div'),
-            drawer = drawerFactory.create(id, scale, scale),
-            ui = drawerFactory.create(id + '-ui', scale, scale, scale);
+            drawer = drawerFactory.create(id, scale, scale, scale);
 
         this.selectedObject = new Observable<MapObject | undefined>(undefined);
 
@@ -64,8 +57,7 @@ export class CellEditor implements UIElement {
         this.pointer = new PointerTarget();
 
         this.drawer = drawer;
-        this.ui = ui;
-        this.context = context;
+        this.graphics = new CellGraphics(context, contents);
 
         container.style.display = 'flex';
         container.style.alignItems = 'start';
@@ -92,26 +84,19 @@ export class CellEditor implements UIElement {
             drawer = this.drawer;
 
         drawer.clear();
-        this.ui.clear();
-        this.mapManager.layers.layers.forEach(l => {
-            const cellDrawer = this.mapManager.cells.render(this.context.cell, l.id, this.scale);
-
-            drawer.image(cellDrawer, VectorMath.zero);
-        });
+        this.graphics.render(this.drawer);
 
         if (points.position) {
-            this.ui.circle(points.position, this.radius, { fillStyle: 'red' });
+            this.drawer.circle(points.position, this.radius, { fillStyle: 'red' });
         }
 
         if (points.mainPoints) {
-            points.mainPoints.forEach(p => this.ui.circle(p, this.radius, { fillStyle: 'blue' }));
+            points.mainPoints.forEach(p => this.drawer.circle(p, this.radius, { fillStyle: 'blue' }));
         }
 
         if (points.helperPoints) {
-            points.helperPoints.forEach(p => this.ui.circle(p, this.radius, { fillStyle: 'green' }));
+            points.helperPoints.forEach(p => this.drawer.circle(p, this.radius, { fillStyle: 'green' }));
         }
-
-        drawer.image(this.ui, VectorMath.zero);
     }
 
     private getPoints() {

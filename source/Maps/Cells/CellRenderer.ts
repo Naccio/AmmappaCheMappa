@@ -1,10 +1,10 @@
 import { CellIndex } from "../../Model/CellIndex";
-import { MapObject } from "../../Model/MapObject";
-import { Drawer } from "../../Engine/Rendering/Drawer";
 import { MapAccessor } from "../MapAccessor";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
+import { CellContext } from "./CellContext";
+import { CellGraphics } from "./CellGraphics";
 
 export class CellRenderer {
     constructor(
@@ -13,29 +13,17 @@ export class CellRenderer {
         private contents: ContentConfiguration[]) {
     }
 
-    public render(cell: CellIndex, layer: string, scale?: number) {
-        scale ??= 1;
-
+    public render(cell: CellIndex, layer: string) {
         const map = this.mapAccessor.map.data,
-            size = map.pixelsPerCell * scale,
+            size = map.pixelsPerCell,
             cellName = GridHelper.cellIndexToName(cell),
             drawer = this.drawerFactory.create(map.id + '-' + cellName, size, size, size),
-            objects = map.objects.filter(o => o.layer === layer && o.cell == cellName);
+            objects = map.objects.filter(o => o.layer === layer && o.cell == cellName),
+            context = new CellContext(cell, objects),
+            graphics = new CellGraphics(context, this.contents);
 
-        for (let object of objects) {
-            this.renderObject(object, drawer);
-        }
+        graphics.render(drawer);
 
         return drawer;
-    }
-
-    private renderObject(object: MapObject, drawer: Drawer) {
-        const content = this.contents.find(c => c.type === object.type);
-
-        if (content) {
-            const graphics = content.graphics.create(object);
-
-            graphics.render(drawer);
-        }
     }
 }

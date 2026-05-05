@@ -64,6 +64,10 @@ button:hover {
     background: var(--btn-bg-hover);
 }
 
+canvas {
+    display: block;
+}
+
 dialog {
     border: var(--border);
     padding: 0;
