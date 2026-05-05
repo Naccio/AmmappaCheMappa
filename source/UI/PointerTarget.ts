@@ -44,9 +44,10 @@ export class PointerTarget implements UIElement {
         const container = document.createElement('div');
 
         container.addEventListener('mousedown', this.mouseDownHandler);
+        container.addEventListener('mouseenter', this.mouseEnterHandler);
         container.addEventListener('mousemove', this.mouseMoveHandler);
-        container.addEventListener('wheel', this.wheelHandler);
         container.addEventListener('mouseup', this.mouseUpHandler);
+        container.addEventListener('wheel', this.wheelHandler);
 
         window.addEventListener('blur', this.blurHandler);
 
@@ -107,6 +108,34 @@ export class PointerTarget implements UIElement {
 
         this.mouseDownPosition = this.getCoordinates(e);
         this.activeButton = e.button;
+    }
+
+    private mouseEnterHandler = (e: MouseEvent) => {
+        let button = undefined;
+
+        switch (e.buttons) {
+            case 1:
+                button = PointerButtons.primary;
+                break;
+
+            case 2:
+                button = PointerButtons.secondary;
+                break;
+
+            case 4:
+                button = PointerButtons.auxiliary;
+                break;
+
+            case 8:
+                button = PointerButtons.back;
+                break;
+
+            case 16:
+                button = PointerButtons.forward;
+                break;
+        }
+
+        this.activeButton = button;
     }
 
     private mouseMoveHandler = (e: MouseEvent) => {
