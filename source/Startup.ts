@@ -38,6 +38,7 @@ import { GridText } from "./Contents/Text/GridText";
 import { Tree } from "./Contents/Trees/Tree";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
 import { VectorMath } from "./Utilities/VectorMath";
+import { ContentPointType } from "./Contents/ContentPoint";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -57,10 +58,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                     left = position.subtract(halfWidth, 0),
                     right = position.add(halfWidth, 0);
 
-                return {
-                    position,
-                    mainPoints: [top, left, right]
-                }
+                return [
+                    {
+                        type: ContentPointType.position,
+                        point: position,
+                    },
+                    {
+                        type: ContentPointType.primary,
+                        point: top
+                    },
+                    {
+                        type: ContentPointType.primary,
+                        point: left
+                    },
+                    {
+                        type: ContentPointType.primary,
+                        point: right
+                    }
+                ]
             })
         )
         .add<Place>('place', b => b
@@ -69,36 +84,60 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const position = VectorMath.startOperation(p.position),
                     radius = position.add(p.radius, 0);
 
-                return {
-                    position,
-                    helperPoints: [radius]
-                }
+                return [
+                    {
+                        type: ContentPointType.position,
+                        point: position
+                    },
+                    {
+                        type: ContentPointType.helper,
+                        point: radius
+                    }
+                ]
             })
         )
         .add<River>('river', b => b
             .setGraphics(r => new RiverGraphics(r))
-            .setPoints(r => {
-                return {
-                    mainPoints: [r.from, r.to],
-                    helperPoints: [r.bend1, r.bend2]
+            .setPoints(r => [
+                {
+                    type: ContentPointType.primary,
+                    point: r.from
+                },
+                {
+                    type: ContentPointType.primary,
+                    point: r.to
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: r.bend1
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: r.bend2
                 }
-            })
+            ])
         )
         .add<Road>('road', b => b
             .setGraphics(r => new RoadGraphics(r))
-            .setPoints(r => {
-                return {
-                    mainPoints: [r.from, r.to]
+            .setPoints(r => [
+                {
+                    type: ContentPointType.primary,
+                    point: r.from
+                },
+                {
+                    type: ContentPointType.primary,
+                    point: r.to
                 }
-            })
+            ])
         )
         .add<GridText>('text', b => b
             .setGraphics(t => new TextGraphics(t))
-            .setPoints(t => {
-                return {
-                    position: t.position
+            .setPoints(t => [
+                {
+                    type: ContentPointType.position,
+                    point: t.position
                 }
-            })
+            ])
         )
         .add<Tree>('tree', b => b
             .setGraphics(t => new TreeGraphics(t))
@@ -109,11 +148,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                     radiusX = crownCenter.subtract(t.crownWidth / 2, 0),
                     radiusY = crownCenter.subtract(0, t.crownHeight / 2);
 
-                return {
-                    position,
-                    mainPoints: [trunkTop],
-                    helperPoints: [crownCenter, radiusX, radiusY]
-                };
+                return [
+                    {
+                        type: ContentPointType.position,
+                        point: position
+                    },
+                    {
+                        type: ContentPointType.primary,
+                        point: trunkTop
+                    },
+                    {
+                        type: ContentPointType.helper,
+                        point: crownCenter
+                    },
+                    {
+                        type: ContentPointType.helper,
+                        point: radiusX
+                    },
+                    {
+                        type: ContentPointType.helper,
+                        point: radiusY
+                    }
+                ];
             })
         )
         .build();

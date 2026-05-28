@@ -1,11 +1,10 @@
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
-import { ContentPoints } from "../../Contents/ContentPoints";
+import { ContentPoint, ContentPointType } from "../../Contents/ContentPoint";
 import { Observable } from "../../Engine/Events/Observable";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
-import { Point } from "../../Model/Point";
 import { PointerButtons, PointerStatus, PointerTarget } from "../../UI/PointerTarget";
 import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
@@ -32,8 +31,8 @@ export class CellEditor implements UIElement {
         layerTypes: []
     };
 
-    private points: ContentPoints = {};
-    private activePoint?: Point;
+    private points: ContentPoint[] = [];
+    private activePoint?: ContentPoint;
 
     public constructor(
         cell: CellIndex,
@@ -86,17 +85,24 @@ export class CellEditor implements UIElement {
         drawer.clear();
         this.graphics.render(this.drawer);
 
-        if (points.position) {
-            this.drawer.circle(points.position, this.radius, { fillStyle: 'red' });
-        }
+        points.forEach(p => {
+            switch (p.type) {
+                case ContentPointType.position:
+                    this.drawer.circle(p.point, this.radius, { fillStyle: 'red' });
+                    break;
 
-        if (points.mainPoints) {
-            points.mainPoints.forEach(p => this.drawer.circle(p, this.radius, { fillStyle: 'blue' }));
-        }
+                case ContentPointType.primary:
+                    this.drawer.circle(p.point, this.radius, { fillStyle: 'blue' });
+                    break;
 
-        if (points.helperPoints) {
-            points.helperPoints.forEach(p => this.drawer.circle(p, this.radius, { fillStyle: 'green' }));
-        }
+                case ContentPointType.helper:
+                    this.drawer.circle(p.point, this.radius, { fillStyle: 'green' });
+                    break;
+
+                default:
+                    throw new Error(`Invalid point type: '${p.type}'.`);
+            }
+        });
     }
 
     private getPoints() {
@@ -105,7 +111,7 @@ export class CellEditor implements UIElement {
 
         this.points = selected !== undefined && content !== undefined
             ? content.points(selected)
-            : {};
+            : [];
     }
 
     private mouseMoveHandler(s: PointerStatus | undefined) {
@@ -118,29 +124,17 @@ export class CellEditor implements UIElement {
             pointer = VectorMath.divide(s.position, scale);
 
         if (this.activePoint) {
-            this.activePoint.x = pointer.x;
-            this.activePoint.y = pointer.y;
+            const point = this.activePoint.point;
+
+            point.x = pointer.x;
+            point.y = pointer.y;
             this.draw();
         } else {
-            let points: Point[] = [];
-
-            if (this.points.helperPoints) {
-                points = [...this.points.helperPoints];
-            }
-
-            if (this.points.mainPoints) {
-                points = [...points, ...this.points.mainPoints];
-            }
-
-            if (this.points.position) {
-                points.push(this.points.position);
-            }
-
-            this.activePoint = points.find(p =>
-                p.x - this.radius < pointer.x &&
-                p.x + this.radius > pointer.x &&
-                p.y - this.radius < pointer.y &&
-                p.y + this.radius > pointer.y
+            this.activePoint = this.points.find(p =>
+                p.point.x - this.radius < pointer.x &&
+                p.point.x + this.radius > pointer.x &&
+                p.point.y - this.radius < pointer.y &&
+                p.point.y + this.radius > pointer.y
             );
         }
     }

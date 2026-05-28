@@ -3,22 +3,16 @@ import { GenericObjectGraphicsFactory } from "../Engine/Rendering/GenericObjectG
 import { Graphics } from "../Engine/Rendering/Graphics";
 import { VectorMath } from "../Utilities/VectorMath";
 import { ContentConfiguration } from "./ContentConfiguration";
-import { ContentPoints } from "./ContentPoints";
+import { ContentPoint } from "./ContentPoint";
 
 export class ContentConfigurationBuilder<T> {
 
     private graphicsFactory: (content: T) => Graphics;
-    private pointsFactory: (content: T) => ContentPoints;
+    private pointsFactory: (content: T) => ContentPoint[];
 
     public constructor(private readonly type: string) {
         this.graphicsFactory = _ => DefaultGraphics.instance;
-        this.pointsFactory = _ => {
-            return {
-                position: VectorMath.zero,
-                mainPoints: [],
-                helperPoints: []
-            };
-        }
+        this.pointsFactory = _ => [];
     }
 
     public build(): ContentConfiguration {
@@ -35,7 +29,7 @@ export class ContentConfigurationBuilder<T> {
         return this;
     }
 
-    public setPoints(factory: (content: T) => ContentPoints) {
+    public setPoints(factory: (content: T) => ContentPoint[]) {
         this.pointsFactory = factory;
 
         return this;
