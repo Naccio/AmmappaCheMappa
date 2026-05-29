@@ -32,6 +32,12 @@ export class VectorMath {
         return this.subtract(v2, v1).normalize();
     }
 
+    public static distance(v1: Vector, v2: Vector) {
+        const d = this.subtract(v2, v1);
+
+        return Math.sqrt(Math.pow(d.x, 2) + Math.pow(d.y, 2));
+    }
+
     public static divide(v: Vector, number: number) {
         return new VectorCalculator(v.x / number, v.y / number);
     }

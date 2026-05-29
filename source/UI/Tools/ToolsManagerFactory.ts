@@ -27,12 +27,12 @@ export class ToolsManagerFactory {
             layersManager = mapManager.layers;
 
         const eraser = new Eraser(mapAccessor, layersManager);
-        const mountainsTool = new MountainsTool(mapAccessor, layersManager);
-        const placesTool = new PlacesTool(mapAccessor, layersManager);
-        const riversTool = new RiversTool(mapAccessor, layersManager);
-        const roadsTool = new RoadsTool(uiLayer, mapAccessor, layersManager);
+        const mountainsTool = new MountainsTool(mapManager);
+        const placesTool = new PlacesTool(mapManager);
+        const riversTool = new RiversTool(mapManager);
+        const roadsTool = new RoadsTool(uiLayer, mapManager);
         const selectTool = new SelectTool(mapManager, this.drawerFactory, this.modalLauncher, this.contents);
-        const textTool = new TextTool(mapAccessor, layersManager, this.modalLauncher, this.localizer);
+        const textTool = new TextTool(mapManager, this.modalLauncher, this.localizer);
         const treesTool = new TreesTool(mapAccessor, layersManager);
         const tools = [
             mountainsTool,

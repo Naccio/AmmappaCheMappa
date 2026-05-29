@@ -1,14 +1,15 @@
 import { GridHelper } from "../../Utilities/GridHelper";
-import { LayersManager } from "../../Maps/Layers/LayersManager";
-import { MapAccessor } from "../../Maps/MapAccessor";
 import { MathHelper } from "../../Utilities/MathHelper";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { River } from "./River";
+import { MapManager } from "../../Maps/MapManager";
+import { MapAccessor } from "../../Maps/MapAccessor";
+import { MapObject } from "../../Model/MapObject";
 
 export class RiversTool implements Tool {
+    private readonly mapAccessor: MapAccessor;
     public readonly configuration = {
         id: 'rivers',
         labelResourceId: 'tool_label_rivers',
@@ -18,7 +19,8 @@ export class RiversTool implements Tool {
     private startPosition?: Point;
     private activeCell?: CellIndex;
 
-    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
+    constructor(private readonly map: MapManager) {
+        this.mapAccessor = map.mapAccessor;
     }
 
     start(position: Point): void {
@@ -47,7 +49,7 @@ export class RiversTool implements Tool {
 
             this.createRivers(activeCell, this.startPosition, cell, position)
 
-            this.startPosition = VectorMath.startOperation(river.from)
+            this.startPosition = VectorMath.startOperation(river.points[0])
                 .multiply(map.data.pixelsPerCell)
                 .add(cellPosition)
                 .divide(map.zoom);
@@ -61,10 +63,9 @@ export class RiversTool implements Tool {
 
                 this.createRiver(cell, from, to);
             } else {
-                river.to = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
-                this.layers.setObjects('river', cell, [river]);
+                river.points[3] = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
 
-                this.startPosition = this.mapAccessor.absolutePosition(cell, river.from);
+                this.startPosition = this.mapAccessor.absolutePosition(cell, river.points[0]);
             }
         }
     }
@@ -97,35 +98,34 @@ export class RiversTool implements Tool {
         return cells;
     }
 
-    private createRiver(cell: CellIndex, from: Point, to: Point, previous?: River) {
+    private createRiver(cell: CellIndex, from: Point, to: Point, previous?: MapObject) {
         let bend1 = {
             x: MathHelper.random(.2, .8),
             y: MathHelper.random(.2, .8)
         };
 
         if (previous !== undefined) {
-            bend1 = VectorMath.startOperation(previous.bend2)
-                .direction(previous.to)
+            bend1 = VectorMath.startOperation(previous.points[2])
+                .direction(previous.points[3])
                 .multiply(MathHelper.random(.2, .5))
                 .add(from);
         }
 
-        const river: River = {
-            from: VectorMath.round(from, 4),
-            to: VectorMath.round(to, 4),
-            bend1: VectorMath.round(bend1, 2),
-            bend2: {
-                x: MathHelper.round(MathHelper.random(.2, .8), 2),
-                y: MathHelper.round(MathHelper.random(.2, .8), 2)
-            }
-        };
-        this.layers.setObjects('river', cell, [river]);
+        from = VectorMath.round(from, 4);
+        to = VectorMath.round(to, 4);
+        bend1 = VectorMath.round(bend1, 2);
+        const bend2 = {
+            x: MathHelper.round(MathHelper.random(.2, .8), 2),
+            y: MathHelper.round(MathHelper.random(.2, .8), 2)
+        },
+            river = this.map.createObject('river', cell, [from, bend1, bend2, to]);
+
+        this.map.addObjects([river]);
 
         return river;
     }
 
-    private getRiver(cell: CellIndex): River | undefined {
-        //TODO: Should not assume that it's a river
-        return this.mapAccessor.getCell(cell).objects[0]?.data as River;
+    private getRiver(cell: CellIndex) {
+        return this.mapAccessor.getCell(cell).objects.find(o => o.type === 'river');
     }
 }

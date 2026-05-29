@@ -30,15 +30,11 @@ import { ModalLauncher } from "./UI/ModalLauncher";
 import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
 import { UIFactory } from "./UI/UIFactory";
 import { Welcome } from "./UI/Welcome";
-import { Mountain } from "./Contents/Mountains/Mountain";
-import { Place } from "./Contents/Places/Place";
-import { River } from "./Contents/Rivers/River";
-import { Road } from "./Contents/Roads/Road";
-import { GridText } from "./Contents/Text/GridText";
 import { Tree } from "./Contents/Trees/Tree";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
 import { VectorMath } from "./Utilities/VectorMath";
 import { ContentPointType } from "./Contents/ContentPoint";
+import { SimpleObjectGraphicsFactory } from "./Engine/Rendering/SimpleObjectGraphicsFactory";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -49,97 +45,72 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapFactory = new MapFactory(localizer);
     const drawerFactory = new CanvasDrawerFactory();
     const contents = new ContentsConfigurationBuilder()
-        .add<Mountain>('mountain', b => b
-            .setGraphics(m => new MountainGraphics(m))
-            .setPoints(m => {
-                const position = VectorMath.startOperation(m.position),
-                    halfWidth = m.width / 2,
-                    top = position.subtract(0, m.height),
-                    left = position.subtract(halfWidth, 0),
-                    right = position.add(halfWidth, 0);
-
-                return [
-                    {
-                        type: ContentPointType.position,
-                        point: position,
-                    },
-                    {
-                        type: ContentPointType.primary,
-                        point: top
-                    },
-                    {
-                        type: ContentPointType.primary,
-                        point: left
-                    },
-                    {
-                        type: ContentPointType.primary,
-                        point: right
-                    }
-                ]
-            })
-        )
-        .add<Place>('place', b => b
-            .setGraphics(p => new PlaceGraphics(p))
-            .setPoints(p => {
-                const position = VectorMath.startOperation(p.position),
-                    radius = position.add(p.radius, 0);
-
-                return [
-                    {
-                        type: ContentPointType.position,
-                        point: position
-                    },
-                    {
-                        type: ContentPointType.helper,
-                        point: radius
-                    }
-                ]
-            })
-        )
-        .add<River>('river', b => b
-            .setGraphics(r => new RiverGraphics(r))
-            .setPoints(r => [
-                {
-                    type: ContentPointType.primary,
-                    point: r.from
-                },
-                {
-                    type: ContentPointType.primary,
-                    point: r.to
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: r.bend1
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: r.bend2
-                }
-            ])
-        )
-        .add<Road>('road', b => b
-            .setGraphics(r => new RoadGraphics(r))
-            .setPoints(r => [
-                {
-                    type: ContentPointType.primary,
-                    point: r.from
-                },
-                {
-                    type: ContentPointType.primary,
-                    point: r.to
-                }
-            ])
-        )
-        .add<GridText>('text', b => b
-            .setGraphics(t => new TextGraphics(t))
-            .setPoints(t => [
+        .add({
+            type: 'mountain',
+            graphics: new SimpleObjectGraphicsFactory(o => new MountainGraphics(o)),
+            points: o => o.points.map(p => { return { type: ContentPointType.primary, point: p } })
+        })
+        .add({
+            type: 'place',
+            graphics: new SimpleObjectGraphicsFactory(o => new PlaceGraphics(o)),
+            points: o => [
                 {
                     type: ContentPointType.position,
-                    point: t.position
+                    point: o.points[0]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[1]
                 }
-            ])
-        )
-        .add<Tree>('tree', b => b
+            ]
+        })
+        .add({
+            type: 'river',
+            graphics: new SimpleObjectGraphicsFactory(o => new RiverGraphics(o)),
+            points: o => [
+                {
+                    type: ContentPointType.primary,
+                    point: o.points[0]
+                },
+                {
+                    type: ContentPointType.primary,
+                    point: o.points[3]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[1]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[2]
+                }
+            ]
+        })
+        .add({
+            type: 'road',
+            graphics: new SimpleObjectGraphicsFactory(o => new RoadGraphics(o)),
+            points: o => [
+                {
+                    type: ContentPointType.primary,
+                    point: o.points[0]
+                },
+                {
+                    type: ContentPointType.primary,
+                    point: o.points[1]
+                }
+            ]
+        })
+        .add({
+            type: 'text',
+            graphics: new SimpleObjectGraphicsFactory(o => new TextGraphics(o)),
+            points: o => [
+                {
+                    type: ContentPointType.position,
+                    point: o.points[0]
+                }
+            ]
+        })
+        .configure<Tree>('tree', b => b
             .setGraphics(t => new TreeGraphics(t))
             .setPoints(t => {
                 const position = VectorMath.startOperation(t.position),

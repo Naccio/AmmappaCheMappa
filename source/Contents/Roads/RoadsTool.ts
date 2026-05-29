@@ -1,14 +1,15 @@
 import { GridHelper } from "../../Utilities/GridHelper";
-import { LayersManager } from "../../Maps/Layers/LayersManager";
 import { MapAccessor } from "../../Maps/MapAccessor";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { DrawingUI } from "../../UI/DrawingUI";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { Road } from "./Road";
+import { MapManager } from "../../Maps/MapManager";
 
 export class RoadsTool implements Tool {
+    private readonly mapAccessor: MapAccessor;
+
     public readonly configuration = {
         id: 'roads',
         labelResourceId: 'tool_label_roads',
@@ -17,7 +18,8 @@ export class RoadsTool implements Tool {
 
     private startPosition?: Point;
 
-    constructor(private ui: DrawingUI, private mapAccessor: MapAccessor, private layers: LayersManager) {
+    constructor(private ui: DrawingUI, private map: MapManager) {
+        this.mapAccessor = map.mapAccessor;
     }
 
     start(position: Point): void {
@@ -94,10 +96,11 @@ export class RoadsTool implements Tool {
     }
 
     private createRoad(cell: CellIndex, from: Point, to: Point) {
-        const road: Road = {
-            from: VectorMath.round(from, 4),
-            to: VectorMath.round(to, 4)
-        };
-        this.layers.setObjects('road', cell, [road]);
+        from = VectorMath.round(from, 2);
+        to = VectorMath.round(to, 2);
+
+        const road = this.map.createObject('road', cell, [from, to]);
+
+        this.map.addObjects([road]);
     }
 }

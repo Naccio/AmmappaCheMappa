@@ -1,12 +1,11 @@
-import { LayersManager } from "../../Maps/Layers/LayersManager";
 import { Localizer } from "../../Engine/Localization/Localizer";
-import { MapAccessor } from "../../Maps/MapAccessor";
 import { Point } from "../../Model/Point";
 import { FormsHelper } from "../../UI/Forms/FormsHelper";
 import { ModalLauncher } from "../../UI/ModalLauncher";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { GridText } from "./GridText";
+import { MapManager } from "../../Maps/MapManager";
 
 export class TextTool implements Tool {
     public readonly configuration = {
@@ -15,11 +14,11 @@ export class TextTool implements Tool {
         layerTypes: ['text']
     };
 
-    constructor(private mapAccessor: MapAccessor, private layers: LayersManager, private modal: ModalLauncher, private localizer: Localizer) {
+    constructor(private map: MapManager, private modal: ModalLauncher, private localizer: Localizer) {
     }
 
     public start(point: Point) {
-        const cell = this.mapAccessor.getIndex(point);
+        const cell = this.map.mapAccessor.getIndex(point);
 
         if (cell === undefined) {
             return;
@@ -36,15 +35,15 @@ export class TextTool implements Tool {
 
         this.modal.launchForm(title, [textInput.html, sizeInput.html], () => {
             const fontSize = parseInt(sizeInput.value!) / 100,
-                normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
+                normalizedPosition = this.map.mapAccessor.normalizedPosition(cell, point),
                 position = VectorMath.round(normalizedPosition, 2),
-                text: GridText = {
-                    position,
+                data: GridText = {
                     value: textInput.value!,
                     fontSize
-                };
+                },
+                text = this.map.createObject('text', cell, [position], data);
 
-            this.layers.setObjects('text', cell, [text]);
+            this.map.addObjects([text]);
         });
     }
 

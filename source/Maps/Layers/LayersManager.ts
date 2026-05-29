@@ -7,6 +7,7 @@ import { LayerAccessor } from "./LayerAccessor";
 import { LayerFactory } from "./LayerFactory";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { Observable } from "../../Engine/Events/Observable";
+import { Point } from "../../Model/Point";
 
 export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
@@ -82,6 +83,10 @@ export class LayersManager {
         this.deleteEvent.trigger(layer);
     }
 
+    public getById(id: string) {
+        return this.layers.find(l => l.id === id);
+    }
+
     public select(id: string) {
         const layer = this.getLayer(id);
 
@@ -98,11 +103,12 @@ export class LayersManager {
                 type,
                 layer: this.activeLayer!.id,
                 cell: GridHelper.cellIndexToName(index),
+                points: [],
                 data: o
             }
         });
 
-        this.mapAccessor.setObjects(index, mapObjects);
+        this.mapAccessor.addObjects(mapObjects);
         //this._activeLayer.drawing.update(index);
         //HACK: Temporarily updating all layers because of one-item-per-cell rule
         this.layers.forEach(l => l.drawing.update(index));

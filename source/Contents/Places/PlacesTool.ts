@@ -1,9 +1,7 @@
-import { LayersManager } from "../../Maps/Layers/LayersManager";
-import { MapAccessor } from "../../Maps/MapAccessor";
+import { MapManager } from "../../Maps/MapManager";
 import { Point } from "../../Model/Point";
 import { Tool } from "../../UI/Tools/Tool";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { Place } from "./Place";
 
 export class PlacesTool implements Tool {
     public readonly configuration = {
@@ -12,24 +10,21 @@ export class PlacesTool implements Tool {
         layerTypes: ['terrain']
     };
 
-    constructor(private mapAccessor: MapAccessor, private layers: LayersManager) {
+    constructor(private readonly map: MapManager) {
     }
 
     public start(point: Point) {
-        const cell = this.mapAccessor.getIndex(point);
+        const cell = this.map.mapAccessor.getIndex(point);
 
         if (cell === undefined) {
             return;
         }
 
-        const normalizedPosition = this.mapAccessor.normalizedPosition(cell, point),
-            position = VectorMath.round(normalizedPosition, 2),
-            place: Place = {
-                position,
-                radius: .2
-            };
+        const position = this.map.mapAccessor.normalizedPosition(cell, point),
+            radius = VectorMath.add(position, { x: .2, y: 0 }),
+            place = this.map.createObject('place', cell, [position, radius]);
 
-        this.layers.setObjects('place', cell, [place]);
+        this.map.addObjects([place]);
     }
 
     public move() {

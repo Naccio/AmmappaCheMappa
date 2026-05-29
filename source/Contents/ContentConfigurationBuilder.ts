@@ -1,7 +1,6 @@
 import { DefaultGraphics } from "../Engine/Rendering/DefaultGraphics";
 import { GenericObjectGraphicsFactory } from "../Engine/Rendering/GenericObjectGraphicsFactory";
 import { Graphics } from "../Engine/Rendering/Graphics";
-import { VectorMath } from "../Utilities/VectorMath";
 import { ContentConfiguration } from "./ContentConfiguration";
 import { ContentPoint } from "./ContentPoint";
 
@@ -18,7 +17,7 @@ export class ContentConfigurationBuilder<T> {
     public build(): ContentConfiguration {
         return {
             type: this.type,
-            graphics: new GenericObjectGraphicsFactory<T>(this.type, this.graphicsFactory),
+            graphics: new GenericObjectGraphicsFactory<T>(this.graphicsFactory),
             points: (o) => this.pointsFactory(o.data)
         };
     }

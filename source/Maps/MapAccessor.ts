@@ -127,7 +127,8 @@ export class MapAccessor {
         return VectorMath
             .startOperation(absolutePosition)
             .multiply(this.scale)
-            .subtract(cellPosition);
+            .subtract(cellPosition)
+            .round(2);
     }
 
     public save() {
@@ -136,15 +137,10 @@ export class MapAccessor {
         }
     }
 
-    public setObjects(index: CellIndex, objects: MapObject[]) {
-        const cellName = GridHelper.cellIndexToName(index),
-            map = this.map.data;
+    public addObjects(objects: MapObject[]) {
+        const map = this.map.data;
 
-
-        map.objects = map.objects
-            //TODO: Eventually more than one object per cell will be allowed
-            .filter(o => o.cell !== cellName)
-            .concat(objects);
+        map.objects = [...map.objects, ...objects];
 
         this.save();
     }

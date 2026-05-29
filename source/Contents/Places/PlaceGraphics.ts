@@ -1,14 +1,16 @@
-import { Place } from "./Place";
 import { Graphics } from "../../Engine/Rendering/Graphics";
 import { Drawer } from "../../Engine/Rendering/Drawer";
+import { MapObject } from "../../Model/MapObject";
+import { VectorMath } from "../../Utilities/VectorMath";
 
 export class PlaceGraphics implements Graphics {
 
-    public constructor(private place: Place) { }
+    public constructor(private place: MapObject) { }
 
     public render(drawer: Drawer) {
-        const radius = this.place.radius,
-            center = this.place.position;
+        const points = this.place.points,
+            center = points[0],
+            radius = VectorMath.distance(center, points[1]);
 
         drawer.circle(center, radius, {
             fillStyle: '#000'

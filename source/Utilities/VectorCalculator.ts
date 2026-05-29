@@ -25,6 +25,10 @@ export class VectorCalculator {
         return VectorMath.direction(this, v);
     }
 
+    public distance(v: Vector) {
+        return VectorMath.distance(this, v);
+    }
+
     public divide(n: number) {
         return VectorMath.divide(this, n);
     }

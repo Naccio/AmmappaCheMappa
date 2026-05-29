@@ -4,14 +4,18 @@ import { ContentConfigurationBuilder } from "./ContentConfigurationBuilder";
 export class ContentsConfigurationBuilder {
     private readonly contents: ContentConfiguration[] = [];
 
-    public add<T>(type: string, factory: (builder: ContentConfigurationBuilder<T>) => void) {
+    public add(configuration: ContentConfiguration) {
+        this.contents.push(configuration);
+
+        return this;
+    }
+
+    public configure<T>(type: string, factory: (builder: ContentConfigurationBuilder<T>) => void) {
         const builder = new ContentConfigurationBuilder<T>(type);
 
         factory(builder);
 
-        this.contents.push(builder.build());
-
-        return this;
+        return this.add(builder.build());
     }
 
     public build() {
