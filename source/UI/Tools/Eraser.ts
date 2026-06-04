@@ -1,5 +1,4 @@
-import { LayersManager } from "../../Maps/Layers/LayersManager";
-import { MapAccessor } from "../../Maps/MapAccessor";
+import { MapManager } from "../../Maps/MapManager";
 import { CellIndex } from "../../Model/CellIndex";
 import { CellTool } from "./CellTool";
 
@@ -10,11 +9,11 @@ export class Eraser extends CellTool {
         layerTypes: ['terrain', 'text']
     };
 
-    constructor(mapAccessor: MapAccessor, private layers: LayersManager) {
-        super(mapAccessor);
+    constructor(private readonly map: MapManager) {
+        super(map.mapAccessor);
     }
 
     public useOnCell(cell: CellIndex) {
-        this.layers.setObjects('', cell, []);
+        this.map.clear(cell);
     }
 }

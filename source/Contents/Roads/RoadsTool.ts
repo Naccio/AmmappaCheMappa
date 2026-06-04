@@ -101,6 +101,7 @@ export class RoadsTool implements Tool {
 
         const road = this.map.createObject('road', cell, [from, to]);
 
+        this.map.clear(cell);
         this.map.addObjects([road]);
     }
 }

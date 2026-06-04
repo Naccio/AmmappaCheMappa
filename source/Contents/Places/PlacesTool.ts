@@ -24,6 +24,7 @@ export class PlacesTool implements Tool {
             radius = VectorMath.add(position, { x: .2, y: 0 }),
             place = this.map.createObject('place', cell, [position, radius]);
 
+        this.map.clear(cell);
         this.map.addObjects([place]);
     }
 

@@ -120,6 +120,7 @@ export class RiversTool implements Tool {
         },
             river = this.map.createObject('river', cell, [from, to, bend1, bend2]);
 
+        this.map.clear(cell);
         this.map.addObjects([river]);
 
         return river;

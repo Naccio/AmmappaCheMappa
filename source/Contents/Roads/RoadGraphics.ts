@@ -3,8 +3,6 @@ import { Graphics } from "../../Engine/Rendering/Graphics";
 import { MapObject } from "../../Model/MapObject";
 
 export class RoadGraphics implements Graphics {
-    private readonly lineWidth = .02;
-
     public constructor(private road: MapObject) { }
 
     public render(drawer: Drawer) {

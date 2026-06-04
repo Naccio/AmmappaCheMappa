@@ -33,6 +33,7 @@ export class TreesTool extends CellTool {
             }
         }
 
+        this.map.clear(cell);
         this.map.addObjects(trees);
     }
 

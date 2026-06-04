@@ -23,10 +23,7 @@ export class ToolsManagerFactory {
     ) { }
 
     public create(mapManager: MapManager, uiLayer: DrawingUI) {
-        const mapAccessor = mapManager.mapAccessor,
-            layersManager = mapManager.layers;
-
-        const eraser = new Eraser(mapAccessor, layersManager);
+        const eraser = new Eraser(mapManager);
         const mountainsTool = new MountainsTool(mapManager);
         const placesTool = new PlacesTool(mapManager);
         const riversTool = new RiversTool(mapManager);

@@ -16,8 +16,21 @@ export class MapManager {
         return this.mapAccessor.id;
     }
 
-    public createObject(type: string, cell: CellIndex, points: Point[], data?: any): MapObject {
-        const layer = this.layers.activeLayer;
+    public clear(cellIndex: CellIndex) {
+        const cell = GridHelper.cellIndexToName(cellIndex),
+            layer = this.layers.activeLayer?.id;
+
+        if (layer === undefined) {
+            throw new Error('No layer selected');
+        }
+
+        this.mapAccessor.deleteObjects(o => o.cell === cell && o.layer === layer);
+        this.layers.getById(layer)?.drawing.update(cellIndex);
+    }
+
+    public createObject(type: string, cellIndex: CellIndex, points: Point[], data?: any): MapObject {
+        const cell = GridHelper.cellIndexToName(cellIndex),
+            layer = this.layers.activeLayer?.id;
 
         if (layer === undefined) {
             throw new Error('No layer selected');
@@ -25,8 +38,8 @@ export class MapManager {
 
         return {
             type,
-            layer: layer.id,
-            cell: GridHelper.cellIndexToName(cell),
+            layer,
+            cell,
             points,
             data
         }

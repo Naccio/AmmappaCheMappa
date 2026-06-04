@@ -28,6 +28,7 @@ export class MountainsTool extends CellTool {
             mountains.push(mountain);
         }
 
+        this.map.clear(cell);
         this.map.addObjects(mountains);
     }
 

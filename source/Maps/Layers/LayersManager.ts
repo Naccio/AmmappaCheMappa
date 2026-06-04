@@ -1,13 +1,10 @@
 import { EventHandler } from "../../Engine/Events/ApplicationEvent";
 import { InternalEvent } from "../../Engine/Events/InternalEvent";
 import { MapAccessor } from "../MapAccessor";
-import { CellIndex } from "../../Model/CellIndex";
 import { MapLayer } from "../../Model/MapLayer";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayerFactory } from "./LayerFactory";
-import { GridHelper } from "../../Utilities/GridHelper";
 import { Observable } from "../../Engine/Events/Observable";
-import { Point } from "../../Model/Point";
 
 export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
@@ -91,27 +88,6 @@ export class LayersManager {
         const layer = this.getLayer(id);
 
         this._activeLayer.value = layer;
-    }
-
-    public setObjects<T>(type: string, index: CellIndex, objects: T[]) {
-        if (this.activeLayer === undefined) {
-            return;
-        }
-
-        const mapObjects = objects.map(o => {
-            return {
-                type,
-                layer: this.activeLayer!.id,
-                cell: GridHelper.cellIndexToName(index),
-                points: [],
-                data: o
-            }
-        });
-
-        this.mapAccessor.addObjects(mapObjects);
-        //this._activeLayer.drawing.update(index);
-        //HACK: Temporarily updating all layers because of one-item-per-cell rule
-        this.layers.forEach(l => l.drawing.update(index));
     }
 
     public update(id: string, action: (layer: MapLayer) => void) {

@@ -145,6 +145,14 @@ export class MapAccessor {
         this.save();
     }
 
+    public deleteObjects(condition: (o: MapObject) => boolean) {
+        const map = this.map.data;
+
+        map.objects = map.objects.filter(o => !condition(o));
+
+        this.save();
+    }
+
     private splitActionsEvenly(numerator: number, denominator: number, splitAction: () => void, mainAction: () => void) {
         const quotient = Math.floor(numerator / denominator);
         let remainder = denominator === 0 ? numerator : numerator % denominator,
