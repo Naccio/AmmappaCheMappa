@@ -63,7 +63,7 @@ export class RiversTool implements Tool {
 
                 this.createRiver(cell, from, to);
             } else {
-                river.points[3] = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
+                river.points[1] = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
 
                 this.startPosition = this.mapAccessor.absolutePosition(cell, river.points[0]);
             }
@@ -105,8 +105,8 @@ export class RiversTool implements Tool {
         };
 
         if (previous !== undefined) {
-            bend1 = VectorMath.startOperation(previous.points[2])
-                .direction(previous.points[3])
+            bend1 = VectorMath.startOperation(previous.points[3])
+                .direction(previous.points[1])
                 .multiply(MathHelper.random(.2, .5))
                 .add(from);
         }
@@ -118,7 +118,7 @@ export class RiversTool implements Tool {
             x: MathHelper.round(MathHelper.random(.2, .8), 2),
             y: MathHelper.round(MathHelper.random(.2, .8), 2)
         },
-            river = this.map.createObject('river', cell, [from, bend1, bend2, to]);
+            river = this.map.createObject('river', cell, [from, to, bend1, bend2]);
 
         this.map.addObjects([river]);
 

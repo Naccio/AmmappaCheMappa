@@ -46,6 +46,10 @@ export class VectorMath {
         return v1.x * v2.x + v1.y * v2.y;
     }
 
+    public static hadamardProduct(v1: Vector, v2: Vector) {
+        return new VectorCalculator(v1.x * v2.x, v1.y * v2.y);
+    }
+
     public static invert(v: Vector) {
         return this.multiply(v, -1);
     }

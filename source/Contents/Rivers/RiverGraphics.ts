@@ -16,7 +16,7 @@ export class RiverGraphics implements Graphics {
         // directionFrom = VectorMath.direction(from, river.bend1),
         // directionTo = VectorMath.direction(river.bend2, river.to);
 
-        drawer.bezier(points[0], points[3], points[1], points[2], style);
+        drawer.bezier(points[0], points[1], points[2], points[3], style);
         // drawer.circle(river.bend1, .05, { fillStyle: '#F00' });
         // drawer.circle(river.bend2, .05, { fillStyle: '#00F' });
         // drawer.line([from, VectorMath.add(from, directionFrom)], { color: '#F0F', lineWidth: 2, ignoreBorders: true });

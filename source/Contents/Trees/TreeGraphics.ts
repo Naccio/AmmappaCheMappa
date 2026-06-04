@@ -1,26 +1,20 @@
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { Graphics } from "../../Engine/Rendering/Graphics";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
-import { Tree } from "./Tree";
+import { MapObject } from "../../Model/MapObject";
 
 export class TreeGraphics implements Graphics {
     private readonly lineWidth = .02;
 
-    public constructor(private tree: Tree) { }
+    public constructor(private tree: MapObject) { }
 
     public render(drawer: Drawer) {
-        const tree = this.tree,
-            position = tree.position,
-            radiusX = tree.crownWidth / 2,
-            radiusY = tree.crownHeight / 2,
-            trunkTop = {
-                x: position.x,
-                y: position.y - tree.trunkHeight
-            },
-            crownCenter = {
-                x: position.x,
-                y: trunkTop.y - tree.crownHeight / 2
-            },
+        const points = this.tree.points,
+            position = points[0],
+            crownCenter = points[1],
+            trunkTop = points[2],
+            radiusX = Math.abs(points[3].x - crownCenter.x),
+            radiusY = Math.abs(trunkTop.y - crownCenter.y),
             lineStyle: LineStyle = {
                 lineCap: 'round',
                 lineJoin: 'round',

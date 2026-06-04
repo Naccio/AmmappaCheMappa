@@ -33,7 +33,7 @@ export class ToolsManagerFactory {
         const roadsTool = new RoadsTool(uiLayer, mapManager);
         const selectTool = new SelectTool(mapManager, this.drawerFactory, this.modalLauncher, this.contents);
         const textTool = new TextTool(mapManager, this.modalLauncher, this.localizer);
-        const treesTool = new TreesTool(mapAccessor, layersManager);
+        const treesTool = new TreesTool(mapManager);
         const tools = [
             mountainsTool,
             placesTool,

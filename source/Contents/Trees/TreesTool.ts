@@ -1,10 +1,10 @@
-import { LayersManager } from "../../Maps/Layers/LayersManager";
-import { MapAccessor } from "../../Maps/MapAccessor";
 import { MathHelper } from "../../Utilities/MathHelper";
 import { CellIndex } from "../../Model/CellIndex";
 import { CellTool } from "../../UI/Tools/CellTool";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { Tree } from "./Tree";
+import { MapManager } from "../../Maps/MapManager";
+import { MapObject } from "../../Model/MapObject";
+import { Point } from "../../Model/Point";
 
 export class TreesTool extends CellTool {
     public readonly configuration = {
@@ -13,12 +13,12 @@ export class TreesTool extends CellTool {
         layerTypes: ['terrain']
     };
 
-    constructor(mapAccessor: MapAccessor, private layers: LayersManager) {
-        super(mapAccessor);
+    constructor(private readonly map: MapManager) {
+        super(map.mapAccessor);
     }
 
     public useOnCell(cell: CellIndex) {
-        const trees: Tree[] = [],
+        const trees: MapObject[] = [],
             perColumn = 6,
             perRow = 4,
             xScale = 1 / perColumn,
@@ -26,25 +26,17 @@ export class TreesTool extends CellTool {
 
         for (let x = 0; x < perColumn; x++) {
             for (let y = 0; y < perRow; y++) {
-                const tree = this.create(),
-                    position = VectorMath.add({ x, y }, tree.position);
+                const points = this.create()
+                    .map(p => VectorMath.add(p, { x, y }).hadamardProduct({ x: xScale, y: yScale }));
 
-                tree.crownHeight = MathHelper.round(tree.crownHeight * yScale, 2);
-                tree.crownWidth = MathHelper.round(tree.crownWidth * xScale, 2);
-                tree.trunkHeight = MathHelper.round(tree.trunkHeight * yScale, 2);
-                tree.position = {
-                    x: MathHelper.round(position.x * xScale, 2),
-                    y: MathHelper.round(position.y * yScale, 2)
-                }
-
-                trees.push(tree);
+                trees.push(this.map.createObject('tree', cell, points));
             }
         }
 
-        this.layers.setObjects('tree', cell, trees);
+        this.map.addObjects(trees);
     }
 
-    private create(): Tree {
+    private create(): Point[] {
         const crownWidth = MathHelper.random(.4, .6),
             height = MathHelper.random(.8, .95),
             crownTrunkRatio = MathHelper.random(.2, .35),
@@ -53,13 +45,24 @@ export class TreesTool extends CellTool {
             position = {
                 x: MathHelper.random(.35, .65),
                 y: MathHelper.random(.8, 1)
+            },
+            trunkTop = {
+                x: position.x,
+                y: position.y - trunkHeight
+            },
+            crownCenter = {
+                x: trunkTop.x,
+                y: trunkTop.y - crownHeight / 2
             };
 
-        return {
+        return [
             position,
-            crownWidth,
-            crownHeight,
-            trunkHeight
-        }
+            crownCenter,
+            trunkTop,
+            {
+                x: crownCenter.x + crownWidth / 2,
+                y: crownCenter.y
+            }
+        ]
     }
 }

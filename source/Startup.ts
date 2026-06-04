@@ -30,9 +30,7 @@ import { ModalLauncher } from "./UI/ModalLauncher";
 import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
 import { UIFactory } from "./UI/UIFactory";
 import { Welcome } from "./UI/Welcome";
-import { Tree } from "./Contents/Trees/Tree";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
-import { VectorMath } from "./Utilities/VectorMath";
 import { ContentPointType } from "./Contents/ContentPoint";
 import { SimpleObjectGraphicsFactory } from "./Engine/Rendering/SimpleObjectGraphicsFactory";
 
@@ -74,15 +72,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 {
                     type: ContentPointType.primary,
-                    point: o.points[3]
-                },
-                {
-                    type: ContentPointType.helper,
                     point: o.points[1]
                 },
                 {
                     type: ContentPointType.helper,
                     point: o.points[2]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[3]
                 }
             ]
         })
@@ -110,39 +108,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             ]
         })
-        .configure<Tree>('tree', b => b
-            .setGraphics(t => new TreeGraphics(t))
-            .setPoints(t => {
-                const position = VectorMath.startOperation(t.position),
-                    trunkTop = position.subtract(0, t.trunkHeight),
-                    crownCenter = trunkTop.subtract(0, t.crownHeight / 2),
-                    radiusX = crownCenter.subtract(t.crownWidth / 2, 0),
-                    radiusY = crownCenter.subtract(0, t.crownHeight / 2);
-
-                return [
-                    {
-                        type: ContentPointType.position,
-                        point: position
-                    },
-                    {
-                        type: ContentPointType.primary,
-                        point: trunkTop
-                    },
-                    {
-                        type: ContentPointType.helper,
-                        point: crownCenter
-                    },
-                    {
-                        type: ContentPointType.helper,
-                        point: radiusX
-                    },
-                    {
-                        type: ContentPointType.helper,
-                        point: radiusY
-                    }
-                ];
-            })
-        )
+        .add({
+            type: 'tree',
+            graphics: new SimpleObjectGraphicsFactory(o => new TreeGraphics(o)),
+            points: o => [
+                {
+                    type: ContentPointType.position,
+                    point: o.points[0]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[1]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[2]
+                },
+                {
+                    type: ContentPointType.helper,
+                    point: o.points[3]
+                }
+            ]
+        })
         .build();
     const uiFactory = new UIFactory();
     const modalLauncher = new ModalLauncher(uiFactory, localizer);

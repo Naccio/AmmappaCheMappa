@@ -37,6 +37,10 @@ export class VectorCalculator {
         return VectorMath.dotProduct(this, v);
     }
 
+    public hadamardProduct(v: Vector) {
+        return VectorMath.hadamardProduct(this, v);
+    }
+
     public invert() {
         return VectorMath.invert(this);
     }
