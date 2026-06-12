@@ -1,5 +1,6 @@
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { ContentPoint, ContentPointType } from "../../Contents/ContentPoint";
+import { ApplyToOthersConstraint } from "../../Contents/ContentPointConstraint";
 import { Observable } from "../../Engine/Events/Observable";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
@@ -32,7 +33,7 @@ export class CellEditor implements UIElement {
     };
 
     private points: ContentPoint[] = [];
-    private activePoint?: ContentPoint;
+    private activePoint?: number;
 
     public constructor(
         cell: CellIndex,
@@ -115,7 +116,9 @@ export class CellEditor implements UIElement {
     }
 
     private mouseMoveHandler(s: PointerStatus | undefined) {
-        if (s === undefined || s.button !== PointerButtons.primary) {
+        const object = this.selectedObject.value;
+
+        if (object === undefined || s === undefined || s.button !== PointerButtons.primary) {
             this.activePoint = undefined;
             return;
         }
@@ -123,19 +126,41 @@ export class CellEditor implements UIElement {
         const scale = this.scale * this.mapManager.mapAccessor.map.data.pixelsPerCell,
             pointer = VectorMath.divide(s.position, scale);
 
-        if (this.activePoint) {
-            const point = this.activePoint.point;
+        if (this.activePoint !== undefined) {
+            const point = this.points[this.activePoint],
+                change = pointer.subtract(point.point),
+                constraints = point.constraints ?? [];
 
-            point.x = pointer.x;
-            point.y = pointer.y;
+            let apply = true;
+
+            if (point.type === ContentPointType.position && constraints.length === 0) {
+                constraints.push(new ApplyToOthersConstraint());
+            }
+
+            for (let i = 0; i < constraints.length; i++) {
+                const constraint = constraints[i];
+
+                apply = constraint.apply(object, this.activePoint, change);
+
+                if (!apply) {
+                    break;
+                }
+            }
+
+            if (apply) {
+                point.point.x += change.x;
+                point.point.y += change.y;
+            }
             this.draw();
         } else {
-            this.activePoint = this.points.find(p =>
+            const index = this.points.findIndex(p =>
                 p.point.x - this.radius < pointer.x &&
                 p.point.x + this.radius > pointer.x &&
                 p.point.y - this.radius < pointer.y &&
                 p.point.y + this.radius > pointer.y
             );
+
+            this.activePoint = index === -1 ? undefined : index;
         }
     }
 }

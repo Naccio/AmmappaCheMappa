@@ -33,6 +33,7 @@ import { Welcome } from "./UI/Welcome";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
 import { ContentPointType } from "./Contents/ContentPoint";
 import { SimpleObjectGraphicsFactory } from "./Engine/Rendering/SimpleObjectGraphicsFactory";
+import { ApplyToOthersConstraint, HorizontalConstraint, VerticalConstraint } from "./Contents/ContentPointConstraint";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -58,7 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 {
                     type: ContentPointType.helper,
-                    point: o.points[1]
+                    point: o.points[1],
+                    constraints: [new HorizontalConstraint()]
                 }
             ]
         })
@@ -118,15 +120,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 {
                     type: ContentPointType.helper,
-                    point: o.points[1]
+                    point: o.points[1],
+                    constraints: [new VerticalConstraint(), new ApplyToOthersConstraint([3])]
                 },
                 {
                     type: ContentPointType.helper,
-                    point: o.points[2]
+                    point: o.points[2],
+                    constraints: [new VerticalConstraint()]
                 },
                 {
                     type: ContentPointType.helper,
-                    point: o.points[3]
+                    point: o.points[3],
+                    constraints: [new HorizontalConstraint()]
                 }
             ]
         })

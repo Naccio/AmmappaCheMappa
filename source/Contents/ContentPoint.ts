@@ -1,4 +1,5 @@
 import { Point } from "../Model/Point";
+import { ContentPointConstraint } from "./ContentPointConstraint";
 
 export enum ContentPointType {
     position,
@@ -8,5 +9,6 @@ export enum ContentPointType {
 
 export interface ContentPoint {
     type: ContentPointType,
-    point: Point
+    point: Point,
+    constraints?: ContentPointConstraint[]
 }
