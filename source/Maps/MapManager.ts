@@ -2,6 +2,7 @@ import { CellIndex } from "../Model/CellIndex";
 import { MapObject } from "../Model/MapObject";
 import { Point } from "../Model/Point";
 import { GridHelper } from "../Utilities/GridHelper";
+import { Utilities } from "../Utilities/Utilities";
 import { LayersManager } from "./Layers/LayersManager";
 import { MapAccessor } from "./MapAccessor";
 
@@ -30,13 +31,15 @@ export class MapManager {
 
     public createObject(type: string, cellIndex: CellIndex, points: Point[], data?: any): MapObject {
         const cell = GridHelper.cellIndexToName(cellIndex),
-            layer = this.layers.activeLayer?.id;
+            layer = this.layers.activeLayer?.id,
+            id = Utilities.generateId(type);
 
         if (layer === undefined) {
             throw new Error('No layer selected');
         }
 
         return {
+            id,
             type,
             layer,
             cell,

@@ -27,7 +27,7 @@ export class TreesTool extends CellTool {
         for (let x = 0; x < perColumn; x++) {
             for (let y = 0; y < perRow; y++) {
                 const points = this.create()
-                    .map(p => VectorMath.add(p, { x, y }).hadamardProduct({ x: xScale, y: yScale }));
+                    .map(p => VectorMath.add(p, { x, y }).hadamardProduct({ x: xScale, y: yScale }).round(2));
 
                 trees.push(this.map.createObject('tree', cell, points));
             }
@@ -64,6 +64,6 @@ export class TreesTool extends CellTool {
                 x: crownCenter.x + crownWidth / 2,
                 y: crownCenter.y
             }
-        ]
+        ];
     }
 }
