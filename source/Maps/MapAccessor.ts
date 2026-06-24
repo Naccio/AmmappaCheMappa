@@ -70,11 +70,7 @@ export class MapAccessor {
             return [];
         }
 
-        if (fromCell.column == toCell.column && fromCell.row === toCell.row) {
-            return [fromCell];
-        }
-
-        return this.getConnectingCells(fromCell, toCell);
+        return GridHelper.getConnectingCells(fromCell, toCell);
     }
 
     public getPosition(index: CellIndex): Point {
@@ -84,38 +80,6 @@ export class MapAccessor {
         };
 
         return VectorMath.multiply(shift, this.map.data.pixelsPerCell);
-    }
-
-    private getConnectingCells(from: CellIndex, to: CellIndex) {
-        //TODO: Look into Bresenham's line algorithm for an alternative
-        const columnDifference = to.column - from.column,
-            rowDifference = to.row - from.row,
-            columnDirection = Math.sign(columnDifference),
-            rowDirection = Math.sign(rowDifference),
-            columnDistance = Math.abs(columnDifference),
-            rowDistance = Math.abs(rowDifference),
-            cells: CellIndex[] = [];
-
-        let column = from.column,
-            row = from.row;
-
-        if (columnDistance > rowDistance) {
-            this.splitActionsEvenly(columnDistance, rowDistance, () => {
-                row += 1 * rowDirection;
-            }, () => {
-                column += 1 * columnDirection;
-                cells.push({ column, row });
-            });
-        } else {
-            this.splitActionsEvenly(rowDistance, columnDistance, () => {
-                column += 1 * columnDirection;
-            }, () => {
-                row += 1 * rowDirection;
-                cells.push({ column, row });
-            });
-        }
-
-        return cells;
     }
 
     public normalizedPosition(cell: CellIndex, absolutePosition: Point): Point {
@@ -151,32 +115,5 @@ export class MapAccessor {
         map.objects = map.objects.filter(o => !condition(o));
 
         this.save();
-    }
-
-    private splitActionsEvenly(numerator: number, denominator: number, splitAction: () => void, mainAction: () => void) {
-        const quotient = Math.floor(numerator / denominator);
-        let remainder = denominator === 0 ? numerator : numerator % denominator,
-            remainderSpacing = denominator / remainder,
-            remainderCounter = 0;
-
-        for (let i = 0; i < denominator; i++) {
-            let iterations = quotient;
-
-            if (remainder > 0 && remainderCounter < i) {
-                iterations += 1;
-                remainder -= 1;
-                remainderCounter += remainderSpacing;
-            }
-
-            splitAction();
-
-            for (let j = 0; j < iterations; j++) {
-                mainAction();
-            }
-        }
-
-        for (let i = 0; i < remainder; i++) {
-            mainAction();
-        }
     }
 }

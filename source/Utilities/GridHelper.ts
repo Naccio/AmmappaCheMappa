@@ -57,6 +57,43 @@ export class GridHelper {
         return name;
     }
 
+    public static getConnectingCells(from: CellIndex, to: CellIndex) {
+
+        if (from.column == to.column && from.row === to.row) {
+            return [from];
+        }
+
+        //TODO: Look into Bresenham's line algorithm for an alternative
+        const columnDifference = to.column - from.column,
+            rowDifference = to.row - from.row,
+            columnDirection = Math.sign(columnDifference),
+            rowDirection = Math.sign(rowDifference),
+            columnDistance = Math.abs(columnDifference),
+            rowDistance = Math.abs(rowDifference),
+            cells: CellIndex[] = [];
+
+        let column = from.column,
+            row = from.row;
+
+        if (columnDistance > rowDistance) {
+            this.splitActionsEvenly(columnDistance, rowDistance, () => {
+                row += 1 * rowDirection;
+            }, () => {
+                column += 1 * columnDirection;
+                cells.push({ column, row });
+            });
+        } else {
+            this.splitActionsEvenly(rowDistance, columnDistance, () => {
+                column += 1 * columnDirection;
+            }, () => {
+                row += 1 * rowDirection;
+                cells.push({ column, row });
+            });
+        }
+
+        return cells;
+    }
+
     public static getConnection(cell: CellIndex, from: Point, direction: Vector): [Point, CellIndex, Point] {
         // Multiply by a large number to minimize the rounding errors
         // when calculating the intersections
@@ -128,5 +165,32 @@ export class GridHelper {
 
     public static isTop(quadrant: number) {
         return quadrant === 0 || quadrant === 1;
+    }
+
+    private static splitActionsEvenly(numerator: number, denominator: number, splitAction: () => void, mainAction: () => void) {
+        const quotient = Math.floor(numerator / denominator);
+        let remainder = denominator === 0 ? numerator : numerator % denominator,
+            remainderSpacing = denominator / remainder,
+            remainderCounter = 0;
+
+        for (let i = 0; i < denominator; i++) {
+            let iterations = quotient;
+
+            if (remainder > 0 && remainderCounter < i) {
+                iterations += 1;
+                remainder -= 1;
+                remainderCounter += remainderSpacing;
+            }
+
+            splitAction();
+
+            for (let j = 0; j < iterations; j++) {
+                mainAction();
+            }
+        }
+
+        for (let i = 0; i < remainder; i++) {
+            mainAction();
+        }
     }
 }
