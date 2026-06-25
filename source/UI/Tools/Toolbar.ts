@@ -3,20 +3,20 @@ import { LayersManager } from "../../Maps/Layers/LayersManager";
 import { Localizer } from "../../Engine/Localization/Localizer";
 import { UIElement } from "../UIElement";
 import { Tool } from "./Tool";
-import { Observable } from "../../Engine/Events/Observable";
+import { InternalObservable } from "../../Engine/Events/InternalObservable";
 import { RadioSelect } from "../RadioSelect";
 
 export class Toolbar implements UIElement {
     private readonly container: HTMLDivElement;
 
-    private _activeTool: Observable<Tool | undefined>;
+    private _activeTool: InternalObservable<Tool | undefined>;
 
     constructor(
         tools: Tool[],
         localizer: Localizer,
         layers: LayersManager
     ) {
-        const activeTool = new Observable<Tool | undefined>(undefined),
+        const activeTool = new InternalObservable<Tool | undefined>(undefined),
             container = document.createElement('div'),
             select = new RadioSelect(activeTool, tools, (tool, label) => {
                 const configuration = tool.configuration;

@@ -1,6 +1,6 @@
 import { InternalEvent } from "./InternalEvent";
 
-export class Observable<T> {
+export class InternalObservable<T> {
     private readonly event = new InternalEvent<T>();
 
     private _value: T;

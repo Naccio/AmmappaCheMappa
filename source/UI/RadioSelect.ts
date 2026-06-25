@@ -1,4 +1,4 @@
-import { Observable } from "../Engine/Events/Observable";
+import { InternalObservable } from "../Engine/Events/InternalObservable";
 import { Utilities } from "../Utilities/Utilities";
 import { UIElement } from "./UIElement";
 
@@ -31,7 +31,7 @@ export class RadioSelect<T> implements UIElement {
     private selected?: T;
 
     public constructor(
-        private readonly target: Observable<T | undefined>,
+        private readonly target: InternalObservable<T | undefined>,
         items: T[],
         private readonly labelFactory: (item: T, label: HTMLLabelElement) => void,
         private readonly wrapperFactory?: (item: T, wrapper: HTMLDivElement) => void

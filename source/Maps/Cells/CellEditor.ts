@@ -1,7 +1,7 @@
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { ContentPoint, ContentPointType } from "../../Contents/ContentPoint";
 import { ApplyToOthersConstraint } from "../../Contents/ContentPointConstraint";
-import { Observable } from "../../Engine/Events/Observable";
+import { InternalObservable } from "../../Engine/Events/InternalObservable";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { CellIndex } from "../../Model/CellIndex";
@@ -24,7 +24,7 @@ export class CellEditor implements UIElement {
     private readonly pointer: PointerTarget;
     private readonly container: HTMLDivElement;
 
-    private readonly selectedObject: Observable<MapObject | undefined>;
+    private readonly selectedObject: InternalObservable<MapObject | undefined>;
 
     public readonly configuration = {
         id: 'select',
@@ -48,7 +48,7 @@ export class CellEditor implements UIElement {
             container = document.createElement('div'),
             drawer = drawerFactory.create(id, scale, scale, scale);
 
-        this.selectedObject = new Observable<MapObject | undefined>(undefined);
+        this.selectedObject = new InternalObservable<MapObject | undefined>(undefined);
 
         const list = new RadioSelect(this.selectedObject, context.objects, (item, label) => {
             label.innerText = item.type;

@@ -1,5 +1,5 @@
 import { InternalEvent } from "../Engine/Events/InternalEvent";
-import { Observable } from "../Engine/Events/Observable";
+import { InternalObservable } from "../Engine/Events/InternalObservable";
 import { Point } from "../Model/Point";
 import { VectorMath } from "../Utilities/VectorMath";
 import { UIElement } from "./UIElement";
@@ -31,7 +31,7 @@ export class PointerTarget implements UIElement {
     private readonly maxConsecutiveClicks = 2;
 
     private readonly container: HTMLDivElement;
-    private readonly _status: Observable<PointerStatus | undefined>;
+    private readonly _status: InternalObservable<PointerStatus | undefined>;
     private readonly clickEvent: InternalEvent<ClickEvent>;
     private readonly zoomEvent: InternalEvent<ZoomEvent>;
 
@@ -52,7 +52,7 @@ export class PointerTarget implements UIElement {
         window.addEventListener('blur', this.blurHandler);
 
         this.container = container;
-        this._status = new Observable<PointerStatus | undefined>(undefined);
+        this._status = new InternalObservable<PointerStatus | undefined>(undefined);
         this.clickEvent = new InternalEvent<ClickEvent>();
         this.zoomEvent = new InternalEvent<ZoomEvent>();
     }
@@ -95,7 +95,7 @@ export class PointerTarget implements UIElement {
     private getCoordinates(e: MouseEvent): Point {
         const clientPoint = { x: e.clientX, y: e.clientY },
             boundingRectangle = this.html.getBoundingClientRect();
-            
+
         return VectorMath.subtract(clientPoint, boundingRectangle);
     }
 

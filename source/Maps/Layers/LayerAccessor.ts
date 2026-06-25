@@ -1,9 +1,9 @@
-import { Observable } from "../../Engine/Events/Observable";
+import { InternalObservable } from "../../Engine/Events/InternalObservable";
 import { MapLayer } from "../../Model/MapLayer";
 import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
 
-export class LayerAccessor extends Observable<MapLayer> {
+export class LayerAccessor extends InternalObservable<MapLayer> {
     public constructor(
         data: MapLayer,
         public readonly drawing: DrawingLayer,

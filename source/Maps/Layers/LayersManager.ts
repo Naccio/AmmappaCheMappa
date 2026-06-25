@@ -4,13 +4,13 @@ import { MapAccessor } from "../MapAccessor";
 import { MapLayer } from "../../Model/MapLayer";
 import { LayerAccessor } from "./LayerAccessor";
 import { LayerFactory } from "./LayerFactory";
-import { Observable } from "../../Engine/Events/Observable";
+import { InternalObservable } from "../../Engine/Events/InternalObservable";
 
 export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerAccessor>();
     private readonly deleteEvent = new InternalEvent<LayerAccessor>();
 
-    private _activeLayer: Observable<LayerAccessor | undefined>;
+    private _activeLayer: InternalObservable<LayerAccessor | undefined>;
 
     public layers: LayerAccessor[];
 
@@ -33,7 +33,7 @@ export class LayersManager {
         selected ??= layers[0];
 
         this.layers = layers;
-        this._activeLayer = new Observable<LayerAccessor | undefined>(selected);
+        this._activeLayer = new InternalObservable<LayerAccessor | undefined>(selected);
 
         this._activeLayer.subscribe(l => {
             if (l) {
