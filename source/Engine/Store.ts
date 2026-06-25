@@ -1,5 +1,6 @@
 import { ApplicationState } from "../Model/ApplicationState";
 import { EditorMap } from "../Model/EditorMap";
+import { Utilities } from "../Utilities/Utilities";
 
 //TODO: Consider switching to IndexedDB
 export class Store implements ApplicationState {
@@ -32,7 +33,7 @@ export class Store implements ApplicationState {
     }
 
     public get maps() {
-        return this.state.maps;
+        return this.state.maps.map(m => Utilities.deepCopy(m));
     }
 
     public deleteMap(id: string) {
@@ -46,8 +47,13 @@ export class Store implements ApplicationState {
     }
 
     public saveMap(map: EditorMap) {
-        if (this.state.maps.indexOf(map) === -1) {
-            this.state.maps.push(map);
+        const index = this.maps.findIndex(m => m.data.id === map.data.id),
+            copy = Utilities.deepCopy(map);
+
+        if (index === -1) {
+            this.state.maps.push(copy);
+        } else {
+            this.state.maps[index] = copy;
         }
 
         this.storeState();

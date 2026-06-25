@@ -2,6 +2,13 @@ import { EditorMap } from "../Model/EditorMap";
 
 export class Utilities {
 
+    public static deepCopy<T>(object: T) {
+        const json = JSON.stringify(object),
+            copy = JSON.parse(json);
+
+        return copy as T;
+    }
+
     public static download(filename: string, content: string) {
         const element = document.createElement('a');
 
