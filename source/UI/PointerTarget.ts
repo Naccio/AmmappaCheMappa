@@ -1,5 +1,6 @@
 import { InternalEvent } from "../Engine/Events/InternalEvent";
 import { InternalObservable } from "../Engine/Events/InternalObservable";
+import { Observable } from "../Engine/Events/Observable";
 import { Point } from "../Model/Point";
 import { VectorMath } from "../Utilities/VectorMath";
 import { UIElement } from "./UIElement";
@@ -61,7 +62,7 @@ export class PointerTarget implements UIElement {
         return this.container;
     }
 
-    public get status() {
+    public get status(): Observable<PointerStatus | undefined> {
         return this._status;
     }
 
@@ -82,7 +83,7 @@ export class PointerTarget implements UIElement {
         this.consecutiveClickTimeout = undefined;
         this.activeButton = undefined;
         this.mouseDownPosition = undefined;
-        this.status.value = undefined;
+        this._status.value = undefined;
     }
 
 

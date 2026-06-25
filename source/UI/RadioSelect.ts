@@ -32,7 +32,7 @@ export class RadioSelect<T> implements UIElement {
 
     public constructor(
         private readonly target: InternalObservable<T | undefined>,
-        items: T[],
+        items: readonly T[],
         private readonly labelFactory: (item: T, label: HTMLLabelElement) => void,
         private readonly wrapperFactory?: (item: T, wrapper: HTMLDivElement) => void
     ) {

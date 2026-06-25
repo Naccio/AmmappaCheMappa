@@ -1,0 +1,45 @@
+import { InternalObservable } from "../../Engine/Events/InternalObservable";
+import { Observable } from "../../Engine/Events/Observable";
+import { CellIndex } from "../../Model/CellIndex";
+import { MapObject } from "../../Model/MapObject";
+import { Point } from "../../Model/Point";
+import { GridHelper } from "../../Utilities/GridHelper";
+import { MapAccessor } from "../MapAccessor";
+
+export class CellManager {
+    private readonly _objects: InternalObservable<readonly MapObject[]>;
+
+    public constructor(
+        public readonly index: CellIndex,
+        private readonly map: MapAccessor
+    ) {
+        const cell = GridHelper.cellIndexToName(index),
+            objects = map.map.data.objects.filter(o => o.cell === cell);
+
+        this._objects = new InternalObservable<readonly MapObject[]>(objects);
+    }
+
+    public get objects(): Observable<readonly MapObject[]> {
+        return this._objects;
+    }
+
+    public get pixels() {
+        return this.map.map.data.pixelsPerCell;
+    }
+
+    public clear() {
+        this._objects.value = [];
+        this.map.save();
+    }
+
+    public update(id: string, points: Point[]) {
+        this._objects.update(objects => {
+            const object = objects.find(o => o.id === id);
+
+            if (object !== undefined) {
+                object.points = points;
+            }
+        });
+        this.map.save();
+    }
+}

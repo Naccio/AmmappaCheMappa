@@ -4,16 +4,15 @@ import { ApplyToOthersConstraint } from "../../Contents/ContentPointConstraint";
 import { InternalObservable } from "../../Engine/Events/InternalObservable";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
-import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
 import { PointerButtons, PointerStatus, PointerTarget } from "../../UI/PointerTarget";
 import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { MapManager } from "../MapManager";
 import { CellContext } from "./CellContext";
 import { CellGraphics } from "./CellGraphics";
+import { CellManager } from "./CellManager";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
@@ -36,15 +35,15 @@ export class CellEditor implements UIElement {
     private activePoint?: number;
 
     public constructor(
-        cell: CellIndex,
-        private readonly mapManager: MapManager,
+        private readonly cell: CellManager,
         drawerFactory: DrawerFactory,
         private readonly contents: ContentConfiguration[]
     ) {
-        const cellName = GridHelper.cellIndexToName(cell),
-            id = `${mapManager.id}-${cellName}-editor`,
-            scale = this.scale * mapManager.mapAccessor.map.data.pixelsPerCell,
-            context = new CellContext(cell, this.mapManager.mapAccessor.map.data.objects.filter(o => o.cell === cellName)),
+        const cellName = GridHelper.cellIndexToName(cell.index),
+            id = `${cellName}-editor`,
+            scale = this.scale * cell.pixels,
+            objects = cell.objects.value,
+            context = new CellContext(cell.index, objects),
             container = document.createElement('div'),
             drawer = drawerFactory.create(id, scale, scale, scale);
 
@@ -119,11 +118,14 @@ export class CellEditor implements UIElement {
         const object = this.selectedObject.value;
 
         if (object === undefined || s === undefined || s.button !== PointerButtons.primary) {
+            if (this.activePoint !== undefined && object !== undefined) {
+                this.cell.update(object.id, this.points.map(p => p.point));
+            }
             this.activePoint = undefined;
             return;
         }
 
-        const scale = this.scale * this.mapManager.mapAccessor.map.data.pixelsPerCell,
+        const scale = this.scale * this.cell.pixels,
             pointer = VectorMath.divide(s.position, scale);
 
         if (this.activePoint !== undefined) {

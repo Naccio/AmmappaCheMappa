@@ -20,7 +20,7 @@ export class SelectTool implements Tool {
         private readonly drawerFactory: DrawerFactory,
         private readonly modal: ModalLauncher,
         private readonly contents: ContentConfiguration[]
-    ) {}
+    ) { }
 
     public start(point: Point) {
         const cell = this.mapManager.mapAccessor.getIndex(point);
@@ -30,7 +30,8 @@ export class SelectTool implements Tool {
         }
 
         const cellName = GridHelper.cellIndexToName(cell),
-            editor = new CellEditor(cell, this.mapManager, this.drawerFactory, this.contents);
+            cellManager = this.mapManager.getCell(cell),
+            editor = new CellEditor(cellManager, this.drawerFactory, this.contents);
 
         this.modal.launch(cellName, [editor.html]);
     }
