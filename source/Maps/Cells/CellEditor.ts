@@ -10,7 +10,6 @@ import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { CellContext } from "./CellContext";
 import { CellGraphics } from "./CellGraphics";
 import { CellManager } from "./CellManager";
 
@@ -43,20 +42,19 @@ export class CellEditor implements UIElement {
             id = `${cellName}-editor`,
             scale = this.scale * cell.pixels,
             objects = cell.objects.value,
-            context = new CellContext(cell.index, objects),
             container = document.createElement('div'),
             drawer = drawerFactory.create(id, scale, scale, scale);
 
         this.selectedObject = new InternalObservable<MapObject | undefined>(undefined);
 
-        const list = new RadioSelect(this.selectedObject, context.objects, (item, label) => {
+        const list = new RadioSelect(this.selectedObject, objects, (item, label) => {
             label.innerText = item.type;
         });
 
         this.pointer = new PointerTarget();
 
         this.drawer = drawer;
-        this.graphics = new CellGraphics(context, contents);
+        this.graphics = new CellGraphics(objects, contents);
 
         container.style.display = 'flex';
         container.style.alignItems = 'start';

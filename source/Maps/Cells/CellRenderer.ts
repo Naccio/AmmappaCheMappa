@@ -3,7 +3,6 @@ import { MapAccessor } from "../MapAccessor";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
-import { CellContext } from "./CellContext";
 import { CellGraphics } from "./CellGraphics";
 
 export class CellRenderer {
@@ -19,8 +18,7 @@ export class CellRenderer {
             cellName = GridHelper.cellIndexToName(cell),
             drawer = this.drawerFactory.create(map.id + '-' + cellName, size, size, size),
             objects = map.objects.filter(o => o.layer === layer && o.cell == cellName),
-            context = new CellContext(cell, objects),
-            graphics = new CellGraphics(context, this.contents);
+            graphics = new CellGraphics(objects, this.contents);
 
         graphics.render(drawer);
 
