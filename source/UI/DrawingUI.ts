@@ -1,19 +1,18 @@
 import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
-import { MapAccessor } from "../Maps/MapAccessor";
 import { Drawer } from "../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
+import { EditorMap } from "../Model/EditorMap";
 
 export class DrawingUI implements DrawingLayer {
     private readonly _drawer: Drawer;
 
     constructor(
-        private mapAccessor: MapAccessor,
-        private drawerFactory: DrawerFactory
+        map: EditorMap,
+        drawerFactory: DrawerFactory
     ) {
-        const map = this.mapAccessor.map,
-            mapData = map.data,
+        const mapData = map.data,
             id = mapData.id + '-ui-layer',
-            drawer = this.drawerFactory.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
+            drawer = drawerFactory.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
 
         this._drawer = drawer;
     }

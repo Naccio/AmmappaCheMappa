@@ -1,10 +1,10 @@
 import { MathHelper } from "../../Utilities/MathHelper";
-import { CellIndex } from "../../Model/CellIndex";
 import { CellTool } from "../../UI/Tools/CellTool";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { MapManager } from "../../Maps/MapManager";
 import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
+import { CellManager } from "../../Maps/Cells/CellManager";
 
 export class TreesTool extends CellTool {
     public readonly configuration = {
@@ -13,11 +13,11 @@ export class TreesTool extends CellTool {
         layerTypes: ['terrain']
     };
 
-    constructor(private readonly map: MapManager) {
-        super(map.mapAccessor);
+    constructor(map: MapManager) {
+        super(map);
     }
 
-    public useOnCell(cell: CellIndex) {
+    public useOnCell(cell: CellManager) {
         const trees: MapObject[] = [],
             perColumn = 6,
             perRow = 4,
@@ -29,12 +29,12 @@ export class TreesTool extends CellTool {
                 const points = this.create()
                     .map(p => VectorMath.add(p, { x, y }).hadamardProduct({ x: xScale, y: yScale }).round(2));
 
-                trees.push(this.map.createObject('tree', cell, points));
+                trees.push(cell.createObject('tree', points));
             }
         }
 
-        this.map.clear(cell);
-        this.map.addObjects(trees);
+        cell.clear();
+        cell.addObjects(trees);
     }
 
     private create(): Point[] {

@@ -14,18 +14,20 @@ export class PlacesTool implements Tool {
     }
 
     public start(point: Point) {
-        const cell = this.map.mapAccessor.getIndex(point);
+        const mapAccessor = this.map.mapAccessor,
+            cellIndex = mapAccessor.getIndex(point);
 
-        if (cell === undefined) {
+        if (cellIndex === undefined) {
             return;
         }
 
-        const position = this.map.mapAccessor.normalizedPosition(cell, point),
+        const position = mapAccessor.normalizedPosition(cellIndex, point),
+            cell = this.map.getCell(cellIndex),
             radius = VectorMath.add(position, { x: .2, y: 0 }),
-            place = this.map.createObject('place', cell, [position, radius]);
+            place = cell.createObject('place', [position, radius]);
 
-        this.map.clear(cell);
-        this.map.addObjects([place]);
+        cell.clear();
+        cell.addObjects([place]);
     }
 
     public move() {

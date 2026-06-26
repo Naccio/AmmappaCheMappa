@@ -1,3 +1,4 @@
+import { CellManager } from "../../Maps/Cells/CellManager";
 import { MapManager } from "../../Maps/MapManager";
 import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
@@ -14,22 +15,22 @@ export class MountainsTool extends CellTool {
         layerTypes: ['terrain']
     };
 
-    constructor(private readonly map: MapManager) {
-        super(map.mapAccessor);
+    constructor(map: MapManager) {
+        super(map);
     }
 
-    public useOnCell(cell: CellIndex) {
+    public useOnCell(cell: CellManager) {
         const mountains: MapObject[] = [];
 
         for (let quadrant = 0; quadrant < 4; quadrant++) {
             const points = this.create(quadrant),
-                mountain = this.map.createObject('mountain', cell, points);
+                mountain = cell.createObject('mountain', points);
 
             mountains.push(mountain);
         }
 
-        this.map.clear(cell);
-        this.map.addObjects(mountains);
+        cell.clear();
+        cell.addObjects(mountains);
     }
 
     private create(quadrant?: number): Point[] {

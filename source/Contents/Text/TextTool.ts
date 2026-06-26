@@ -18,9 +18,9 @@ export class TextTool implements Tool {
     }
 
     public start(point: Point) {
-        const cell = this.map.mapAccessor.getIndex(point);
+        const cellIndex = this.map.mapAccessor.getIndex(point);
 
-        if (cell === undefined) {
+        if (cellIndex === undefined) {
             return;
         }
 
@@ -34,16 +34,17 @@ export class TextTool implements Tool {
         textInput.required = true;
 
         this.modal.launchForm(title, [textInput.html, sizeInput.html], () => {
-            const fontSize = parseInt(sizeInput.value!) / 100,
-                normalizedPosition = this.map.mapAccessor.normalizedPosition(cell, point),
+            const cell = this.map.getCell(cellIndex),
+                fontSize = parseInt(sizeInput.value!) / 100,
+                normalizedPosition = this.map.mapAccessor.normalizedPosition(cellIndex, point),
                 position = VectorMath.round(normalizedPosition, 2),
                 data: GridText = {
                     value: textInput.value!,
                     fontSize
                 },
-                text = this.map.createObject('text', cell, [position], data);
+                text = cell.createObject('text', [position], data);
 
-            this.map.addObjects([text]);
+            cell.addObjects([text]);
         });
     }
 

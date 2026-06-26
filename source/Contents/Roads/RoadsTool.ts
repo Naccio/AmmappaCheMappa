@@ -95,13 +95,14 @@ export class RoadsTool implements Tool {
         return cells;
     }
 
-    private createRoad(cell: CellIndex, from: Point, to: Point) {
+    private createRoad(cellIndex: CellIndex, from: Point, to: Point) {
         from = VectorMath.round(from, 2);
         to = VectorMath.round(to, 2);
 
-        const road = this.map.createObject('road', cell, [from, to]);
+        const cell = this.map.getCell(cellIndex),
+            road = cell.createObject('road', [from, to]);
 
-        this.map.clear(cell);
-        this.map.addObjects([road]);
+        cell.clear();
+        cell.addObjects([road]);
     }
 }

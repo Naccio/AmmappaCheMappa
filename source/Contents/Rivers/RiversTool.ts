@@ -7,6 +7,7 @@ import { VectorMath } from "../../Utilities/VectorMath";
 import { MapManager } from "../../Maps/MapManager";
 import { MapAccessor } from "../../Maps/MapAccessor";
 import { MapObject } from "../../Model/MapObject";
+import { CellManager } from "../../Maps/Cells/CellManager";
 
 export class RiversTool implements Tool {
     private readonly mapAccessor: MapAccessor;
@@ -98,7 +99,8 @@ export class RiversTool implements Tool {
         return cells;
     }
 
-    private createRiver(cell: CellIndex, from: Point, to: Point, previous?: MapObject) {
+    private createRiver(cellIndex: CellIndex, from: Point, to: Point, previous?: MapObject) {
+        const cell = this.map.getCell(cellIndex);
         let bend1 = {
             x: MathHelper.random(.2, .8),
             y: MathHelper.random(.2, .8)
@@ -118,10 +120,10 @@ export class RiversTool implements Tool {
             x: MathHelper.round(MathHelper.random(.2, .8), 2),
             y: MathHelper.round(MathHelper.random(.2, .8), 2)
         },
-            river = this.map.createObject('river', cell, [from, to, bend1, bend2]);
+            river = cell.createObject('river', [from, to, bend1, bend2]);
 
-        this.map.clear(cell);
-        this.map.addObjects([river]);
+        cell.clear();
+        cell.addObjects([river]);
 
         return river;
     }
