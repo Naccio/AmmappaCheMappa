@@ -20,20 +20,20 @@ export class MapManagerFactory {
 
     public create(map: EditorMap) {
         const mapAccessor = new MapAccessor(map, this.store);
-        const grid = new GridLayerFactory(mapAccessor, this.drawerFactory);
         const cells: CellManager[] = [];
         for (let column = 0; column < map.data.columns; column++) {
             for (let row = 0; row < map.data.columns; row++) {
                 cells.push(new CellManager({ row, column }, mapAccessor));
             }
         }
-        const cellRenderer = new CellRenderer(mapAccessor, this.drawerFactory, this.contents);
-        const terrainLayer = new DefaultLayerFactory('terrain', mapAccessor, this.drawerFactory, cellRenderer);
-        const textLayer = new DefaultLayerFactory('text', mapAccessor, this.drawerFactory, cellRenderer);
+        const cellRenderer = new CellRenderer(this.drawerFactory, this.contents);
+        const gridLayer = new GridLayerFactory(mapAccessor, this.drawerFactory);
+        const terrainLayer = new DefaultLayerFactory('terrain', map.data, this.drawerFactory, cellRenderer, cells);
+        const textLayer = new DefaultLayerFactory('text', map.data, this.drawerFactory, cellRenderer, cells);
         const layers = [
             terrainLayer,
             textLayer,
-            grid
+            gridLayer
         ];
         const layerFactory = new LayerFactory(layers);
         const layersManager = new LayersManager(layerFactory, mapAccessor);

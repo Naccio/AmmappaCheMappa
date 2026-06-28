@@ -29,9 +29,6 @@ export class GridLayer implements DrawingLayer, LayerRenderer {
         this.renderAtScale(drawer, this.mapAccessor.map.data.pixelsPerCell);
     }
 
-    public update() {
-    }
-
     public zoom() {
         this.setupCanvas();
     }

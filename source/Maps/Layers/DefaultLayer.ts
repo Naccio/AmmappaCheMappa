@@ -1,19 +1,19 @@
-import { MapAccessor } from "../MapAccessor";
-import { CellIndex } from "../../Model/CellIndex";
 import { CellRenderer } from "../Cells/CellRenderer";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
 import { VectorMath } from "../../Utilities/VectorMath";
+import { CellManager } from "../Cells/CellManager";
 
 export class DefaultLayer implements DrawingLayer, LayerRenderer {
 
     constructor(
         private id: string,
-        private mapAccessor: MapAccessor,
+        private cells: CellManager[],
         private drawer: Drawer,
         private renderer: CellRenderer
     ) {
+        cells.forEach(c => c.objects.subscribe(_ => this.renderCell(c)));
     }
 
     public get html() {
@@ -21,34 +21,22 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
     }
 
     public render(drawer?: Drawer) {
-        this.draw();
+        this.cells.forEach(c => this.renderCell(c));
         drawer?.image(this.drawer, VectorMath.zero);
-    }
-
-    public update(cell: CellIndex) {
-        this.renderCell(cell);
     }
 
     public zoom() {
     }
 
-    private draw() {
-        const map = this.mapAccessor.map.data;
-
-        for (let column = 0; column < map.columns; column++) {
-            for (let row = 0; row < map.rows; row++) {
-                this.renderCell({ column, row });
-            }
-        }
-    }
-
-    private renderCell(cell: CellIndex) {
-        const scale = this.mapAccessor.map.data.pixelsPerCell,
+    private renderCell(cell: CellManager) {
+        const scale = cell.pixels,
             origin = {
-                x: cell.column * scale,
-                y: cell.row * scale
+                x: cell.index.column * scale,
+                y: cell.index.row * scale
             },
             cellImage = this.renderer.render(cell, this.id);
+
+        console.log(cell.index);
 
         this.drawer.clear(origin, scale, scale);
         this.drawer.image(cellImage, origin);

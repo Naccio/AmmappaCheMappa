@@ -1,10 +1,11 @@
-import { MapAccessor } from "../MapAccessor";
 import { CellRenderer } from "../Cells/CellRenderer";
 import { LayerRenderer } from "./LayerRenderer";
 import { DefaultLayer } from "./DefaultLayer";
 import { DrawingLayer } from "./DrawingLayer";
 import { LayerAbstractFactory } from "./LayerAbstractFactory";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
+import { CellManager } from "../Cells/CellManager";
+import { MapData } from "../../Model/MapData";
 
 export class DefaultLayerFactory implements LayerAbstractFactory {
 
@@ -12,9 +13,10 @@ export class DefaultLayerFactory implements LayerAbstractFactory {
 
     constructor(
         private _type: string,
-        private mapAccessor: MapAccessor,
+        private map: MapData,
         private drawerFactory: DrawerFactory,
-        private renderer: CellRenderer) {
+        private renderer: CellRenderer,
+        private cells: CellManager[]) {
     }
 
     public get type() {
@@ -33,13 +35,12 @@ export class DefaultLayerFactory implements LayerAbstractFactory {
         let layer = this.layers.find(l => l.id === id);
 
         if (!layer) {
-            const map = this.mapAccessor.map,
-                mapData = map.data,
-                drawer = this.drawerFactory.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
+            const map = this.map,
+                drawer = this.drawerFactory.create(id, map.columns * map.pixelsPerCell, map.rows * map.pixelsPerCell);
 
             layer = {
                 id,
-                layer: new DefaultLayer(id, this.mapAccessor, drawer, this.renderer)
+                layer: new DefaultLayer(id, this.cells, drawer, this.renderer)
             };
 
             this.layers.push(layer);
