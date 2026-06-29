@@ -7,7 +7,6 @@ import { VectorMath } from "../../Utilities/VectorMath";
 import { MapManager } from "../../Maps/MapManager";
 import { MapAccessor } from "../../Maps/MapAccessor";
 import { MapObject } from "../../Model/MapObject";
-import { CellManager } from "../../Maps/Cells/CellManager";
 
 export class RiversTool implements Tool {
     private readonly mapAccessor: MapAccessor;
@@ -37,36 +36,40 @@ export class RiversTool implements Tool {
 
     move(position?: Point): void {
         const activeCell = this.activeCell,
-            cell = this.mapAccessor.getIndex(position);
+            cellIndex = this.mapAccessor.getIndex(position);
 
-        if (this.startPosition === undefined || activeCell === undefined || position === undefined || cell === undefined) {
+        if (this.startPosition === undefined || activeCell === undefined || position === undefined || cellIndex === undefined) {
             return
         }
 
-        if (!GridHelper.cellIsEqual(activeCell, cell)) {
+        if (!GridHelper.cellIsEqual(activeCell, cellIndex)) {
             const map = this.mapAccessor.map,
                 river = this.getRiver(activeCell)!,
-                cellPosition = this.mapAccessor.getPosition(cell);
+                cellPosition = this.mapAccessor.getPosition(cellIndex);
 
-            this.createRivers(activeCell, this.startPosition, cell, position)
+            this.createRivers(activeCell, this.startPosition, cellIndex, position)
 
             this.startPosition = VectorMath.startOperation(river.points[0])
                 .multiply(map.data.pixelsPerCell)
                 .add(cellPosition)
                 .divide(map.zoom);
-            this.activeCell = cell;
+            this.activeCell = cellIndex;
         } else {
-            const river = this.getRiver(cell);
+            const river = this.getRiver(cellIndex);
 
             if (river === undefined) {
-                const from = this.mapAccessor.normalizedPosition(cell, this.startPosition),
-                    to = this.mapAccessor.normalizedPosition(cell, position);
+                const from = this.mapAccessor.normalizedPosition(cellIndex, this.startPosition),
+                    to = this.mapAccessor.normalizedPosition(cellIndex, position);
 
-                this.createRiver(cell, from, to);
+                this.createRiver(cellIndex, from, to);
             } else {
-                river.points[1] = VectorMath.round(this.mapAccessor.normalizedPosition(cell, position), 4);
+                const cell = this.map.getCell(cellIndex),
+                    points = [...river.points];
 
-                this.startPosition = this.mapAccessor.absolutePosition(cell, river.points[0]);
+                points[1] = VectorMath.round(this.mapAccessor.normalizedPosition(cellIndex, position), 2);
+                cell.update(river.id, points);
+
+                this.startPosition = this.mapAccessor.absolutePosition(cellIndex, river.points[0]);
             }
         }
     }
@@ -129,6 +132,6 @@ export class RiversTool implements Tool {
     }
 
     private getRiver(cell: CellIndex) {
-        return this.mapAccessor.getCell(cell).objects.find(o => o.type === 'river');
+        return this.map.getCell(cell).objects.value.find(o => o.type === 'river');
     }
 }

@@ -1,7 +1,6 @@
 import { GridHelper } from "../Utilities/GridHelper";
 import { CellIndex } from "../Model/CellIndex";
 import { EditorMap } from "../Model/EditorMap";
-import { GridCell } from "../Model/GridCell";
 import { MapObject } from "../Model/MapObject";
 import { Point } from "../Model/Point";
 import { Store } from "../Engine/Store";
@@ -33,16 +32,6 @@ export class MapAccessor {
             .startOperation(normalizedPosition)
             .add(cellPosition)
             .divide(this.scale);
-    }
-
-    public getCell(index: CellIndex): GridCell {
-        const name = GridHelper.cellIndexToName(index),
-            objects = this.map.data.objects.filter(o => o.cell === name);
-
-        return {
-            index,
-            objects
-        };
     }
 
     public getIndex(position?: Point): CellIndex | undefined {
