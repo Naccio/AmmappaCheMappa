@@ -8,15 +8,19 @@ import { Store } from "../Engine/Store";
 import { VectorMath } from "../Utilities/VectorMath";
 import { DrawingUI } from "./DrawingUI";
 import { UIElement } from "./UIElement";
+import { LayerUIFactory } from "../Maps/Layers/LayerUIFactory";
 
 export class MapDrawer implements UIElement {
-    private actualShift: Vector = VectorMath.zero;
     private readonly container: HTMLDivElement;
+    private readonly _layers: Map<string, DrawingLayer>;
+
+    private actualShift: Vector = VectorMath.zero;
 
     constructor(
         private mapManager: MapManager,
         private store: Store,
-        private ui: DrawingUI
+        private ui: DrawingUI,
+        private layerUi: LayerUIFactory
     ) {
         const container = document.createElement('div');
 
@@ -25,6 +29,7 @@ export class MapDrawer implements UIElement {
         container.append(ui.html);
 
         this.container = container;
+        this._layers = new Map<string, DrawingLayer>();
 
         mapManager.layers.onCreate(this.layerCreateHandler);
         mapManager.layers.onDelete(this.layerDeleteHandler);
@@ -39,9 +44,7 @@ export class MapDrawer implements UIElement {
     }
 
     private get layers(): DrawingLayer[] {
-        const mapLayers = this.mapManager.layers.layers.map(l => l.drawing);
-
-        return [...mapLayers, this.ui];
+        return [...this._layers.values(), this.ui];
     }
 
     private get currentShift() {
@@ -113,14 +116,19 @@ export class MapDrawer implements UIElement {
     }
 
     private layerCreateHandler = (c: LayerAccessor) => {
-        this.container.append(c.drawing.html);
-        c.renderer.render();
-        c.subscribe(l => c.drawing.html.style.display = l.hidden ? 'none' : 'block');
+        const drawing = this.layerUi.createDrawing(this.mapManager, c.value),
+            renderer = this.layerUi.createRenderer(this.mapManager, c.value);
+
+        this._layers.set(c.id, drawing);
+        this.container.append(drawing.html);
+        renderer.render();
+        c.subscribe(l => drawing.html.style.display = l.hidden ? 'none' : 'block');
     }
 
     private layerDeleteHandler = (c: LayerAccessor) => {
         const element = document.getElementById(c.id);
 
+        this._layers.delete(c.id);
         element?.remove();
     }
 }

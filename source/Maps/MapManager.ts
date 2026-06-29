@@ -8,7 +8,7 @@ export class MapManager {
     constructor(
         public readonly mapAccessor: MapAccessor,
         public readonly layers: LayersManager,
-        private readonly cells: CellManager[]
+        public readonly cells: readonly CellManager[]
     ) {
     }
 

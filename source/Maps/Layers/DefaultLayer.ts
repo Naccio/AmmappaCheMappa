@@ -9,7 +9,7 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
 
     constructor(
         private id: string,
-        private cells: CellManager[],
+        private cells: readonly CellManager[],
         private drawer: Drawer,
         private renderer: CellRenderer
     ) {
