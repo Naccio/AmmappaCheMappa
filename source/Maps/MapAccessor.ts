@@ -5,6 +5,7 @@ import { MapObject } from "../Model/MapObject";
 import { Point } from "../Model/Point";
 import { Store } from "../Engine/Store";
 import { VectorMath } from "../Utilities/VectorMath";
+import { MapLayer } from "../Model/MapLayer";
 
 export class MapAccessor {
     constructor(private _map: EditorMap, private store: Store) {
@@ -62,6 +63,10 @@ export class MapAccessor {
         return GridHelper.getConnectingCells(fromCell, toCell);
     }
 
+    public getLayer(id: string) {
+        return this.map.data.layers.find(l => l.id === id);
+    }
+
     public getPosition(index: CellIndex): Point {
         const shift = {
             x: index.column,
@@ -90,10 +95,26 @@ export class MapAccessor {
         }
     }
 
+    public addLayer(layer: MapLayer) {
+        const map = this.map.data;
+
+        map.layers.push(layer);
+
+        this.save();
+    }
+
     public addObjects(objects: MapObject[]) {
         const map = this.map.data;
 
         map.objects = [...map.objects, ...objects];
+
+        this.save();
+    }
+
+    public deleteLayer(id: string) {
+        const map = this.map.data;
+
+        map.layers = map.layers.filter(l => l.id !== id);
 
         this.save();
     }

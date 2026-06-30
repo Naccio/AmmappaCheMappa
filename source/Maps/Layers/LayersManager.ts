@@ -21,7 +21,7 @@ export class LayersManager {
         let selected: LayerAccessor | undefined = undefined;
 
         map.data.layers.forEach(l => {
-            const layer = factory.create(l);
+            const layer = factory.create(l.id, mapAccessor);
 
             if (map.activeLayer === l.id) {
                 selected = layer;
@@ -56,10 +56,11 @@ export class LayersManager {
     }
 
     public add(layer: MapLayer) {
-        const accessor = this.factory.create(layer);
+        this.mapAccessor.addLayer(layer);
+
+        const accessor = this.factory.create(layer.id, this.mapAccessor);
 
         this.layers.push(accessor);
-        this.saveLayers();
         this.createEvent.trigger(accessor);
 
         return accessor;
@@ -76,7 +77,7 @@ export class LayersManager {
         if (this.activeLayer?.id === id) {
             this.select(this.layers[0].id);
         }
-        this.saveLayers();
+        this.mapAccessor.deleteLayer(id);
         this.deleteEvent.trigger(layer);
     }
 
@@ -88,13 +89,6 @@ export class LayersManager {
         const layer = this.getLayer(id);
 
         this._activeLayer.value = layer;
-    }
-
-    public update(id: string, action: (layer: MapLayer) => void) {
-        const layer = this.getLayer(id);
-
-        layer.update(action);
-        this.mapAccessor.save();
     }
 
     public onSelect(handler: EventHandler<LayerAccessor>) {
@@ -114,17 +108,12 @@ export class LayersManager {
     }
 
     private getLayer(id: string) {
-        const layer = this.layers.find(l => l.id === id);
+        const layer = this.getById(id);
 
         if (layer === undefined) {
             throw new Error(`Layer '${id}' does not exist.`);
         }
 
         return layer;
-    }
-
-    private saveLayers() {
-        this.mapAccessor.map.data.layers = this.layers.map(l => l.value);
-        this.mapAccessor.save();
     }
 }

@@ -115,14 +115,15 @@ export class MapDrawer implements UIElement {
         this.container.style.height = mapData.rows * multiplier + 'px';
     }
 
-    private layerCreateHandler = (c: LayerAccessor) => {
-        const drawing = this.layerUi.createDrawing(this.mapManager, c.value),
-            renderer = this.layerUi.createRenderer(this.mapManager, c.value);
+    private layerCreateHandler = (l: LayerAccessor) => {
+        const drawing = this.layerUi.createDrawing(this.mapManager, l),
+            renderer = this.layerUi.createRenderer(this.mapManager, l);
 
-        this._layers.set(c.id, drawing);
+        this._layers.set(l.id, drawing);
         this.container.append(drawing.html);
         renderer.render();
-        c.subscribe(l => drawing.html.style.display = l.hidden ? 'none' : 'block');
+        l.onUpdate(() => drawing.html.style.display = l.hidden ? 'none' : 'block');
+        drawing.html.style.display = l.hidden ? 'none' : 'block'
     }
 
     private layerDeleteHandler = (c: LayerAccessor) => {

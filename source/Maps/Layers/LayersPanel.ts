@@ -17,30 +17,33 @@ export class LayersPanel implements UIElement {
             layersManager.activeLayerObservable,
             layersManager.layers,
             (layer, label) => {
-                const data = layer.value,
-                    id = data.id,
+                const id = layer.id,
                     //HACK: Magic string layer_type_
-                    type = this.localizer[`layer_type_${data.type}`],
+                    type = this.localizer[`layer_type_${layer.type}`],
                     labelText = document.createElement('span'),
                     typeLabel = document.createElement('small'),
                     deleteButton = this.uiFactory.createCloseButton(_ => this.layersManager.delete(id));
 
                 typeLabel.innerText = `(${type})`;
 
-                layer.subscribe(l => {
-                    const name = l.name ?? l.id;
+                layer.onUpdate(() => {
+                    const name = layer.name ?? layer.id;
 
                     label.title = name;
                     labelText.innerText = name;
                 });
+
+                const name = layer.name ?? layer.id;
+
+                label.title = name;
+                labelText.innerText = name;
 
                 label.append(labelText);
                 label.append(typeLabel);
                 label.append(deleteButton);
             },
             (layer, wrapper) => {
-                const data = layer.value,
-                    id = data.id,
+                const id = layer.id,
                     mapId = this.layersManager.mapId,
                     check = document.createElement('input');
 
@@ -48,9 +51,9 @@ export class LayersPanel implements UIElement {
                 check.name = mapId + '-visible-layers';
                 check.value = id;
                 check.id = id + '-visible';
-                check.checked = !data.hidden;
+                check.checked = !layer.hidden;
 
-                check.onchange = () => this.layersManager.update(id, l => l.hidden = !check.checked);
+                check.onchange = () => layer.hidden = !check.checked;
 
                 wrapper.append(check);
             }
