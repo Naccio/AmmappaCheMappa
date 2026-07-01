@@ -116,20 +116,21 @@ export class MapDrawer implements UIElement {
     }
 
     private layerCreateHandler = (l: LayerAccessor) => {
-        const drawing = this.layerUi.createDrawing(this.mapManager, l),
-            renderer = this.layerUi.createRenderer(this.mapManager, l);
+        const drawing = this.layerUi.createDrawing(this.mapManager, l);
 
         this._layers.set(l.id, drawing);
         this.container.append(drawing.html);
-        renderer.render();
+
         l.onUpdate(() => drawing.html.style.display = l.hidden ? 'none' : 'block');
         drawing.html.style.display = l.hidden ? 'none' : 'block'
     }
 
-    private layerDeleteHandler = (c: LayerAccessor) => {
-        const element = document.getElementById(c.id);
+    private layerDeleteHandler = (l: LayerAccessor) => {
+        const drawing = this._layers.get(l.id);
 
-        this._layers.delete(c.id);
-        element?.remove();
+        if (drawing !== undefined) {
+            drawing.html.remove();
+            this._layers.delete(l.id);
+        }
     }
 }
