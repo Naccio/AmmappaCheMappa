@@ -18,7 +18,7 @@ export class MapRenderer {
             width = map.columns * map.pixelsPerCell,
             height = map.rows * map.pixelsPerCell;
 
-        const drawer = this.drawerFactory.create(map.id, width, height);
+        const drawer = this.drawerFactory.create(width, height);
 
         drawer.rectangle(VectorMath.zero, width, height, { fillStyle: '#fff' });
         for (let layer of layers) {

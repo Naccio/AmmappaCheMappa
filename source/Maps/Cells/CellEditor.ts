@@ -38,12 +38,10 @@ export class CellEditor implements UIElement {
         drawerFactory: DrawerFactory,
         private readonly contents: ContentConfiguration[]
     ) {
-        const cellName = GridHelper.cellIndexToName(cell.index),
-            id = `${cellName}-editor`,
-            scale = this.scale * cell.pixels,
+        const scale = this.scale * cell.pixels,
             objects = cell.objects.value,
             container = document.createElement('div'),
-            drawer = drawerFactory.create(id, scale, scale, scale);
+            drawer = drawerFactory.create(scale, scale, scale);
 
         this.selectedObject = new InternalObservable<MapObject | undefined>(undefined);
 

@@ -59,7 +59,7 @@ export class GridLayer implements DrawingLayer, LayerRenderer {
     public setupCanvas() {
         const map = this.mapAccessor.map,
             spacing = map.data.pixelsPerCell / map.zoom,
-            drawer = this.drawerFactory.create(this.id + '-canvas', map.data.columns * spacing, map.data.rows * spacing);
+            drawer = this.drawerFactory.create(map.data.columns * spacing, map.data.rows * spacing);
 
         this.renderAtScale(drawer, spacing);
 

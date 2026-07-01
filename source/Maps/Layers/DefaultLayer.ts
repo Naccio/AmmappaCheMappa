@@ -36,8 +36,6 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
             },
             cellImage = this.renderer.render(cell, this.id);
 
-        console.log(cell.index);
-
         this.drawer.clear(origin, scale, scale);
         this.drawer.image(cellImage, origin);
     }

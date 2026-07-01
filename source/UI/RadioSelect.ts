@@ -117,9 +117,6 @@ export class RadioSelect<T> implements UIElement {
     public remove(item: T) {
         const index = this.items.findIndex(i => i.value === item);
 
-        console.log(item);
-        console.log(index);
-
         if (index !== -1) {
             const removed = this.items.splice(index, 1);
 

@@ -1,4 +1,3 @@
-import { GridHelper } from "../../Utilities/GridHelper";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { CellGraphics } from "./CellGraphics";
@@ -12,8 +11,7 @@ export class CellRenderer {
 
     public render(cell: CellManager, layer: string) {
         const size = cell.pixels,
-            cellName = GridHelper.cellIndexToName(cell.index),
-            drawer = this.drawerFactory.create('cell-renderer-' + cellName, size, size, size),
+            drawer = this.drawerFactory.create(size, size, size),
             objects = cell.objects.value.filter(o => o.layer === layer),
             graphics = new CellGraphics(objects, this.contents);
 

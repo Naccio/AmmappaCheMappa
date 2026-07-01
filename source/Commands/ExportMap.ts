@@ -6,12 +6,15 @@ import { ActiveMapCommand } from "./ActiveMapCommand";
 
 export class ExportMap extends ActiveMapCommand {
 
-    constructor(private renderer: MapRenderer, private maps: MapsManager, localizer: Localizer) {
+    constructor(
+        private readonly renderer: MapRenderer,
+        maps: MapsManager,
+        localizer: Localizer) {
         super(maps, localizer['command_label_export_map']);
     }
 
     public execute() {
-        const map = this.maps.activeMap;
+        const map = this.activeMap;
 
         if (map) {
             const renderedMap = this.renderer.render(map);

@@ -11,8 +11,7 @@ export class DrawingUI implements DrawingLayer {
         drawerFactory: DrawerFactory
     ) {
         const mapData = map.data,
-            id = mapData.id + '-ui-layer',
-            drawer = drawerFactory.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
+            drawer = drawerFactory.create(mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
 
         this._drawer = drawer;
     }
