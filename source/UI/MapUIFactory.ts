@@ -11,7 +11,7 @@ import { Toolbar } from "./Tools/Toolbar";
 import { ToolsManagerFactory } from "./Tools/ToolsManagerFactory";
 import { UIFactory } from "./UIFactory";
 import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
-import { LayerUIFactory } from "../Maps/Layers/LayerUIFactory";
+import { LayersConfiguration } from "../Maps/Layers/LayersConfiguration";
 
 export class MapUIFactory {
 
@@ -21,7 +21,7 @@ export class MapUIFactory {
         private localizer: Localizer,
         private store: Store,
         private ui: UIFactory,
-        private layerUI: LayerUIFactory
+        private layers: LayersConfiguration
     ) { }
 
     create(mapManager: MapManager) {
@@ -32,7 +32,7 @@ export class MapUIFactory {
         const tools = this.toolsFactory.create(mapManager, uiLayer);
         const toolbar = new Toolbar(tools.tools, this.localizer, layersManager);
         const toolActivator = new ToolActivator(toolbar);
-        const drawer = new MapDrawer(mapManager, this.store, uiLayer, this.layerUI);
+        const drawer = new MapDrawer(mapManager, this.store, uiLayer, this.layers);
         const drawingArea = new DrawingArea(toolActivator, drawer);
         const layersPanel = new LayersPanel(layersManager, this.ui, this.localizer);
 

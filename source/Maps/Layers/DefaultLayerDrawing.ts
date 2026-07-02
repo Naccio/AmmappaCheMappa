@@ -1,11 +1,10 @@
 import { CellRenderer } from "../Cells/CellRenderer";
 import { Drawer } from "../../Engine/Rendering/Drawer";
-import { LayerRenderer } from "./LayerRenderer";
 import { DrawingLayer } from "./DrawingLayer";
-import { VectorMath } from "../../Utilities/VectorMath";
 import { CellManager } from "../Cells/CellManager";
+import { GridHelper } from "../../Utilities/GridHelper";
 
-export class DefaultLayer implements DrawingLayer, LayerRenderer {
+export class DefaultLayerDrawing implements DrawingLayer {
 
     constructor(
         private id: string,
@@ -20,20 +19,12 @@ export class DefaultLayer implements DrawingLayer, LayerRenderer {
         return this.drawer.html;
     }
 
-    public render(drawer?: Drawer) {
-        this.cells.forEach(c => this.renderCell(c));
-        drawer?.image(this.drawer, VectorMath.zero);
-    }
-
     public zoom() {
     }
 
     private renderCell(cell: CellManager) {
         const scale = cell.pixels,
-            origin = {
-                x: cell.index.column * scale,
-                y: cell.index.row * scale
-            },
+            origin = GridHelper.cellIndexToPosition(cell.index, scale),
             cellImage = this.renderer.render(cell, this.id);
 
         this.drawer.clear(origin, scale, scale);

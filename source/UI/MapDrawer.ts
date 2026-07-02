@@ -8,7 +8,7 @@ import { Store } from "../Engine/Store";
 import { VectorMath } from "../Utilities/VectorMath";
 import { DrawingUI } from "./DrawingUI";
 import { UIElement } from "./UIElement";
-import { LayerUIFactory } from "../Maps/Layers/LayerUIFactory";
+import { LayersConfiguration } from "../Maps/Layers/LayersConfiguration";
 
 export class MapDrawer implements UIElement {
     private readonly container: HTMLDivElement;
@@ -20,7 +20,7 @@ export class MapDrawer implements UIElement {
         private mapManager: MapManager,
         private store: Store,
         private ui: DrawingUI,
-        private layerUi: LayerUIFactory
+        private layersConfiguration: LayersConfiguration
     ) {
         const container = document.createElement('div');
 
@@ -116,7 +116,8 @@ export class MapDrawer implements UIElement {
     }
 
     private layerCreateHandler = (l: LayerAccessor) => {
-        const drawing = this.layerUi.createDrawing(this.mapManager, l);
+        const layer = this.layersConfiguration.get(l.type),
+            drawing = layer.drawing.create(l.id, this.mapManager);
 
         this._layers.set(l.id, drawing);
         this.container.append(drawing.html);

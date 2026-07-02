@@ -18,6 +18,13 @@ export class GridHelper {
         return name + (index.row + 1);
     }
 
+    public static cellIndexToPosition(index: CellIndex, size: number): Point {
+        return {
+            x: index.column * size,
+            y: index.row * size
+        };
+    }
+
     public static cellIsEqual(cell1?: CellIndex, cell2?: CellIndex) {
         return cell1?.column === cell2?.column && cell1?.row === cell2?.row;
     }

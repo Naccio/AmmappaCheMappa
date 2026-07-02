@@ -35,9 +35,12 @@ import { ContentPointType } from "./Contents/ContentPoint";
 import { SimpleObjectGraphicsFactory } from "./Engine/Rendering/SimpleObjectGraphicsFactory";
 import { ApplyToOthersConstraint, HorizontalConstraint, VerticalConstraint } from "./Contents/ContentPointConstraint";
 import { CellRenderer } from "./Maps/Cells/CellRenderer";
-import { GridLayerFactory } from "./Maps/Layers/GridLayerFactory";
-import { DefaultLayerFactory } from "./Maps/Layers/DefaultLayerFactory";
-import { LayerUIFactory } from "./Maps/Layers/LayerUIFactory";
+import { MapDrawerFactory } from "./Maps/MapDrawerFactory";
+import { LayersConfigurationBuilder } from "./Maps/Layers/LayersConfigurationBuilder";
+import { DefaultLayerRendererFactory } from "./Maps/Layers/DefaultLayerRendererFactory";
+import { DefaultLayerDrawingFactory } from "./Maps/Layers/DefaultLayerDrawingFactory";
+import { GridLayerRendererFactory } from "./Maps/Layers/GridLayerRendererFactory";
+import { GridLayerDrawingFactory } from "./Maps/Layers/GridLayerDrawingFactory";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -140,23 +143,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             ]
         })
         .build();
+
     const uiFactory = new UIFactory();
+    const mapDrawerFactory = new MapDrawerFactory(drawerFactory);
     const cellRenderer = new CellRenderer(drawerFactory, contents);
-    const gridLayer = new GridLayerFactory(drawerFactory);
-    const terrainLayer = new DefaultLayerFactory('terrain', drawerFactory, cellRenderer);
-    const textLayer = new DefaultLayerFactory('text', drawerFactory, cellRenderer);
-    const layers = [
-        terrainLayer,
-        textLayer,
-        gridLayer
-    ];
-    const layerUIFactory = new LayerUIFactory(layers);
+
+    const defaultLayerRenderer = new DefaultLayerRendererFactory(cellRenderer);
+    const defaultLayerDrawing = new DefaultLayerDrawingFactory(mapDrawerFactory, cellRenderer);
+    const layersBuilder = new LayersConfigurationBuilder(defaultLayerRenderer, defaultLayerDrawing);
+    const gridRenderer = new GridLayerRendererFactory(drawerFactory);
+    const gridDrawing = new GridLayerDrawingFactory(drawerFactory);
+    const layers = layersBuilder
+        .add('terrain')
+        .add('text')
+        .add('grid', b => b
+            .setRenderer(gridRenderer)
+            .setDrawing(gridDrawing)
+        )
+        .build();
+
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
     const mapManagerFactory = new MapManagerFactory(store);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
     const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, drawerFactory, localizer, contents);
-    const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory, layerUIFactory);
-    const mapRenderer = new MapRenderer(drawerFactory, layerUIFactory);
+    const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory, layers);
+    const mapRenderer = new MapRenderer(mapDrawerFactory, layers);
 
     const newMapCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);
     const openMapCommand = new OpenMap(mapsManager, localizer);

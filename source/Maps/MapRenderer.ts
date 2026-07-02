@@ -1,28 +1,31 @@
 import { MapManager } from "./MapManager";
 import { RenderedMap } from "../Engine/Rendering/RenderedMap";
-import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
 import { VectorMath } from "../Utilities/VectorMath";
-import { LayerUIFactory } from "./Layers/LayerUIFactory";
+import { MapDrawerFactory } from "./MapDrawerFactory";
+import { CellRenderer } from "./Cells/CellRenderer";
+import { CellManager } from "./Cells/CellManager";
+import { Drawer } from "../Engine/Rendering/Drawer";
+import { LayersConfiguration } from "./Layers/LayersConfiguration";
 
 export class MapRenderer {
 
     public constructor(
-        private readonly drawerFactory: DrawerFactory,
-        private readonly layerUI: LayerUIFactory
+        private readonly drawerFactory: MapDrawerFactory,
+        private readonly layers: LayersConfiguration
     ) {
     }
 
-    render(mapManager: MapManager): RenderedMap {
+    public render(mapManager: MapManager): RenderedMap {
         const map = mapManager.mapAccessor.map.data,
-            layers = map.layers.filter(l => !l.hidden),
-            width = map.columns * map.pixelsPerCell,
-            height = map.rows * map.pixelsPerCell;
+            layers = map.layers.filter(l => !l.hidden);
 
-        const drawer = this.drawerFactory.create(width, height);
+        const drawer = this.drawerFactory.create(mapManager.mapAccessor);
 
-        drawer.rectangle(VectorMath.zero, width, height, { fillStyle: '#fff' });
+        drawer.rectangle(VectorMath.zero, drawer.width, drawer.height, { fillStyle: '#fff' });
         for (let layer of layers) {
-            const renderer = this.layerUI.createRenderer(mapManager, layer);
+            const layerConfiguration = this.layers.get(layer.type),
+                renderer = layerConfiguration.renderer.create(layer.id, mapManager);
+
             renderer.render(drawer);
         }
 
