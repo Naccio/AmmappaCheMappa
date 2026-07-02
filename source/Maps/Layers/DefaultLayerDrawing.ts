@@ -1,14 +1,14 @@
 import { CellRenderer } from "../Cells/CellRenderer";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawingLayer } from "./DrawingLayer";
-import { CellManager } from "../Cells/CellManager";
+import { CellContext } from "../Cells/CellContext";
 import { GridHelper } from "../../Utilities/GridHelper";
 
 export class DefaultLayerDrawing implements DrawingLayer {
 
     constructor(
         private id: string,
-        private cells: readonly CellManager[],
+        private cells: readonly CellContext[],
         private drawer: Drawer,
         private renderer: CellRenderer
     ) {
@@ -22,7 +22,7 @@ export class DefaultLayerDrawing implements DrawingLayer {
     public zoom() {
     }
 
-    private renderCell(cell: CellManager) {
+    private renderCell(cell: CellContext) {
         const scale = cell.pixels,
             origin = GridHelper.cellIndexToPosition(cell.index, scale),
             cellImage = this.renderer.render(cell, this.id);

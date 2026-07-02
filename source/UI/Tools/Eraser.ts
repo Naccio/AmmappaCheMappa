@@ -1,4 +1,4 @@
-import { CellManager } from "../../Maps/Cells/CellManager";
+import { CellContext } from "../../Maps/Cells/CellContext";
 import { MapManager } from "../../Maps/MapManager";
 import { CellTool } from "./CellTool";
 
@@ -13,7 +13,7 @@ export class Eraser extends CellTool {
         super(map);
     }
 
-    public useOnCell(cell: CellManager) {
+    public useOnCell(cell: CellContext) {
         cell.clear();
     }
 }

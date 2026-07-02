@@ -1,6 +1,6 @@
 import { CellIndex } from "../Model/CellIndex";
 import { GridHelper } from "../Utilities/GridHelper";
-import { CellManager } from "./Cells/CellManager";
+import { CellContext } from "./Cells/CellContext";
 import { LayersManager } from "./Layers/LayersManager";
 import { MapAccessor } from "./MapAccessor";
 
@@ -8,7 +8,7 @@ export class MapManager {
     constructor(
         public readonly mapAccessor: MapAccessor,
         public readonly layers: LayersManager,
-        public readonly cells: readonly CellManager[]
+        public readonly cells: readonly CellContext[]
     ) {
     }
 

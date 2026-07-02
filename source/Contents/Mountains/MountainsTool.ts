@@ -1,4 +1,4 @@
-import { CellManager } from "../../Maps/Cells/CellManager";
+import { CellContext } from "../../Maps/Cells/CellContext";
 import { MapManager } from "../../Maps/MapManager";
 import { CellIndex } from "../../Model/CellIndex";
 import { MapObject } from "../../Model/MapObject";
@@ -19,7 +19,7 @@ export class MountainsTool extends CellTool {
         super(map);
     }
 
-    public useOnCell(cell: CellManager) {
+    public useOnCell(cell: CellContext) {
         const mountains: MapObject[] = [];
 
         for (let quadrant = 0; quadrant < 4; quadrant++) {

@@ -3,7 +3,7 @@ import { RenderedMap } from "../Engine/Rendering/RenderedMap";
 import { VectorMath } from "../Utilities/VectorMath";
 import { MapDrawerFactory } from "./MapDrawerFactory";
 import { CellRenderer } from "./Cells/CellRenderer";
-import { CellManager } from "./Cells/CellManager";
+import { CellContext } from "./Cells/CellContext";
 import { Drawer } from "../Engine/Rendering/Drawer";
 import { LayersConfiguration } from "./Layers/LayersConfiguration";
 

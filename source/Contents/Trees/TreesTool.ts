@@ -4,7 +4,7 @@ import { VectorMath } from "../../Utilities/VectorMath";
 import { MapManager } from "../../Maps/MapManager";
 import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
-import { CellManager } from "../../Maps/Cells/CellManager";
+import { CellContext } from "../../Maps/Cells/CellContext";
 
 export class TreesTool extends CellTool {
     public readonly configuration = {
@@ -17,7 +17,7 @@ export class TreesTool extends CellTool {
         super(map);
     }
 
-    public useOnCell(cell: CellManager) {
+    public useOnCell(cell: CellContext) {
         const trees: MapObject[] = [],
             perColumn = 6,
             perRow = 4,

@@ -11,7 +11,7 @@ import { UIElement } from "../../UI/UIElement";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { CellGraphics } from "./CellGraphics";
-import { CellManager } from "./CellManager";
+import { CellContext } from "./CellContext";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
@@ -34,7 +34,7 @@ export class CellEditor implements UIElement {
     private activePoint?: number;
 
     public constructor(
-        private readonly cell: CellManager,
+        private readonly cell: CellContext,
         drawerFactory: DrawerFactory,
         private readonly contents: ContentConfiguration[]
     ) {

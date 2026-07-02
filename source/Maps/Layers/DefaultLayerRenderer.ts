@@ -1,14 +1,14 @@
 import { CellRenderer } from "../Cells/CellRenderer";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { LayerRenderer } from "./LayerRenderer";
-import { CellManager } from "../Cells/CellManager";
+import { CellContext } from "../Cells/CellContext";
 import { GridHelper } from "../../Utilities/GridHelper";
 
 export class DefaultLayerRenderer implements LayerRenderer {
 
     constructor(
         private id: string,
-        private cells: readonly CellManager[],
+        private cells: readonly CellContext[],
         private renderer: CellRenderer
     ) {
     }
@@ -17,7 +17,7 @@ export class DefaultLayerRenderer implements LayerRenderer {
         this.cells.forEach(c => this.renderCell(drawer, c));
     }
 
-    private renderCell(drawer: Drawer, cell: CellManager) {
+    private renderCell(drawer: Drawer, cell: CellContext) {
         const position = GridHelper.cellIndexToPosition(cell.index, cell.pixels),
             cellImage = this.renderer.render(cell, this.id);
 

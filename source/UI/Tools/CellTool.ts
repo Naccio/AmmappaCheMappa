@@ -3,7 +3,7 @@ import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { Tool } from "./Tool";
 import { ToolConfiguration } from "./ToolConfiguration";
-import { CellManager } from "../../Maps/Cells/CellManager";
+import { CellContext } from "../../Maps/Cells/CellContext";
 import { MapManager } from "../../Maps/MapManager";
 
 export abstract class CellTool implements Tool {
@@ -15,7 +15,7 @@ export abstract class CellTool implements Tool {
     public constructor(protected map: MapManager) {
     }
 
-    protected abstract useOnCell(cell: CellManager): void;
+    protected abstract useOnCell(cell: CellContext): void;
 
     public start(position: Point) {
         this.guardedUse(position);

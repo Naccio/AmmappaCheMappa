@@ -1,7 +1,7 @@
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { CellGraphics } from "./CellGraphics";
-import { CellManager } from "./CellManager";
+import { CellContext } from "./CellContext";
 
 export class CellRenderer {
     constructor(
@@ -9,7 +9,7 @@ export class CellRenderer {
         private contents: ContentConfiguration[]) {
     }
 
-    public render(cell: CellManager, layer: string) {
+    public render(cell: CellContext, layer: string) {
         const size = cell.pixels,
             drawer = this.drawerFactory.create(size, size, size),
             objects = cell.objects.value.filter(o => o.layer === layer),

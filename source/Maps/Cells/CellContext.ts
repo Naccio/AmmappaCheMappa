@@ -7,7 +7,7 @@ import { GridHelper } from "../../Utilities/GridHelper";
 import { Utilities } from "../../Utilities/Utilities";
 import { MapAccessor } from "../MapAccessor";
 
-export class CellManager {
+export class CellContext {
     private readonly _objects: InternalObservable<MapObject[]>;
 
     public readonly name: string;
