@@ -1,4 +1,4 @@
-import { LayerAccessor } from "../../Maps/Layers/LayerAccessor";
+import { LayerContext } from "../../Maps/Layers/LayerContext";
 import { LayersManager } from "../../Maps/Layers/LayersManager";
 import { Localizer } from "../../Engine/Localization/Localizer";
 import { UIElement } from "../UIElement";
@@ -44,7 +44,7 @@ export class Toolbar implements UIElement {
         return this.container;
     }
 
-    private isCompatibleWith(tool?: Tool, layer?: LayerAccessor) {
+    private isCompatibleWith(tool?: Tool, layer?: LayerContext) {
         if (!tool || !layer) {
             return false;
         }

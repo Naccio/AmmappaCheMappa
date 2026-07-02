@@ -2,7 +2,7 @@ import { InternalEvent } from "../../Engine/Events/InternalEvent";
 import { MapLayer } from "../../Model/MapLayer";
 import { MapAccessor } from "../MapAccessor";
 
-export class LayerAccessor {
+export class LayerContext {
     private readonly updateEvent: InternalEvent<undefined>;
     private readonly data: MapLayer;
 

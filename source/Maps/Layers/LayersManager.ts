@@ -2,23 +2,23 @@ import { EventHandler } from "../../Engine/Events/ApplicationEvent";
 import { InternalEvent } from "../../Engine/Events/InternalEvent";
 import { MapAccessor } from "../MapAccessor";
 import { MapLayer } from "../../Model/MapLayer";
-import { LayerAccessor } from "./LayerAccessor";
+import { LayerContext } from "./LayerContext";
 import { LayerFactory } from "./LayerFactory";
 import { InternalObservable } from "../../Engine/Events/InternalObservable";
 
 export class LayersManager {
-    private readonly createEvent = new InternalEvent<LayerAccessor>();
-    private readonly deleteEvent = new InternalEvent<LayerAccessor>();
+    private readonly createEvent = new InternalEvent<LayerContext>();
+    private readonly deleteEvent = new InternalEvent<LayerContext>();
 
-    private _activeLayer: InternalObservable<LayerAccessor | undefined>;
+    private _activeLayer: InternalObservable<LayerContext | undefined>;
 
-    public layers: LayerAccessor[];
+    public layers: LayerContext[];
 
     public constructor(private factory: LayerFactory, private mapAccessor: MapAccessor) {
         const map = mapAccessor.map,
-            layers: LayerAccessor[] = [];
+            layers: LayerContext[] = [];
 
-        let selected: LayerAccessor | undefined = undefined;
+        let selected: LayerContext | undefined = undefined;
 
         map.data.layers.forEach(l => {
             const layer = factory.create(l.id, mapAccessor);
@@ -33,7 +33,7 @@ export class LayersManager {
         selected ??= layers[0];
 
         this.layers = layers;
-        this._activeLayer = new InternalObservable<LayerAccessor | undefined>(selected);
+        this._activeLayer = new InternalObservable<LayerContext | undefined>(selected);
 
         this._activeLayer.subscribe(l => {
             if (l) {
@@ -91,7 +91,7 @@ export class LayersManager {
         this._activeLayer.value = layer;
     }
 
-    public onSelect(handler: EventHandler<LayerAccessor>) {
+    public onSelect(handler: EventHandler<LayerContext>) {
         this._activeLayer.subscribe(layer => {
             if (layer) {
                 handler(layer);
@@ -99,11 +99,11 @@ export class LayersManager {
         });
     }
 
-    public onCreate(handler: EventHandler<LayerAccessor>) {
+    public onCreate(handler: EventHandler<LayerContext>) {
         this.createEvent.subscribe(handler);
     }
 
-    public onDelete(handler: EventHandler<LayerAccessor>) {
+    public onDelete(handler: EventHandler<LayerContext>) {
         this.deleteEvent.subscribe(handler);
     }
 

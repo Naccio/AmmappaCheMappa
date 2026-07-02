@@ -1,8 +1,8 @@
 import { MapAccessor } from "../MapAccessor";
-import { LayerAccessor } from "./LayerAccessor";
+import { LayerContext } from "./LayerContext";
 
 export class LayerFactory {
-    public create(id: string, mapAccessor: MapAccessor): LayerAccessor {
-        return new LayerAccessor(id, mapAccessor);
+    public create(id: string, mapAccessor: MapAccessor): LayerContext {
+        return new LayerContext(id, mapAccessor);
     }
 }

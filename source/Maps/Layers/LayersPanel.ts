@@ -2,11 +2,11 @@ import { Localizer } from "../../Engine/Localization/Localizer";
 import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
 import { UIFactory } from "../../UI/UIFactory";
-import { LayerAccessor } from "./LayerAccessor";
+import { LayerContext } from "./LayerContext";
 import { LayersManager } from "./LayersManager";
 
 export class LayersPanel implements UIElement {
-    private readonly select: RadioSelect<LayerAccessor>;
+    private readonly select: RadioSelect<LayerContext>;
 
     public constructor(
         private layersManager: LayersManager,

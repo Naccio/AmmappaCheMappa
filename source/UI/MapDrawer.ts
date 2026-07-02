@@ -1,5 +1,5 @@
 import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
-import { LayerAccessor } from "../Maps/Layers/LayerAccessor";
+import { LayerContext } from "../Maps/Layers/LayerContext";
 import { MapManager } from "../Maps/MapManager";
 import { MathHelper } from "../Utilities/MathHelper";
 import { Point } from "../Model/Point";
@@ -115,7 +115,7 @@ export class MapDrawer implements UIElement {
         this.container.style.height = mapData.rows * multiplier + 'px';
     }
 
-    private layerCreateHandler = (l: LayerAccessor) => {
+    private layerCreateHandler = (l: LayerContext) => {
         const layer = this.layersConfiguration.get(l.type),
             drawing = layer.drawing.create(l.id, this.mapManager);
 
@@ -126,7 +126,7 @@ export class MapDrawer implements UIElement {
         drawing.html.style.display = l.hidden ? 'none' : 'block'
     }
 
-    private layerDeleteHandler = (l: LayerAccessor) => {
+    private layerDeleteHandler = (l: LayerContext) => {
         const drawing = this._layers.get(l.id);
 
         if (drawing !== undefined) {
