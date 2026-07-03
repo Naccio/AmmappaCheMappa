@@ -1,9 +1,8 @@
 import { ObjectGraphicsFactory } from "../Engine/Rendering/ObjectGraphicsFactory";
-import { MapObject } from "../Model/MapObject";
-import { ContentPoint } from "./ContentPoint";
+import { ContentPointsConfiguration } from "./ContentPointsConfiguration";
 
 export interface ContentConfiguration {
     type: string;
     graphics: ObjectGraphicsFactory;
-    points: (object: MapObject) => ContentPoint[];
+    points: ContentPointsConfiguration;
 }

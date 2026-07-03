@@ -1,12 +1,12 @@
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
-import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { CellGraphics } from "./CellGraphics";
 import { CellContext } from "./CellContext";
+import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
 
 export class CellRenderer {
     constructor(
         private drawerFactory: DrawerFactory,
-        private contents: ContentConfiguration[]) {
+        private contents: ContentsConfiguration) {
     }
 
     public render(cell: CellContext, layer: string) {

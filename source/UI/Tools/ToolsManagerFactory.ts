@@ -12,14 +12,14 @@ import { ToolsManager } from "./ToolsManager";
 import { SelectTool } from "./SelectTool";
 import { MapManager } from "../../Maps/MapManager";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
-import { ContentConfiguration } from "../../Contents/ContentConfiguration";
+import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
 
 export class ToolsManagerFactory {
     constructor(
         private modalLauncher: ModalLauncher,
         private drawerFactory: DrawerFactory,
         private localizer: Localizer,
-        private contents: ContentConfiguration[],
+        private contents: ContentsConfiguration,
     ) { }
 
     public create(mapManager: MapManager, uiLayer: DrawingUI) {

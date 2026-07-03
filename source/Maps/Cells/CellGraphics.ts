@@ -1,4 +1,4 @@
-import { ContentConfiguration } from "../../Contents/ContentConfiguration";
+import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { Graphics } from "../../Engine/Rendering/Graphics";
 import { MapObject } from "../../Model/MapObject";
@@ -7,7 +7,7 @@ export class CellGraphics implements Graphics {
 
     public constructor(
         private readonly objects: readonly MapObject[],
-        private readonly contents: readonly ContentConfiguration[]
+        private readonly contents: ContentsConfiguration
     ) { }
 
     public render(drawer: Drawer) {
@@ -19,12 +19,9 @@ export class CellGraphics implements Graphics {
     }
 
     private renderObject(object: MapObject, drawer: Drawer) {
-        const content = this.contents.find(c => c.type === object.type);
+        const content = this.contents.get(object.type),
+            graphics = content.graphics.create(object);
 
-        if (content) {
-            const graphics = content.graphics.create(object);
-
-            graphics.render(drawer);
-        }
+        graphics.render(drawer);
     }
 }

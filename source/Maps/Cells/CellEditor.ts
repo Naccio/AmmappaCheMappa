@@ -1,4 +1,3 @@
-import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { ContentPoint, ContentPointType } from "../../Contents/ContentPoint";
 import { ApplyToOthersConstraint } from "../../Contents/ContentPointConstraint";
 import { InternalObservable } from "../../Engine/Events/InternalObservable";
@@ -8,10 +7,10 @@ import { MapObject } from "../../Model/MapObject";
 import { PointerButtons, PointerStatus, PointerTarget } from "../../UI/PointerTarget";
 import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
-import { GridHelper } from "../../Utilities/GridHelper";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { CellGraphics } from "./CellGraphics";
 import { CellContext } from "./CellContext";
+import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
@@ -36,7 +35,7 @@ export class CellEditor implements UIElement {
     public constructor(
         private readonly cell: CellContext,
         drawerFactory: DrawerFactory,
-        private readonly contents: ContentConfiguration[]
+        private readonly contents: ContentsConfiguration
     ) {
         const scale = this.scale * cell.pixels,
             objects = cell.objects.value,
@@ -102,12 +101,15 @@ export class CellEditor implements UIElement {
     }
 
     private getPoints() {
-        const selected = this.selectedObject.value,
-            content = this.contents.find(c => c.type === selected?.type);
+        const selected = this.selectedObject.value;
 
-        this.points = selected !== undefined && content !== undefined
-            ? content.points(selected)
-            : [];
+        if (selected === undefined) {
+            this.points = [];
+        } else {
+            const content = this.contents.get(selected.type);
+
+            this.points = content.points.get(selected);
+        }
     }
 
     private mouseMoveHandler(s: PointerStatus | undefined) {
@@ -130,10 +132,6 @@ export class CellEditor implements UIElement {
                 constraints = point.constraints ?? [];
 
             let apply = true;
-
-            if (point.type === ContentPointType.position && constraints.length === 0) {
-                constraints.push(new ApplyToOthersConstraint());
-            }
 
             for (let i = 0; i < constraints.length; i++) {
                 const constraint = constraints[i];

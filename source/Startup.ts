@@ -31,9 +31,6 @@ import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
 import { UIFactory } from "./UI/UIFactory";
 import { Welcome } from "./UI/Welcome";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
-import { ContentPointType } from "./Contents/ContentPoint";
-import { SimpleObjectGraphicsFactory } from "./Engine/Rendering/SimpleObjectGraphicsFactory";
-import { ApplyToOthersConstraint, HorizontalConstraint, VerticalConstraint } from "./Contents/ContentPointConstraint";
 import { CellRenderer } from "./Maps/Cells/CellRenderer";
 import { MapDrawerFactory } from "./Maps/MapDrawerFactory";
 import { LayersConfigurationBuilder } from "./Maps/Layers/LayersConfigurationBuilder";
@@ -51,97 +48,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapFactory = new MapFactory(localizer);
     const drawerFactory = new CanvasDrawerFactory();
     const contents = new ContentsConfigurationBuilder()
-        .add({
-            type: 'mountain',
-            graphics: new SimpleObjectGraphicsFactory(o => new MountainGraphics(o)),
-            points: o => o.points.map(p => { return { type: ContentPointType.primary, point: p } })
-        })
-        .add({
-            type: 'place',
-            graphics: new SimpleObjectGraphicsFactory(o => new PlaceGraphics(o)),
-            points: o => [
-                {
-                    type: ContentPointType.position,
-                    point: o.points[0]
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: o.points[1],
-                    constraints: [new HorizontalConstraint()]
-                }
-            ]
-        })
-        .add({
-            type: 'river',
-            graphics: new SimpleObjectGraphicsFactory(o => new RiverGraphics(o)),
-            points: o => [
-                {
-                    type: ContentPointType.primary,
-                    point: o.points[0]
-                },
-                {
-                    type: ContentPointType.primary,
-                    point: o.points[1]
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: o.points[2]
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: o.points[3]
-                }
-            ]
-        })
-        .add({
-            type: 'road',
-            graphics: new SimpleObjectGraphicsFactory(o => new RoadGraphics(o)),
-            points: o => [
-                {
-                    type: ContentPointType.primary,
-                    point: o.points[0]
-                },
-                {
-                    type: ContentPointType.primary,
-                    point: o.points[1]
-                }
-            ]
-        })
-        .add({
-            type: 'text',
-            graphics: new SimpleObjectGraphicsFactory(o => new TextGraphics(o)),
-            points: o => [
-                {
-                    type: ContentPointType.position,
-                    point: o.points[0]
-                }
-            ]
-        })
-        .add({
-            type: 'tree',
-            graphics: new SimpleObjectGraphicsFactory(o => new TreeGraphics(o)),
-            points: o => [
-                {
-                    type: ContentPointType.position,
-                    point: o.points[0]
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: o.points[1],
-                    constraints: [new VerticalConstraint(), new ApplyToOthersConstraint([3])]
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: o.points[2],
-                    constraints: [new VerticalConstraint()]
-                },
-                {
-                    type: ContentPointType.helper,
-                    point: o.points[3],
-                    constraints: [new HorizontalConstraint()]
-                }
-            ]
-        })
+        .add('mountain', b => b
+            .setGraphics(o => new MountainGraphics(o))
+            .configurePoints(b => b
+                .addPrimary()
+                .addPrimary()
+                .addPrimary()
+            )
+        )
+        .add('place', b => b
+            .setGraphics(o => new PlaceGraphics(o))
+            .configurePoints(b => b
+                .addPosition()
+                .addHelper(b => b.constrainHorizontally())
+            )
+        )
+        .add('river', b => b
+            .setGraphics(o => new RiverGraphics(o))
+            .configurePoints(b => b
+                .addPrimary()
+                .addPrimary()
+                .addHelper()
+                .addHelper()
+            )
+        )
+        .add('road', b => b
+            .setGraphics(o => new RoadGraphics(o))
+            .configurePoints(b => b
+                .addPrimary()
+                .addPrimary()
+            )
+        )
+        .add('text', b => b
+            .setGraphics(o => new TextGraphics(o))
+            .configurePoints(b => b
+                .addPosition()
+            )
+        )
+        .add('tree', b => b
+            .setGraphics(o => new TreeGraphics(o))
+            .configurePoints(b => b
+                .addPosition()
+                .addHelper(b => b.constrainVertically().applyToOthers([3]))
+                .addHelper(b => b.constrainVertically())
+                .addHelper(b => b.constrainHorizontally())
+            )
+        )
         .build();
 
     const uiFactory = new UIFactory();
@@ -183,22 +135,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const aboutCommand = new About(modalLauncher, localizer);
 
     builder
-        .addMenu(localizer['menu_label_file'], m => {
-            m.addCommand(newMapCommand);
-            m.addCommand(openMapCommand);
-            m.addCommand(editMapCommand);
-            m.addCommand(saveMapCommand);
-            m.addCommand(exportMapCommand);
-            m.addCommand(closeMapCommand);
-        })
-        .addMenu(localizer['menu_label_layer'], m => {
-            m.addCommand(newLayerCommand);
-            m.addCommand(editLayerCommand);
-            m.addCommand(deleteLayerCommand);
-        })
-        .addMenu(localizer['menu_label_help'], m => {
-            m.addCommand(aboutCommand);
-        })
+        .addMenu(localizer['menu_label_file'], m => m
+            .addCommand(newMapCommand)
+            .addCommand(openMapCommand)
+            .addCommand(editMapCommand)
+            .addCommand(saveMapCommand)
+            .addCommand(exportMapCommand)
+            .addCommand(closeMapCommand)
+        )
+        .addMenu(localizer['menu_label_layer'], m => m
+            .addCommand(newLayerCommand)
+            .addCommand(editLayerCommand)
+            .addCommand(deleteLayerCommand)
+        )
+        .addMenu(localizer['menu_label_help'], m => m
+            .addCommand(aboutCommand)
+        )
         .addMenu(localizer['menu_label_language'], m => {
             for (let language of LocalizationHelper.languages) {
                 m.addCustomEntry(new LanguageMenuEntry(store, language));

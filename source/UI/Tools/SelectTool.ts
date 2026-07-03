@@ -4,8 +4,8 @@ import { Point } from "../../Model/Point";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ModalLauncher } from "../ModalLauncher";
 import { Tool } from "./Tool";
-import { ContentConfiguration } from "../../Contents/ContentConfiguration";
 import { CellEditor } from "../../Maps/Cells/CellEditor";
+import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
 
 export class SelectTool implements Tool {
 
@@ -19,7 +19,7 @@ export class SelectTool implements Tool {
         private readonly mapManager: MapManager,
         private readonly drawerFactory: DrawerFactory,
         private readonly modal: ModalLauncher,
-        private readonly contents: ContentConfiguration[]
+        private readonly contents: ContentsConfiguration
     ) { }
 
     public start(point: Point) {
