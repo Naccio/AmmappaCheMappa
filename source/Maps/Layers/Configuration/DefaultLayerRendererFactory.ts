@@ -1,7 +1,8 @@
-import { CellRenderer } from "../Cells/CellRenderer";
-import { MapManager } from "../MapManager";
-import { DefaultLayerRenderer } from "./DefaultLayerRenderer";
+import { CellRenderer } from "../../Cells/CellRenderer";
+import { MapManager } from "../../MapManager";
+import { DefaultLayerRenderer } from "../DefaultLayerRenderer";
 import { LayerRendererFactory } from "./LayerRendererFactory";
+
 
 export class DefaultLayerRendererFactory implements LayerRendererFactory {
     public constructor(private readonly cellRenderer: CellRenderer) { }

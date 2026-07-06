@@ -1,4 +1,3 @@
-import { DefaultLayerRenderer } from "./DefaultLayerRenderer";
 import { LayerConfiguration } from "./LayerConfiguration";
 import { LayerConfigurationBuilder } from "./LayerConfigurationBuilder";
 import { LayerDrawingFactory } from "./LayerDrawingFactory";

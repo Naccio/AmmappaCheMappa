@@ -11,7 +11,7 @@ import { Toolbar } from "./Tools/Toolbar";
 import { ToolsManagerFactory } from "./Tools/ToolsManagerFactory";
 import { UIFactory } from "./UIFactory";
 import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
-import { LayersConfiguration } from "../Maps/Layers/LayersConfiguration";
+import { LayersConfiguration } from "../Maps/Layers/Configuration/LayersConfiguration";
 
 export class MapUIFactory {
 

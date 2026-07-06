@@ -3,8 +3,8 @@ import { InternalEvent } from "../../Engine/Events/InternalEvent";
 import { MapAccessor } from "../MapAccessor";
 import { MapLayer } from "../../Model/MapLayer";
 import { LayerContext } from "./LayerContext";
-import { LayerFactory } from "./LayerFactory";
 import { InternalObservable } from "../../Engine/Events/InternalObservable";
+import { LayerFactory } from "./LayerFactory";
 
 export class LayersManager {
     private readonly createEvent = new InternalEvent<LayerContext>();

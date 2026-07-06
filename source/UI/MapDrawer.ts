@@ -8,7 +8,7 @@ import { Store } from "../Engine/Store";
 import { VectorMath } from "../Utilities/VectorMath";
 import { DrawingUI } from "./DrawingUI";
 import { UIElement } from "./UIElement";
-import { LayersConfiguration } from "../Maps/Layers/LayersConfiguration";
+import { LayersConfiguration } from "../Maps/Layers/Configuration/LayersConfiguration";
 
 export class MapDrawer implements UIElement {
     private readonly container: HTMLDivElement;

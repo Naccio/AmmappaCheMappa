@@ -1,7 +1,7 @@
-import { CellRenderer } from "../Cells/CellRenderer";
-import { MapDrawerFactory } from "../MapDrawerFactory";
-import { MapManager } from "../MapManager";
-import { DefaultLayerDrawing } from "./DefaultLayerDrawing";
+import { CellRenderer } from "../../Cells/CellRenderer";
+import { MapDrawerFactory } from "../../MapDrawerFactory";
+import { MapManager } from "../../MapManager";
+import { DefaultLayerDrawing } from "../DefaultLayerDrawing";
 import { LayerDrawingFactory } from "./LayerDrawingFactory";
 
 export class DefaultLayerDrawingFactory implements LayerDrawingFactory {

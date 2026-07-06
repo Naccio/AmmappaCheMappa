@@ -33,11 +33,11 @@ import { Welcome } from "./UI/Welcome";
 import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
 import { CellRenderer } from "./Maps/Cells/CellRenderer";
 import { MapDrawerFactory } from "./Maps/MapDrawerFactory";
-import { LayersConfigurationBuilder } from "./Maps/Layers/LayersConfigurationBuilder";
-import { DefaultLayerRendererFactory } from "./Maps/Layers/DefaultLayerRendererFactory";
-import { DefaultLayerDrawingFactory } from "./Maps/Layers/DefaultLayerDrawingFactory";
-import { GridLayerRendererFactory } from "./Maps/Layers/GridLayerRendererFactory";
-import { GridLayerDrawingFactory } from "./Maps/Layers/GridLayerDrawingFactory";
+import { DefaultLayerRendererFactory } from "./Maps/Layers/Configuration/DefaultLayerRendererFactory";
+import { DefaultLayerDrawingFactory } from "./Maps/Layers/Configuration/DefaultLayerDrawingFactory";
+import { LayersConfigurationBuilder } from "./Maps/Layers/Configuration/LayersConfigurationBuilder";
+import { GridLayerRendererFactory } from "./Maps/Layers/Configuration/GridLayerRendererFactory";
+import { GridLayerDrawingFactory } from "./Maps/Layers/Configuration/GridLayerDrawingFactory";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
