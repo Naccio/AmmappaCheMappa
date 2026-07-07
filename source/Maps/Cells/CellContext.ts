@@ -16,11 +16,8 @@ export class CellContext {
         public readonly index: CellIndex,
         private readonly map: MapAccessor
     ) {
-        const cell = GridHelper.cellIndexToName(index),
-            objects = map.map.data.objects.filter(o => o.cell === cell);
-
-        this._objects = new InternalObservable<MapObject[]>(objects);
-        this.name = cell;
+        this.name = GridHelper.cellIndexToName(index);
+        this._objects = new InternalObservable<MapObject[]>(this.loadObjects());
     }
 
     public get objects(): Observable<readonly MapObject[]> {
@@ -32,16 +29,15 @@ export class CellContext {
     }
 
     public addObjects(newObjects: MapObject[]) {
-        this._objects.update(objects => {
-            newObjects.forEach(o => objects.push(o));
-        });
         this.map.addObjects(newObjects);
+        this._objects.value = this.loadObjects();
     }
 
     public clear() {
-        this._objects.value = [];
-        this.map.deleteObjects(o => o.cell === this.name && o.layer === this.map.map.activeLayer);
-        this.map.save();
+        const layer = this.map.map.activeLayer;
+
+        this.map.deleteObjects(o => o.cell === this.name && o.layer === layer);
+        this._objects.value = this.loadObjects();
     }
 
     public createObject(type: string, points: Point[], data?: any): MapObject {
@@ -72,5 +68,9 @@ export class CellContext {
             }
         });
         this.map.save();
+    }
+
+    private loadObjects() {
+        return this.map.map.data.objects.filter(o => o.cell === this.name);
     }
 }
