@@ -1,8 +1,7 @@
-import { LayersPanel } from "../Layers/LayersPanel";
-import { Localizer } from "../Localization/Localizer";
-import { MapManager } from "../MapManager";
-import { Store } from "../Store";
-import { CanvasProvider } from "./CanvasProvider";
+import { LayersPanel } from "../Maps/Layers/LayersPanel";
+import { Localizer } from "../Engine/Localization/Localizer";
+import { MapManager } from "../Maps/MapManager";
+import { Store } from "../Engine/Store";
 import { DrawingArea } from "./DrawingArea";
 import { DrawingUI } from "./DrawingUI";
 import { MapDrawer } from "./MapDrawer";
@@ -11,26 +10,29 @@ import { ToolActivator } from "./Tools/ToolActivator";
 import { Toolbar } from "./Tools/Toolbar";
 import { ToolsManagerFactory } from "./Tools/ToolsManagerFactory";
 import { UIFactory } from "./UIFactory";
+import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
+import { LayersConfiguration } from "../Maps/Layers/Configuration/LayersConfiguration";
 
 export class MapUIFactory {
 
     constructor(
-        private canvasProvider: CanvasProvider,
+        private drawerFactory: DrawerFactory,
         private toolsFactory: ToolsManagerFactory,
         private localizer: Localizer,
         private store: Store,
-        private ui: UIFactory
+        private ui: UIFactory,
+        private layers: LayersConfiguration
     ) { }
 
     create(mapManager: MapManager) {
         const mapAccessor = mapManager.mapAccessor,
             layersManager = mapManager.layers;
 
-        const uiLayer = new DrawingUI(mapAccessor, this.canvasProvider);
-        const tools = this.toolsFactory.create(mapAccessor, layersManager, uiLayer);
-        const toolbar = new Toolbar(tools.tools, this.localizer, mapAccessor, layersManager);
+        const uiLayer = new DrawingUI(mapAccessor.map, this.drawerFactory);
+        const tools = this.toolsFactory.create(mapManager, uiLayer);
+        const toolbar = new Toolbar(tools.tools, this.localizer, layersManager);
         const toolActivator = new ToolActivator(toolbar);
-        const drawer = new MapDrawer(mapManager, this.store, uiLayer);
+        const drawer = new MapDrawer(mapManager, this.store, uiLayer, this.layers);
         const drawingArea = new DrawingArea(toolActivator, drawer);
         const layersPanel = new LayersPanel(layersManager, this.ui, this.localizer);
 

@@ -1,4 +1,4 @@
-import { ApplicationLanguage } from "../../Localization/ApplicationLanguage";
+import { ApplicationLanguage } from "../../Engine/Localization/ApplicationLanguage";
 import { ApplicationState } from "../../Model/ApplicationState";
 import { ButtonMenuEntry } from "./ButtonMenuEntry";
 

@@ -1,17 +1,17 @@
-import { DrawingLayer } from "../Layers/DrawingLayer";
-import { MapAccessor } from "../MapAccessor";
-import { CanvasDrawer } from "../Rendering/CanvasDrawer";
-import { Drawer } from "../Rendering/Drawer";
-import { CanvasProvider } from "./CanvasProvider";
+import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
+import { Drawer } from "../Engine/Rendering/Drawer";
+import { DrawerFactory } from "../Engine/Rendering/DrawerFactory";
+import { EditorMap } from "../Model/EditorMap";
 
 export class DrawingUI implements DrawingLayer {
-    private readonly _drawer: CanvasDrawer;
+    private readonly _drawer: Drawer;
 
-    constructor(private mapAccessor: MapAccessor, private canvasProvider: CanvasProvider) {
-        const map = this.mapAccessor.map,
-            mapData = map.data,
-            id = mapData.id + '-ui-layer',
-            drawer = this.canvasProvider.create(id, mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell, 1 / map.zoom);
+    constructor(
+        map: EditorMap,
+        drawerFactory: DrawerFactory
+    ) {
+        const mapData = map.data,
+            drawer = drawerFactory.create(mapData.columns * mapData.pixelsPerCell, mapData.rows * mapData.pixelsPerCell);
 
         this._drawer = drawer;
     }
@@ -21,13 +21,12 @@ export class DrawingUI implements DrawingLayer {
     }
 
     public get html() {
-        return this._drawer.canvas;
+        return this._drawer.html;
     }
 
     public update() {
     }
 
     public zoom() {
-        this._drawer.scale(1 / this.mapAccessor.map.zoom);
     }
 }

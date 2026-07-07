@@ -20,5 +20,6 @@ export default {
         loader: "ts-loader"
       }
     ]
-  }
+  },
+  mode: 'production'
 };

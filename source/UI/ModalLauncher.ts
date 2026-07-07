@@ -1,4 +1,4 @@
-import { Localizer } from "../Localization/Localizer";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { UIFactory } from "./UIFactory";
 
 //TODO: Handle code duplication on dialog creation

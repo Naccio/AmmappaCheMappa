@@ -1,5 +1,5 @@
-import { LayersPanel } from "../Layers/LayersPanel";
-import { MapManager } from "../MapManager";
+import { LayersPanel } from "../Maps/Layers/LayersPanel";
+import { MapManager } from "../Maps/MapManager";
 import { DrawingArea } from "./DrawingArea";
 import { Toolbar } from "./Tools/Toolbar";
 import { UIElement } from "./UIElement";
@@ -40,15 +40,6 @@ export class MapUI implements UIElement {
 
     public remove() {
         this.container.remove();
-    }
-
-    public setup() {
-        const mapAccessor = this.map.mapAccessor,
-            layersManager = this.map.layers,
-            map = mapAccessor.map;
-
-        mapAccessor.map.data.layers.forEach(l => layersManager.add(l));
-        layersManager.select(map.activeLayer);
     }
 
     public show() {

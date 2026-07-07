@@ -1,9 +1,10 @@
-import { GridHelper } from "../../GridHelper";
-import { MapAccessor } from "../../MapAccessor";
+import { GridHelper } from "../../Utilities/GridHelper";
 import { CellIndex } from "../../Model/CellIndex";
 import { Point } from "../../Model/Point";
 import { Tool } from "./Tool";
 import { ToolConfiguration } from "./ToolConfiguration";
+import { CellContext } from "../../Maps/Cells/CellContext";
+import { MapManager } from "../../Maps/MapManager";
 
 export abstract class CellTool implements Tool {
     private lastCell?: CellIndex;
@@ -11,10 +12,10 @@ export abstract class CellTool implements Tool {
 
     public abstract readonly configuration: ToolConfiguration;
 
-    public constructor(protected mapAccessor: MapAccessor) {
+    public constructor(protected map: MapManager) {
     }
 
-    protected abstract useOnCell(cell: CellIndex): void;
+    protected abstract useOnCell(cell: CellContext): void;
 
     public start(position: Point) {
         this.guardedUse(position);
@@ -35,21 +36,21 @@ export abstract class CellTool implements Tool {
     }
 
     private guardedUse(position: Point) {
-        const cell = this.mapAccessor.getIndex(position);
+        const cellIndex = this.map.mapAccessor.getIndex(position);
 
-        if (cell !== undefined && !GridHelper.cellIsEqual(cell, this.lastCell)) {
+        if (cellIndex !== undefined && !GridHelper.cellIsEqual(cellIndex, this.lastCell)) {
+            const cell = this.map.getCell(cellIndex);
+
             if (this.lastPosition === undefined) {
                 this.useOnCell(cell);
             } else {
-                const cells = this.mapAccessor.getIndexes(this.lastPosition, position);
-
-                for (let cell of cells) {
-                    this.useOnCell(cell);
-                }
+                this.map.mapAccessor.getIndexes(this.lastPosition, position)
+                    .map(i => this.map.getCell(i))
+                    .forEach(c => this.useOnCell(c));
             }
         }
 
-        this.lastCell = cell;
+        this.lastCell = cellIndex;
         this.lastPosition = position;
     }
 }

@@ -1,6 +1,6 @@
-import { Localizer } from "../Localization/Localizer";
-import { MapManager } from "../MapManager";
-import { MapsManager } from "../MapsManager";
+import { Localizer } from "../Engine/Localization/Localizer";
+import { MapManager } from "../Maps/MapManager";
+import { MapsManager } from "../Maps/MapsManager";
 import { ActiveMapCommand } from "./ActiveMapCommand";
 
 export class DeleteLayer extends ActiveMapCommand {

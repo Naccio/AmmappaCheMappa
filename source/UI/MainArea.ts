@@ -1,5 +1,5 @@
-import { MapManager } from "../MapManager";
-import { MapsManager } from "../MapsManager";
+import { MapManager } from "../Maps/MapManager";
+import { MapsManager } from "../Maps/MapsManager";
 import { MapData } from "../Model/MapData";
 import { MapUI } from "./MapUI";
 import { MapUIFactory } from "./MapUIFactory";
@@ -100,8 +100,6 @@ export class MainArea implements UIElement {
         });
         this.container.append(ui.html);
         this.tabs.append(tab);
-
-        ui.setup();
     }
 
     private remove(id: string) {

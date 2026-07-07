@@ -1,4 +1,4 @@
-import { EventHandler } from "../Events/ApplicationEvent";
+import { EventHandler } from "../Engine/Events/ApplicationEvent";
 
 export interface Command {
     get disabled(): boolean;

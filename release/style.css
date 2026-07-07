@@ -65,7 +65,7 @@ button:hover {
 }
 
 canvas {
-    position: absolute;
+    display: block;
 }
 
 dialog {
@@ -122,6 +122,10 @@ small {
 
 .label-radio {
     display: none;
+}
+
+.label-radio+label {
+    display: block;
 }
 
 .label-radio:disabled+label {
@@ -228,6 +232,12 @@ small {
     overflow: hidden;
 }
 
+.drawing-area canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 .layers {
     --btn-font-size: var(--font-size-small);
     --btn-border: none;
@@ -332,6 +342,5 @@ small {
 
 .toolbar :not(:disabled)+label {
     font-size: 3rem;
-    display: block;
     text-align: center;
 }

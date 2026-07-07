@@ -7,6 +7,6 @@ export interface MapData {
     columns: number,
     rows: number,
     pixelsPerCell: number,
-    objects: { [index: string]: MapObject[] },
+    objects: MapObject[],
     layers: MapLayer[]
 }

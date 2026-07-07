@@ -1,0 +1,71 @@
+import { MapAccessor } from "../MapAccessor";
+import { Drawer } from "../../Engine/Rendering/Drawer";
+import { LayerRenderer } from "./LayerRenderer";
+import { LineStyle } from "../../Engine/Rendering/LineStyle";
+import { DrawingLayer } from "./DrawingLayer";
+import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
+
+export class GridLayer implements DrawingLayer, LayerRenderer {
+    private wrapper: HTMLElement;
+
+    constructor(
+        private id: string,
+        private mapAccessor: MapAccessor,
+        private drawerFactory: DrawerFactory
+    ) {
+        const wrapper = document.createElement('div');
+
+        wrapper.id = this.id;
+
+        this.wrapper = wrapper;
+    }
+
+    public get html() {
+        return this.wrapper;
+    }
+
+    public render(drawer?: Drawer) {
+        drawer ??= this.setupCanvas();
+        this.renderAtScale(drawer, this.mapAccessor.map.data.pixelsPerCell);
+    }
+
+    public zoom() {
+        this.setupCanvas();
+    }
+
+    private renderAtScale(drawer: Drawer, spacing: number) {
+        const map = this.mapAccessor.map.data,
+            style: LineStyle = {
+                color: '#999',
+                lineWidth: 2
+            };
+
+        for (let i = 0; i < map.columns + 1; i++) {
+            const x = i * spacing,
+                y1 = 0,
+                y2 = drawer.height;
+
+            drawer.line([{ x, y: y1 }, { x, y: y2 }], style);
+        }
+        for (let i = 0; i < map.rows + 1; i++) {
+            const y = i * spacing,
+                x1 = 0,
+                x2 = drawer.width;
+
+            drawer.line([{ x: x1, y }, { x: x2, y }], style);
+        }
+    }
+
+    public setupCanvas() {
+        const map = this.mapAccessor.map,
+            spacing = map.data.pixelsPerCell / map.zoom,
+            drawer = this.drawerFactory.create(map.data.columns * spacing, map.data.rows * spacing);
+
+        this.renderAtScale(drawer, spacing);
+
+        this.wrapper.innerHTML = '';
+        this.wrapper.append(drawer.html);
+
+        return drawer;
+    }
+}

@@ -1,23 +1,26 @@
-import { DrawingLayer } from "../Layers/DrawingLayer";
-import { LayerAccessor } from "../Layers/LayerAccessor";
-import { MapManager } from "../MapManager";
-import { MathHelper } from "../MathHelper";
-import { MapLayer } from "../Model/MapLayer";
+import { DrawingLayer } from "../Maps/Layers/DrawingLayer";
+import { LayerContext } from "../Maps/Layers/LayerContext";
+import { MapManager } from "../Maps/MapManager";
+import { MathHelper } from "../Utilities/MathHelper";
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
-import { Store } from "../Store";
-import { VectorMath } from "../VectorMath";
+import { Store } from "../Engine/Store";
+import { VectorMath } from "../Utilities/VectorMath";
 import { DrawingUI } from "./DrawingUI";
 import { UIElement } from "./UIElement";
+import { LayersConfiguration } from "../Maps/Layers/Configuration/LayersConfiguration";
 
 export class MapDrawer implements UIElement {
-    private actualShift: Vector = VectorMath.zero;
     private readonly container: HTMLDivElement;
+    private readonly _layers: Map<string, DrawingLayer>;
+
+    private actualShift: Vector = VectorMath.zero;
 
     constructor(
         private mapManager: MapManager,
         private store: Store,
-        private ui: DrawingUI
+        private ui: DrawingUI,
+        private layersConfiguration: LayersConfiguration
     ) {
         const container = document.createElement('div');
 
@@ -26,9 +29,14 @@ export class MapDrawer implements UIElement {
         container.append(ui.html);
 
         this.container = container;
+        this._layers = new Map<string, DrawingLayer>();
 
         mapManager.layers.onCreate(this.layerCreateHandler);
         mapManager.layers.onDelete(this.layerDeleteHandler);
+
+        mapManager.layers.layers.forEach(l => {
+            this.layerCreateHandler(l);
+        })
     }
 
     public get html() {
@@ -36,9 +44,7 @@ export class MapDrawer implements UIElement {
     }
 
     private get layers(): DrawingLayer[] {
-        const mapLayers = this.mapManager.layers.layers.map(l => l.drawing);
-
-        return [...mapLayers, this.ui];
+        return [...this._layers.values(), this.ui];
     }
 
     private get currentShift() {
@@ -109,15 +115,23 @@ export class MapDrawer implements UIElement {
         this.container.style.height = mapData.rows * multiplier + 'px';
     }
 
-    private layerCreateHandler = (c: LayerAccessor) => {
-        this.container.append(c.drawing.html);
-        c.renderer.render();
-        c.subscribe(l => c.drawing.html.style.display = l.hidden ? 'none' : 'block');
+    private layerCreateHandler = (l: LayerContext) => {
+        const layer = this.layersConfiguration.get(l.type),
+            drawing = layer.drawing.create(l.id, this.mapManager);
+
+        this._layers.set(l.id, drawing);
+        this.container.append(drawing.html);
+
+        l.onUpdate(() => drawing.html.style.display = l.hidden ? 'none' : 'block');
+        drawing.html.style.display = l.hidden ? 'none' : 'block'
     }
 
-    private layerDeleteHandler = (c: MapLayer) => {
-        const element = document.getElementById(c.id);
+    private layerDeleteHandler = (l: LayerContext) => {
+        const drawing = this._layers.get(l.id);
 
-        element?.remove();
+        if (drawing !== undefined) {
+            drawing.html.remove();
+            this._layers.delete(l.id);
+        }
     }
 }

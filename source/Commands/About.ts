@@ -1,4 +1,4 @@
-import { Localizer } from "../Localization/Localizer";
+import { Localizer } from "../Engine/Localization/Localizer";
 import { ModalLauncher } from "../UI/ModalLauncher";
 import { SimpleCommand } from "./SimpleCommand";
 
@@ -15,7 +15,7 @@ export class About extends SimpleCommand {
 
         quote.innerText = this.localizer['paragraph_about'];
 
-        versionLink.innerText = 'alpha.3';
+        versionLink.innerText = 'alpha.4';
         versionLink.href = 'https://github.com/Naccio/AmmappaCheMappa';
         versionLink.target = '_blank';
 

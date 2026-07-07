@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 
+## [alpha.4] - 2026-07-07
+
+### Added
+
+- Tools:
+  - **Select**: Allows to click on a cell to access its details and edit the
+    points of every object in that cell
+
+### Changed
+
+- ***BREAKING***: Model changed, maps generated with previous versions will no
+  longer work
+- Architecture:
+  - Every map object is now defined by a list of points
+    - Objects can still define custom data on top of that
+    - Object points can have different types, defined by the object's type
+      configuration. These types are: Primary, Helper and Position
+
+### Fixed
+
+- **Drawing area**: Closing a map shows the welcome message even if there is
+  another map open
+
+
 ## [alpha.3] - 2026-04-10
 
 ### Added
@@ -52,9 +76,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ### Changed
 
-- BREAKING: Model changed, maps generated with previous versions will no longer
-  work
-
+- ***BREAKING***: Model changed, maps generated with previous versions will no
+  longer work
 - Commands:
   - **New**: Maps can be given a title
 - UI:

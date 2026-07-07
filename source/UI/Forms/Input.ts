@@ -1,4 +1,4 @@
-import { Utilities } from "../../Utilities";
+import { Utilities } from "../../Utilities/Utilities";
 import { UIElement } from "../UIElement";
 
 export class Input implements UIElement {
