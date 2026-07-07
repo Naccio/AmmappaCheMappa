@@ -1,5 +1,5 @@
-import { MapObject } from "../Model/MapObject";
-import { ContentPoint } from "./ContentPoint";
+import { MapObject } from "../../../Model/MapObject";
+import { ContentPoint } from "../ContentPoint";
 import { ContentPointConfiguration } from "./ContentPointConfiguration";
 
 export class ContentPointsConfiguration {

@@ -1,4 +1,4 @@
-import { ContentPointType } from "./ContentPoint";
+import { ContentPointType } from "../ContentPoint";
 import { ContentPointConfiguration } from "./ContentPointConfiguration";
 import { ContentPointConfigurationBuilder } from "./ContentPointConfigurationBuilder";
 import { ContentPointsConfiguration } from "./ContentPointsConfiguration";

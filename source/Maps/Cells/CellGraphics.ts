@@ -1,7 +1,7 @@
-import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { Graphics } from "../../Engine/Rendering/Graphics";
 import { MapObject } from "../../Model/MapObject";
+import { ContentsConfiguration } from "../Contents/Configuration/ContentsConfiguration";
 
 export class CellGraphics implements Graphics {
 

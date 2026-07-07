@@ -1,6 +1,6 @@
-import { Graphics } from "../../Engine/Rendering/Graphics";
-import { Drawer } from "../../Engine/Rendering/Drawer";
-import { MapObject } from "../../Model/MapObject";
+import { Drawer } from "../../../Engine/Rendering/Drawer";
+import { Graphics } from "../../../Engine/Rendering/Graphics";
+import { MapObject } from "../../../Model/MapObject";
 
 export class MountainGraphics implements Graphics {
     private readonly lineWidth = .04;

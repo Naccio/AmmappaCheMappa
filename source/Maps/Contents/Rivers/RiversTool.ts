@@ -1,12 +1,13 @@
-import { GridHelper } from "../../Utilities/GridHelper";
-import { MathHelper } from "../../Utilities/MathHelper";
-import { CellIndex } from "../../Model/CellIndex";
-import { Point } from "../../Model/Point";
-import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../Utilities/VectorMath";
-import { MapManager } from "../../Maps/MapManager";
-import { MapAccessor } from "../../Maps/MapAccessor";
-import { MapObject } from "../../Model/MapObject";
+import { CellIndex } from "../../../Model/CellIndex";
+import { MapObject } from "../../../Model/MapObject";
+import { Point } from "../../../Model/Point";
+import { Tool } from "../../../UI/Tools/Tool";
+import { GridHelper } from "../../../Utilities/GridHelper";
+import { MathHelper } from "../../../Utilities/MathHelper";
+import { VectorMath } from "../../../Utilities/VectorMath";
+import { MapAccessor } from "../../MapAccessor";
+import { MapManager } from "../../MapManager";
+
 
 export class RiversTool implements Tool {
     private readonly mapAccessor: MapAccessor;

@@ -1,11 +1,11 @@
-import { Graphics } from "../Engine/Rendering/Graphics";
-import { ObjectGraphicsFactory } from "../Engine/Rendering/ObjectGraphicsFactory";
-import { SimpleObjectGraphicsFactory } from "../Engine/Rendering/SimpleObjectGraphicsFactory";
-import { MapObject } from "../Model/MapObject";
+import { Graphics } from "../../../Engine/Rendering/Graphics";
+import { ObjectGraphicsFactory } from "../../../Engine/Rendering/ObjectGraphicsFactory";
+import { SimpleObjectGraphicsFactory } from "../../../Engine/Rendering/SimpleObjectGraphicsFactory";
+import { MapObject } from "../../../Model/MapObject";
 import { ContentConfiguration } from "./ContentConfiguration";
-import { ContentPoint } from "./ContentPoint";
 import { ContentPointsConfiguration } from "./ContentPointsConfiguration";
 import { ContentPointsConfigurationBuilder } from "./ContentPointsConfigurationBuilder";
+
 
 export class ContentConfigurationBuilder {
     private points?: ContentPointsConfiguration;

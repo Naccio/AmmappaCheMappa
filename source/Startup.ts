@@ -9,12 +9,6 @@ import { NewLayer } from "./Commands/NewLayer";
 import { NewMap } from "./Commands/NewMap";
 import { OpenMap } from "./Commands/OpenMap";
 import { SaveMap } from "./Commands/SaveMap";
-import { MountainGraphics } from "./Contents/Mountains/MountainGraphics";
-import { PlaceGraphics } from "./Contents/Places/PlaceGraphics";
-import { RiverGraphics } from "./Contents/Rivers/RiverGraphics";
-import { RoadGraphics } from "./Contents/Roads/RoadGraphics";
-import { TextGraphics } from "./Contents/Text/TextGraphics";
-import { TreeGraphics } from "./Contents/Trees/TreeGraphics";
 import { LocalizationHelper } from "./Engine/Localization/LocalizationHelper";
 import { LocalizerFactory } from "./Engine/Localization/LocalizerFactory";
 import { MapFactory } from "./Maps/MapFactory";
@@ -30,7 +24,7 @@ import { ModalLauncher } from "./UI/ModalLauncher";
 import { ToolsManagerFactory } from "./UI/Tools/ToolsManagerFactory";
 import { UIFactory } from "./UI/UIFactory";
 import { Welcome } from "./UI/Welcome";
-import { ContentsConfigurationBuilder } from "./Contents/ContentsConfigurationBuilder";
+import { ContentsConfigurationBuilder } from "./Maps/Contents/Configuration/ContentsConfigurationBuilder";
 import { CellRenderer } from "./Maps/Cells/CellRenderer";
 import { MapDrawerFactory } from "./Maps/MapDrawerFactory";
 import { DefaultLayerRendererFactory } from "./Maps/Layers/Configuration/DefaultLayerRendererFactory";
@@ -38,6 +32,12 @@ import { DefaultLayerDrawingFactory } from "./Maps/Layers/Configuration/DefaultL
 import { LayersConfigurationBuilder } from "./Maps/Layers/Configuration/LayersConfigurationBuilder";
 import { GridLayerRendererFactory } from "./Maps/Layers/Configuration/GridLayerRendererFactory";
 import { GridLayerDrawingFactory } from "./Maps/Layers/Configuration/GridLayerDrawingFactory";
+import { MountainGraphics } from "./Maps/Contents/Mountains/MountainGraphics";
+import { PlaceGraphics } from "./Maps/Contents/Places/PlaceGraphics";
+import { RiverGraphics } from "./Maps/Contents/Rivers/RiverGraphics";
+import { RoadGraphics } from "./Maps/Contents/Roads/RoadGraphics";
+import { TextGraphics } from "./Maps/Contents/Text/TextGraphics";
+import { TreeGraphics } from "./Maps/Contents/Trees/TreeGraphics";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();

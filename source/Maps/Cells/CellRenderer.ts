@@ -1,7 +1,7 @@
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { CellGraphics } from "./CellGraphics";
 import { CellContext } from "./CellContext";
-import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
+import { ContentsConfiguration } from "../Contents/Configuration/ContentsConfiguration";
 
 export class CellRenderer {
     constructor(

@@ -1,6 +1,6 @@
-import { Drawer } from "../../Engine/Rendering/Drawer";
-import { Graphics } from "../../Engine/Rendering/Graphics";
-import { MapObject } from "../../Model/MapObject";
+import { Drawer } from "../../../Engine/Rendering/Drawer";
+import { Graphics } from "../../../Engine/Rendering/Graphics";
+import { MapObject } from "../../../Model/MapObject";
 import { GridText } from "./GridText";
 
 export class TextGraphics implements Graphics {

@@ -1,12 +1,12 @@
-import { CellContext } from "../../Maps/Cells/CellContext";
-import { MapManager } from "../../Maps/MapManager";
-import { CellIndex } from "../../Model/CellIndex";
-import { MapObject } from "../../Model/MapObject";
-import { Point } from "../../Model/Point";
-import { CellTool } from "../../UI/Tools/CellTool";
-import { GridHelper } from "../../Utilities/GridHelper";
-import { MathHelper } from "../../Utilities/MathHelper";
-import { VectorMath } from "../../Utilities/VectorMath";
+import { MapObject } from "../../../Model/MapObject";
+import { Point } from "../../../Model/Point";
+import { CellTool } from "../../../UI/Tools/CellTool";
+import { GridHelper } from "../../../Utilities/GridHelper";
+import { MathHelper } from "../../../Utilities/MathHelper";
+import { VectorMath } from "../../../Utilities/VectorMath";
+import { CellContext } from "../../Cells/CellContext";
+import { MapManager } from "../../MapManager";
+
 
 export class MountainsTool extends CellTool {
     public readonly configuration = {

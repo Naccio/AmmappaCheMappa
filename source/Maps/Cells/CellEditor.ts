@@ -1,5 +1,4 @@
-import { ContentPoint, ContentPointType } from "../../Contents/ContentPoint";
-import { ApplyToOthersConstraint } from "../../Contents/ContentPointConstraint";
+import { ContentPoint, ContentPointType } from "../Contents/ContentPoint";
 import { InternalObservable } from "../../Engine/Events/InternalObservable";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
@@ -10,7 +9,7 @@ import { UIElement } from "../../UI/UIElement";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { CellGraphics } from "./CellGraphics";
 import { CellContext } from "./CellContext";
-import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
+import { ContentsConfiguration } from "../Contents/Configuration/ContentsConfiguration";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;

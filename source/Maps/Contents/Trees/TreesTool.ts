@@ -1,10 +1,10 @@
-import { MathHelper } from "../../Utilities/MathHelper";
-import { CellTool } from "../../UI/Tools/CellTool";
-import { VectorMath } from "../../Utilities/VectorMath";
-import { MapManager } from "../../Maps/MapManager";
-import { MapObject } from "../../Model/MapObject";
-import { Point } from "../../Model/Point";
-import { CellContext } from "../../Maps/Cells/CellContext";
+import { MapObject } from "../../../Model/MapObject";
+import { Point } from "../../../Model/Point";
+import { CellTool } from "../../../UI/Tools/CellTool";
+import { MathHelper } from "../../../Utilities/MathHelper";
+import { VectorMath } from "../../../Utilities/VectorMath";
+import { CellContext } from "../../Cells/CellContext";
+import { MapManager } from "../../MapManager";
 
 export class TreesTool extends CellTool {
     public readonly configuration = {

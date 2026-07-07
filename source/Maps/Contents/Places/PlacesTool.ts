@@ -1,7 +1,8 @@
-import { MapManager } from "../../Maps/MapManager";
-import { Point } from "../../Model/Point";
-import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../Utilities/VectorMath";
+import { Point } from "../../../Model/Point";
+import { Tool } from "../../../UI/Tools/Tool";
+import { VectorMath } from "../../../Utilities/VectorMath";
+import { MapManager } from "../../MapManager";
+
 
 export class PlacesTool implements Tool {
     public readonly configuration = {

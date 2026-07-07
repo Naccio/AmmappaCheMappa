@@ -1,11 +1,12 @@
-import { GridHelper } from "../../Utilities/GridHelper";
-import { MapAccessor } from "../../Maps/MapAccessor";
-import { CellIndex } from "../../Model/CellIndex";
-import { Point } from "../../Model/Point";
-import { DrawingUI } from "../../UI/DrawingUI";
-import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../Utilities/VectorMath";
-import { MapManager } from "../../Maps/MapManager";
+import { CellIndex } from "../../../Model/CellIndex";
+import { Point } from "../../../Model/Point";
+import { DrawingUI } from "../../../UI/DrawingUI";
+import { Tool } from "../../../UI/Tools/Tool";
+import { GridHelper } from "../../../Utilities/GridHelper";
+import { VectorMath } from "../../../Utilities/VectorMath";
+import { MapAccessor } from "../../MapAccessor";
+import { MapManager } from "../../MapManager";
+
 
 export class RoadsTool implements Tool {
     private readonly mapAccessor: MapAccessor;

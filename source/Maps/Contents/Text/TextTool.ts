@@ -1,11 +1,12 @@
-import { Localizer } from "../../Engine/Localization/Localizer";
-import { Point } from "../../Model/Point";
-import { FormsHelper } from "../../UI/Forms/FormsHelper";
-import { ModalLauncher } from "../../UI/ModalLauncher";
-import { Tool } from "../../UI/Tools/Tool";
-import { VectorMath } from "../../Utilities/VectorMath";
+import { Localizer } from "../../../Engine/Localization/Localizer";
+import { Point } from "../../../Model/Point";
+import { FormsHelper } from "../../../UI/Forms/FormsHelper";
+import { ModalLauncher } from "../../../UI/ModalLauncher";
+import { Tool } from "../../../UI/Tools/Tool";
+import { VectorMath } from "../../../Utilities/VectorMath";
+import { MapManager } from "../../MapManager";
 import { GridText } from "./GridText";
-import { MapManager } from "../../Maps/MapManager";
+
 
 export class TextTool implements Tool {
     public readonly configuration = {

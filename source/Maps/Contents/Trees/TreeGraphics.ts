@@ -1,7 +1,7 @@
-import { Drawer } from "../../Engine/Rendering/Drawer";
-import { Graphics } from "../../Engine/Rendering/Graphics";
-import { LineStyle } from "../../Engine/Rendering/LineStyle";
-import { MapObject } from "../../Model/MapObject";
+import { Drawer } from "../../../Engine/Rendering/Drawer";
+import { Graphics } from "../../../Engine/Rendering/Graphics";
+import { LineStyle } from "../../../Engine/Rendering/LineStyle";
+import { MapObject } from "../../../Model/MapObject";
 
 export class TreeGraphics implements Graphics {
     private readonly lineWidth = .02;

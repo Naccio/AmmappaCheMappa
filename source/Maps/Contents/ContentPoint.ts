@@ -1,5 +1,5 @@
-import { Point } from "../Model/Point";
-import { ContentPointConstraint } from "./ContentPointConstraint";
+import { Point } from "../../Model/Point";
+import { ContentPointConstraint } from "./Configuration/ContentPointConstraint";
 
 export enum ContentPointType {
     position,

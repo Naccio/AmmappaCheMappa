@@ -1,6 +1,6 @@
-import { MapObject } from "../Model/MapObject";
-import { Point } from "../Model/Point";
-import { Vector } from "../Model/Vector";
+import { MapObject } from "../../../Model/MapObject";
+import { Point } from "../../../Model/Point";
+import { Vector } from "../../../Model/Vector";
 
 export interface ContentPointConstraint {
     apply(object: MapObject, pointIndex: number, change: Vector): boolean;

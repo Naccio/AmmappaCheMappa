@@ -1,6 +1,7 @@
-import { Drawer } from "../../Engine/Rendering/Drawer";
-import { Graphics } from "../../Engine/Rendering/Graphics";
-import { MapObject } from "../../Model/MapObject";
+import { Drawer } from "../../../Engine/Rendering/Drawer";
+import { Graphics } from "../../../Engine/Rendering/Graphics";
+import { MapObject } from "../../../Model/MapObject";
+
 
 export class RoadGraphics implements Graphics {
     public constructor(private road: MapObject) { }

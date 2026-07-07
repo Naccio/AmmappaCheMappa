@@ -1,5 +1,6 @@
-import { ContentPointType } from "./ContentPoint";
+import { ContentPointType } from "../ContentPoint";
 import { ContentPointConstraint } from "./ContentPointConstraint";
+
 
 export interface ContentPointConfiguration {
     type: ContentPointType;

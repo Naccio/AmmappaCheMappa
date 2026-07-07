@@ -1,4 +1,4 @@
-import { ObjectGraphicsFactory } from "../Engine/Rendering/ObjectGraphicsFactory";
+import { ObjectGraphicsFactory } from "../../../Engine/Rendering/ObjectGraphicsFactory";
 import { ContentPointsConfiguration } from "./ContentPointsConfiguration";
 
 export interface ContentConfiguration {

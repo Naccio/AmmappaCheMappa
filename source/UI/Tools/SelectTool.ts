@@ -5,7 +5,7 @@ import { GridHelper } from "../../Utilities/GridHelper";
 import { ModalLauncher } from "../ModalLauncher";
 import { Tool } from "./Tool";
 import { CellEditor } from "../../Maps/Cells/CellEditor";
-import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
+import { ContentsConfiguration } from "../../Maps/Contents/Configuration/ContentsConfiguration";
 
 export class SelectTool implements Tool {
 

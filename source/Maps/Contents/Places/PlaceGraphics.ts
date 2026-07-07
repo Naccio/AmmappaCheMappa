@@ -1,7 +1,8 @@
-import { Graphics } from "../../Engine/Rendering/Graphics";
-import { Drawer } from "../../Engine/Rendering/Drawer";
-import { MapObject } from "../../Model/MapObject";
-import { VectorMath } from "../../Utilities/VectorMath";
+import { Drawer } from "../../../Engine/Rendering/Drawer";
+import { Graphics } from "../../../Engine/Rendering/Graphics";
+import { MapObject } from "../../../Model/MapObject";
+import { VectorMath } from "../../../Utilities/VectorMath";
+
 
 export class PlaceGraphics implements Graphics {
 

@@ -1,9 +1,3 @@
-import { MountainsTool } from "../../Contents/Mountains/MountainsTool";
-import { PlacesTool } from "../../Contents/Places/PlacesTool";
-import { RiversTool } from "../../Contents/Rivers/RiversTool";
-import { RoadsTool } from "../../Contents/Roads/RoadsTool";
-import { TextTool } from "../../Contents/Text/TextTool";
-import { TreesTool } from "../../Contents/Trees/TreesTool";
 import { Localizer } from "../../Engine/Localization/Localizer";
 import { DrawingUI } from "../DrawingUI";
 import { ModalLauncher } from "../ModalLauncher";
@@ -12,7 +6,13 @@ import { ToolsManager } from "./ToolsManager";
 import { SelectTool } from "./SelectTool";
 import { MapManager } from "../../Maps/MapManager";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
-import { ContentsConfiguration } from "../../Contents/ContentsConfiguration";
+import { ContentsConfiguration } from "../../Maps/Contents/Configuration/ContentsConfiguration";
+import { MountainsTool } from "../../Maps/Contents/Mountains/MountainsTool";
+import { PlacesTool } from "../../Maps/Contents/Places/PlacesTool";
+import { RiversTool } from "../../Maps/Contents/Rivers/RiversTool";
+import { RoadsTool } from "../../Maps/Contents/Roads/RoadsTool";
+import { TextTool } from "../../Maps/Contents/Text/TextTool";
+import { TreesTool } from "../../Maps/Contents/Trees/TreesTool";
 
 export class ToolsManagerFactory {
     constructor(
