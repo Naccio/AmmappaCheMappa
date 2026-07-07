@@ -1,11 +1,6 @@
 import { Point } from "../../Model/Point";
 import { ContentPointConstraint } from "./Configuration/ContentPointConstraint";
-
-export enum ContentPointType {
-    position,
-    primary,
-    helper
-}
+import { ContentPointType } from "./ContentPointType";
 
 export interface ContentPoint {
     type: ContentPointType,

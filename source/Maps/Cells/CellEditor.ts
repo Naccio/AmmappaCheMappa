@@ -1,4 +1,5 @@
-import { ContentPoint, ContentPointType } from "../Contents/ContentPoint";
+import { ContentPoint } from "../Contents/ContentPoint";
+import { ContentPointType } from "../Contents/ContentPointType";
 import { InternalObservable } from "../../Engine/Events/InternalObservable";
 import { Drawer } from "../../Engine/Rendering/Drawer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
