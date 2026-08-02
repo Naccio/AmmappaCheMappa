@@ -154,8 +154,8 @@ export class CellEditor implements UIElement {
 
     private getCellShift(index: CellIndex) {
         return {
-            x: this.cell.index.column + 1 - index.column,
-            y: this.cell.index.row + 1 - index.row
+            x: index.column + 1 - this.cell.index.column,
+            y: index.row + 1 - this.cell.index.row
         };
     }
 
