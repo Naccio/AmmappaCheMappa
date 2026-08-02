@@ -4,6 +4,7 @@ import { LayerRenderer } from "./LayerRenderer";
 import { LineStyle } from "../../Engine/Rendering/LineStyle";
 import { DrawingLayer } from "./DrawingLayer";
 import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
+import { GridHelper } from "../../Utilities/GridHelper";
 
 export class GridLayer implements DrawingLayer, LayerRenderer {
     private wrapper: HTMLElement;
@@ -36,7 +37,7 @@ export class GridLayer implements DrawingLayer, LayerRenderer {
     private renderAtScale(drawer: Drawer, spacing: number) {
         const map = this.mapAccessor.map.data,
             style: LineStyle = {
-                color: '#999',
+                color: GridHelper.defaultGridColor,
                 lineWidth: 2
             };
 

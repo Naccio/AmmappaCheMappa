@@ -9,6 +9,8 @@ export class GridHelper {
     public static readonly bottomNeighborIndex = 2;
     public static readonly leftNeighborIndex = 3;
 
+    public static readonly defaultGridColor = '#999';
+
     public static readonly quadrantShift: Vector[] = [
         { x: 0, y: 0 },
         { x: 1, y: 0 },

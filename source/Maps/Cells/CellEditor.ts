@@ -8,16 +8,18 @@ import { PointerButtons, PointerStatus, PointerTarget } from "../../UI/PointerTa
 import { RadioSelect } from "../../UI/RadioSelect";
 import { UIElement } from "../../UI/UIElement";
 import { VectorMath } from "../../Utilities/VectorMath";
-import { CellGraphics } from "./CellGraphics";
 import { CellContext } from "./CellContext";
 import { ContentsConfiguration } from "../Contents/Configuration/ContentsConfiguration";
+import { CellRenderer } from "./CellRenderer";
+import { CellIndex } from "../../Model/CellIndex";
+import { GridHelper } from "../../Utilities/GridHelper";
+import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
-    private readonly scale = 3;
+    private readonly scale = 2.5;
 
     private readonly drawer: Drawer;
-    private readonly graphics: CellGraphics;
     private readonly pointer: PointerTarget;
     private readonly container: HTMLDivElement;
 
@@ -35,12 +37,14 @@ export class CellEditor implements UIElement {
     public constructor(
         private readonly cell: CellContext,
         drawerFactory: DrawerFactory,
-        private readonly contents: ContentsConfiguration
+        private readonly contents: ContentsConfiguration,
+        private readonly renderer: CellRenderer
     ) {
         const scale = this.scale * cell.pixels,
+            size = scale * 3,
             objects = cell.objects.value,
             container = document.createElement('div'),
-            drawer = drawerFactory.create(scale, scale, scale);
+            drawer = drawerFactory.create(size, size, scale);
 
         this.selectedObject = new InternalObservable<MapObject | undefined>(undefined);
 
@@ -49,9 +53,7 @@ export class CellEditor implements UIElement {
         });
 
         this.pointer = new PointerTarget();
-
         this.drawer = drawer;
-        this.graphics = new CellGraphics(objects, contents);
 
         container.style.display = 'flex';
         container.style.alignItems = 'start';
@@ -74,30 +76,91 @@ export class CellEditor implements UIElement {
     }
 
     private draw() {
+        this.drawer.clear();
+        this.drawCells();
+        this.drawOverlay();
+        this.drawPoints();
+    }
+
+    private drawPoints() {
         const points = this.points,
             drawer = this.drawer;
 
-        drawer.clear();
-        this.graphics.render(this.drawer);
-
         points.forEach(p => {
+            const point = this.getRelativePoint(p);
+
             switch (p.type) {
                 case ContentPointType.position:
-                    this.drawer.circle(p.point, this.radius, { fillStyle: 'red' });
+                    this.drawer.circle(point, this.radius, { fillStyle: 'red' });
                     break;
 
                 case ContentPointType.primary:
-                    this.drawer.circle(p.point, this.radius, { fillStyle: 'blue' });
+                    this.drawer.circle(point, this.radius, { fillStyle: 'blue' });
                     break;
 
                 case ContentPointType.helper:
-                    this.drawer.circle(p.point, this.radius, { fillStyle: 'green' });
+                    this.drawer.circle(point, this.radius, { fillStyle: 'green' });
                     break;
 
                 default:
                     throw new Error(`Invalid point type: '${p.type}'.`);
             }
         });
+    }
+
+    private drawCell(cell?: CellContext) {
+        if (cell === undefined) {
+            return;
+        }
+
+        const shift = this.getCellShift(cell.index),
+            image = this.renderer.render(cell, undefined, this.scale);
+
+        this.drawer.image(image, shift);
+    }
+
+    private drawCells() {
+        const c = this.cell,
+            t = c.topNeighbor,
+            r = c.rightNeighbor,
+            b = c.bottomNeighbor,
+            l = c.leftNeighbor,
+            tr = t?.rightNeighbor,
+            br = b?.rightNeighbor,
+            bl = b?.leftNeighbor,
+            tl = t?.leftNeighbor;
+
+        [c, t, r, b, l, tr, br, bl, tl].forEach(c => this.drawCell(c));
+    }
+
+    private drawOverlay() {
+        for (let x = 0; x < 3; x++) {
+            for (let y = 0; y < 3; y++) {
+                const style: ShapeStyle = {
+                    line: {
+                        color: GridHelper.defaultGridColor,
+                        lineWidth: .01
+                    }
+                };
+
+                if (x !== 1 || y !== 1) {
+                    style.fillStyle = 'rgba(215,215,215,.75)';
+                }
+
+                this.drawer.rectangle({ x, y }, 1, 1, style);
+            }
+        }
+    }
+
+    private getCellShift(index: CellIndex) {
+        return {
+            x: this.cell.index.column + 1 - index.column,
+            y: this.cell.index.row + 1 - index.row
+        };
+    }
+
+    private getRelativePoint(point: ContentPoint) {
+        return VectorMath.add(point.point, this.getCellShift(this.cell.index));
     }
 
     private getPoints() {
@@ -128,7 +191,8 @@ export class CellEditor implements UIElement {
 
         if (this.activePoint !== undefined) {
             const point = this.points[this.activePoint],
-                change = pointer.subtract(point.point),
+                relativePoint = this.getRelativePoint(point),
+                change = pointer.subtract(relativePoint),
                 constraints = point.constraints ?? [];
 
             let apply = true;
@@ -149,12 +213,14 @@ export class CellEditor implements UIElement {
             }
             this.draw();
         } else {
-            const index = this.points.findIndex(p =>
-                p.point.x - this.radius < pointer.x &&
-                p.point.x + this.radius > pointer.x &&
-                p.point.y - this.radius < pointer.y &&
-                p.point.y + this.radius > pointer.y
-            );
+            const index = this.points
+                .map(p => this.getRelativePoint(p))
+                .findIndex(p =>
+                    p.x - this.radius < pointer.x &&
+                    p.x + this.radius > pointer.x &&
+                    p.y - this.radius < pointer.y &&
+                    p.y + this.radius > pointer.y
+                );
 
             this.activePoint = index === -1 ? undefined : index;
         }

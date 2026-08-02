@@ -97,7 +97,9 @@ export class CanvasDrawer implements Drawer {
         this.setShapeStyle(style);
         this.context.beginPath();
         this.context.ellipse(point.x, point.y, radiusX, radiusY, rotation, 0, Math.PI * 2);
-        this.context.fill();
+        if (style.fillStyle !== undefined) {
+            this.context.fill();
+        }
         if (style.line !== undefined) {
             this.context.stroke();
         }
@@ -106,8 +108,8 @@ export class CanvasDrawer implements Drawer {
     }
 
     public image(drawer: CanvasDrawer, point: Point) {
-        const width = this.getActualValue(drawer.width),
-            height = this.getActualValue(drawer.height)
+        const width = drawer.width,
+            height = drawer.height
 
         point = this.getActualPoint(point);
 
@@ -137,7 +139,12 @@ export class CanvasDrawer implements Drawer {
         this.context.save();
 
         this.setShapeStyle(style);
-        this.context.fillRect(point.x, point.y, width, height);
+        if (style.fillStyle !== undefined) {
+            this.context.fillRect(point.x, point.y, width, height);
+        }
+        if (style.line !== undefined) {
+            this.context.strokeRect(point.x, point.y, width, height);
+        }
 
         this.context.restore();
     }

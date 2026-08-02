@@ -38,6 +38,7 @@ import { RiverGraphics } from "./Maps/Contents/Rivers/RiverGraphics";
 import { RoadGraphics } from "./Maps/Contents/Roads/RoadGraphics";
 import { TextGraphics } from "./Maps/Contents/Text/TextGraphics";
 import { TreeGraphics } from "./Maps/Contents/Trees/TreeGraphics";
+import { CellEditorFactory } from "./Maps/Cells/CellEditorFactory";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const uiFactory = new UIFactory();
     const mapDrawerFactory = new MapDrawerFactory(drawerFactory);
     const cellRenderer = new CellRenderer(drawerFactory, contents);
+    const cellEditorFactory = new CellEditorFactory(drawerFactory, contents, cellRenderer);
 
     const defaultLayerRenderer = new DefaultLayerRendererFactory(cellRenderer);
     const defaultLayerDrawing = new DefaultLayerDrawingFactory(mapDrawerFactory, cellRenderer);
@@ -117,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modalLauncher = new ModalLauncher(uiFactory, localizer);
     const mapManagerFactory = new MapManagerFactory(store);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
-    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, drawerFactory, localizer, contents);
+    const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, localizer, cellEditorFactory);
     const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory, layers);
     const mapRenderer = new MapRenderer(mapDrawerFactory, layers);
 

@@ -1,11 +1,9 @@
-import { DrawerFactory } from "../../Engine/Rendering/DrawerFactory";
 import { MapManager } from "../../Maps/MapManager";
 import { Point } from "../../Model/Point";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ModalLauncher } from "../ModalLauncher";
 import { Tool } from "./Tool";
-import { CellEditor } from "../../Maps/Cells/CellEditor";
-import { ContentsConfiguration } from "../../Maps/Contents/Configuration/ContentsConfiguration";
+import { CellEditorFactory } from "../../Maps/Cells/CellEditorFactory";
 
 export class SelectTool implements Tool {
 
@@ -17,9 +15,8 @@ export class SelectTool implements Tool {
 
     public constructor(
         private readonly mapManager: MapManager,
-        private readonly drawerFactory: DrawerFactory,
         private readonly modal: ModalLauncher,
-        private readonly contents: ContentsConfiguration
+        private readonly editorFactory: CellEditorFactory
     ) { }
 
     public start(point: Point) {
@@ -31,7 +28,7 @@ export class SelectTool implements Tool {
 
         const cellName = GridHelper.cellIndexToName(cell),
             cellManager = this.mapManager.getCell(cell),
-            editor = new CellEditor(cellManager, this.drawerFactory, this.contents);
+            editor = this.editorFactory.create(cellManager);
 
         this.modal.launch(cellName, [editor.html]);
     }
