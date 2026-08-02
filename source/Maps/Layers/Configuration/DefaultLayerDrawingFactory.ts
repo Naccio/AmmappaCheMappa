@@ -14,6 +14,6 @@ export class DefaultLayerDrawingFactory implements LayerDrawingFactory {
     public create(id: string, map: MapManager) {
         const drawer = this.mapDrawerFactory.create(map.mapAccessor);
 
-        return new DefaultLayerDrawing(id, map.cells, drawer, this.cellRenderer);
+        return new DefaultLayerDrawing(id, map.cells.flat(1), drawer, this.cellRenderer);
     }
 }

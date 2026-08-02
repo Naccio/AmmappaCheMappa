@@ -8,6 +8,6 @@ export class DefaultLayerRendererFactory implements LayerRendererFactory {
     public constructor(private readonly cellRenderer: CellRenderer) { }
 
     public create(id: string, map: MapManager) {
-        return new DefaultLayerRenderer(id, map.cells, this.cellRenderer);
+        return new DefaultLayerRenderer(id, map.cells.flat(1), this.cellRenderer);
     }
 }

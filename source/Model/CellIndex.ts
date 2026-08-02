@@ -1,4 +1,4 @@
 export interface CellIndex {
-    column: number;
-    row: number;
+    readonly column: number;
+    readonly row: number;
 }

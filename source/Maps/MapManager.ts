@@ -1,5 +1,4 @@
 import { CellIndex } from "../Model/CellIndex";
-import { GridHelper } from "../Utilities/GridHelper";
 import { CellContext } from "./Cells/CellContext";
 import { LayersManager } from "./Layers/LayersManager";
 import { MapAccessor } from "./MapAccessor";
@@ -8,7 +7,7 @@ export class MapManager {
     constructor(
         public readonly mapAccessor: MapAccessor,
         public readonly layers: LayersManager,
-        public readonly cells: readonly CellContext[]
+        public readonly cells: readonly CellContext[][]
     ) {
     }
 
@@ -17,7 +16,7 @@ export class MapManager {
     }
 
     public getCell(index: CellIndex) {
-        const cell = this.cells.find(c => GridHelper.cellIsEqual(c.index, index));
+        const cell = this.cells[index.column][index.row];
 
         if (cell === undefined) {
             throw new Error(`Could not find cell [${index.column},${index.row}].`);

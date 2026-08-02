@@ -10,6 +10,8 @@ import { MapAccessor } from "../MapAccessor";
 export class CellContext {
     private readonly _objects: InternalObservable<MapObject[]>;
 
+    private _neighbors?: readonly (CellContext | undefined)[];
+
     public readonly name: string;
 
     public constructor(
@@ -18,6 +20,38 @@ export class CellContext {
     ) {
         this.name = GridHelper.cellIndexToName(index);
         this._objects = new InternalObservable<MapObject[]>(this.loadObjects());
+    }
+
+    public get neighbors() {
+        if (this._neighbors === undefined) {
+            throw new Error('Cell neighbors were not assigned.');
+        }
+
+        return this._neighbors;
+    }
+
+    public set neighbors(value: readonly (CellContext | undefined)[]) {
+        if (value.length !== 4) {
+            throw new Error('Cell neighbors array length must be 4.');
+        }
+
+        this._neighbors = value;
+    }
+
+    public get topNeighbor() {
+        return this.neighbors[GridHelper.topNeighborIndex];
+    }
+
+    public get rightNeighbor() {
+        return this.neighbors[GridHelper.rightNeighborIndex];
+    }
+
+    public get bottomNeighbor() {
+        return this.neighbors[GridHelper.bottomNeighborIndex];
+    }
+
+    public get leftNeighbor() {
+        return this.neighbors[GridHelper.leftNeighborIndex];
     }
 
     public get objects(): Observable<readonly MapObject[]> {

@@ -4,6 +4,11 @@ import { Vector } from "../Model/Vector";
 import { VectorMath } from "./VectorMath";
 
 export class GridHelper {
+    public static readonly topNeighborIndex = 0;
+    public static readonly rightNeighborIndex = 1;
+    public static readonly bottomNeighborIndex = 2;
+    public static readonly leftNeighborIndex = 3;
+
     public static readonly quadrantShift: Vector[] = [
         { x: 0, y: 0 },
         { x: 1, y: 0 },

@@ -14,7 +14,7 @@ export class DefaultLayerRenderer implements LayerRenderer {
     }
 
     public render(drawer: Drawer) {
-        this.cells.forEach(c => this.renderCell(drawer, c));
+        this.cells.flat(1).forEach(c => this.renderCell(drawer, c));
     }
 
     private renderCell(drawer: Drawer, cell: CellContext) {
