@@ -1,7 +1,6 @@
-import { Point } from "../../../Model/Point";
 import { Tool } from "../../../UI/Tools/Tool";
+import { ToolContext } from "../../../UI/Tools/ToolContext";
 import { VectorMath } from "../../../Utilities/VectorMath";
-import { MapManager } from "../../MapManager";
 
 
 export class PlacesTool implements Tool {
@@ -11,20 +10,15 @@ export class PlacesTool implements Tool {
         layerTypes: ['terrain']
     };
 
-    constructor(private readonly map: MapManager) {
-    }
+    public start(context: ToolContext) {
+        const cell = context.cell,
+            position = context.cellPosition;
 
-    public start(point: Point) {
-        const mapAccessor = this.map.mapAccessor,
-            cellIndex = mapAccessor.getIndex(point);
-
-        if (cellIndex === undefined) {
+        if (cell === undefined) {
             return;
         }
 
-        const position = mapAccessor.normalizedPosition(cellIndex, point),
-            cell = this.map.getCell(cellIndex),
-            radius = VectorMath.add(position, { x: .2, y: 0 }),
+        const radius = VectorMath.add(position, { x: .2, y: 0 }),
             place = cell.createObject('place', [position, radius]);
 
         cell.clear();

@@ -31,7 +31,7 @@ export class MapUIFactory {
         const uiLayer = new DrawingUI(mapAccessor.map, this.drawerFactory);
         const tools = this.toolsFactory.create(mapManager, uiLayer);
         const toolbar = new Toolbar(tools.tools, this.localizer, layersManager);
-        const toolActivator = new ToolActivator(toolbar);
+        const toolActivator = new ToolActivator(toolbar, mapManager);
         const drawer = new MapDrawer(mapManager, this.store, uiLayer, this.layers);
         const drawingArea = new DrawingArea(toolActivator, drawer);
         const layersPanel = new LayersPanel(layersManager, this.ui, this.localizer);

@@ -1,4 +1,3 @@
-import { GridHelper } from "../Utilities/GridHelper";
 import { CellIndex } from "../Model/CellIndex";
 import { EditorMap } from "../Model/EditorMap";
 import { MapObject } from "../Model/MapObject";
@@ -23,18 +22,6 @@ export class MapAccessor {
         return this.map.zoom / this.map.data.pixelsPerCell;
     }
 
-    public absolutePosition(cell: CellIndex, normalizedPosition: Point): Point {
-        const cellPosition = {
-            x: cell.column,
-            y: cell.row
-        };
-
-        return VectorMath
-            .startOperation(normalizedPosition)
-            .add(cellPosition)
-            .divide(this.scale);
-    }
-
     public getIndex(position?: Point): CellIndex | undefined {
         if (position === undefined) {
             return undefined;
@@ -52,28 +39,8 @@ export class MapAccessor {
         return { column, row };
     }
 
-    public getIndexes(from: Point, to: Point) {
-        const fromCell = this.getIndex(from),
-            toCell = this.getIndex(to);
-
-        if (fromCell === undefined || toCell === undefined) {
-            return [];
-        }
-
-        return GridHelper.getConnectingCells(fromCell, toCell);
-    }
-
     public getLayer(id: string) {
         return this.map.data.layers.find(l => l.id === id);
-    }
-
-    public getPosition(index: CellIndex): Point {
-        const shift = {
-            x: index.column,
-            y: index.row
-        };
-
-        return VectorMath.multiply(shift, this.map.data.pixelsPerCell);
     }
 
     public normalizedPosition(cell: CellIndex, absolutePosition: Point): Point {

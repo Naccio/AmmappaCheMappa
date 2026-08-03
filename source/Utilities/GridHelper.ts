@@ -108,7 +108,7 @@ export class GridHelper {
         return cells;
     }
 
-    public static getConnection(cell: CellIndex, from: Point, direction: Vector): [Point, CellIndex, Point] {
+    public static getConnection(from: Point, direction: Vector): [Point, number, Point] {
         // Multiply by a large number to minimize the rounding errors
         // when calculating the intersections
         const distantTo = VectorMath.multiply(direction, 1000),
@@ -121,12 +121,12 @@ export class GridHelper {
             left = { from: { x: 0, y: 0 }, to: { x: 0, y: 1 } };
 
         let to = VectorMath.lineIntersection(line, top),
-            nextCell: CellIndex | undefined = undefined,
+            nextCell: number | undefined = undefined,
             nextFrom: Point | undefined = undefined;
 
         if (from.y !== 0 && to !== undefined) {
             to.y = 0;
-            nextCell = { column: cell.column, row: cell.row - 1 };
+            nextCell = this.topNeighborIndex;
             nextFrom = { x: to.x, y: 1 };
 
             return [to, nextCell, nextFrom];
@@ -136,7 +136,7 @@ export class GridHelper {
 
         if (from.x !== 1 && to !== undefined) {
             to.x = 1;
-            nextCell = { column: cell.column + 1, row: cell.row };
+            nextCell = this.rightNeighborIndex;
             nextFrom = { x: 0, y: to.y };
 
             return [to, nextCell, nextFrom];
@@ -146,7 +146,7 @@ export class GridHelper {
 
         if (from.y !== 1 && to !== undefined) {
             to.y = 1;
-            nextCell = { column: cell.column, row: cell.row + 1 };
+            nextCell = this.bottomNeighborIndex;
             nextFrom = { x: to.x, y: 0 };
 
             return [to, nextCell, nextFrom];
@@ -156,7 +156,7 @@ export class GridHelper {
 
         if (from.x !== 0 && to !== undefined) {
             to.x = 0;
-            nextCell = { column: cell.column - 1, row: cell.row };
+            nextCell = this.leftNeighborIndex;
             nextFrom = { x: 1, y: to.y };
 
             return [to, nextCell, nextFrom];

@@ -1,9 +1,8 @@
-import { MapManager } from "../../Maps/MapManager";
-import { Point } from "../../Model/Point";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ModalLauncher } from "../ModalLauncher";
 import { Tool } from "./Tool";
 import { CellEditorFactory } from "../../Maps/Cells/CellEditorFactory";
+import { ToolContext } from "./ToolContext";
 
 export class SelectTool implements Tool {
 
@@ -14,21 +13,19 @@ export class SelectTool implements Tool {
     };
 
     public constructor(
-        private readonly mapManager: MapManager,
         private readonly modal: ModalLauncher,
         private readonly editorFactory: CellEditorFactory
     ) { }
 
-    public start(point: Point) {
-        const cell = this.mapManager.mapAccessor.getIndex(point);
+    public start(context: ToolContext) {
+        const cell = context.cell;
 
         if (cell === undefined) {
             return;
         }
 
-        const cellName = GridHelper.cellIndexToName(cell),
-            cellManager = this.mapManager.getCell(cell),
-            editor = this.editorFactory.create(cellManager);
+        const cellName = GridHelper.cellIndexToName(cell.index),
+            editor = this.editorFactory.create(cell);
 
         this.modal.launch(cellName, [editor.html]);
     }

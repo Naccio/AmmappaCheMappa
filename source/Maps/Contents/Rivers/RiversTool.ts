@@ -1,16 +1,15 @@
-import { CellIndex } from "../../../Model/CellIndex";
 import { MapObject } from "../../../Model/MapObject";
 import { Point } from "../../../Model/Point";
 import { Tool } from "../../../UI/Tools/Tool";
+import { ToolContext } from "../../../UI/Tools/ToolContext";
 import { GridHelper } from "../../../Utilities/GridHelper";
 import { MathHelper } from "../../../Utilities/MathHelper";
+import { Utilities } from "../../../Utilities/Utilities";
 import { VectorMath } from "../../../Utilities/VectorMath";
-import { MapAccessor } from "../../MapAccessor";
-import { MapManager } from "../../MapManager";
+import { CellContext } from "../../Cells/CellContext";
 
 
 export class RiversTool implements Tool {
-    private readonly mapAccessor: MapAccessor;
     public readonly configuration = {
         id: 'rivers',
         labelResourceId: 'tool_label_rivers',
@@ -18,59 +17,51 @@ export class RiversTool implements Tool {
     };
 
     private startPosition?: Point;
-    private activeCell?: CellIndex;
+    private activeCell?: CellContext;
 
-    constructor(private readonly map: MapManager) {
-        this.mapAccessor = map.mapAccessor;
-    }
-
-    start(position: Point): void {
-        const cell = this.mapAccessor.getIndex(position);
+    start(context: ToolContext): void {
+        const cell = context.cell;
 
         if (cell === undefined) {
             return;
         }
 
-        this.startPosition = position;
+        this.startPosition = context.cellPosition;
         this.activeCell = cell;
     }
 
-    move(position?: Point): void {
+    move(context: ToolContext): void {
         const activeCell = this.activeCell,
-            cellIndex = this.mapAccessor.getIndex(position);
+            cell = context.cell;
 
-        if (this.startPosition === undefined || activeCell === undefined || position === undefined || cellIndex === undefined) {
+        if (this.startPosition === undefined || activeCell === undefined || cell === undefined) {
             return
         }
 
-        if (!GridHelper.cellIsEqual(activeCell, cellIndex)) {
-            const map = this.mapAccessor.map,
-                river = this.getRiver(activeCell)!,
-                cellPosition = this.mapAccessor.getPosition(cellIndex);
+        const position = context.cellPosition;
 
-            this.createRivers(activeCell, this.startPosition, cellIndex, position)
+        if (!GridHelper.cellIsEqual(activeCell.index, cell.index)) {
+            const river = this.getRiver(activeCell)!;
 
-            this.startPosition = VectorMath.startOperation(river.points[0])
-                .multiply(map.data.pixelsPerCell)
-                .add(cellPosition)
-                .divide(map.zoom);
-            this.activeCell = cellIndex;
+            this.createRivers(activeCell, this.startPosition, cell, position)
+
+            this.startPosition = river.points[0];
+            this.activeCell = cell;
         } else {
-            const river = this.getRiver(cellIndex);
+            const river = this.getRiver(cell);
 
             if (river === undefined) {
-                const from = this.mapAccessor.normalizedPosition(cellIndex, this.startPosition),
-                    to = this.mapAccessor.normalizedPosition(cellIndex, position);
+                const from = this.startPosition,
+                    to = position;
 
-                this.createRiver(cellIndex, from, to);
+                this.createRiver(cell, from, to);
             } else {
-                const cell = this.map.getCell(cellIndex),
-                    points = [...river.points];
+                const points = [...river.points];
 
-                points[1] = VectorMath.round(this.mapAccessor.normalizedPosition(cellIndex, position), 2);
+                points[1] = position;
                 cell.update(river.id, points);
 
-                this.startPosition = this.mapAccessor.absolutePosition(cellIndex, river.points[0]);
+                this.startPosition = river.points[0];
             }
         }
     }
@@ -80,31 +71,30 @@ export class RiversTool implements Tool {
         this.activeCell = undefined
     }
 
-    private createRivers(firstCell: CellIndex, start: Point, lastCell: CellIndex, end: Point) {
-        const normalizedStart = this.mapAccessor.normalizedPosition(firstCell, start),
-            direction = VectorMath.direction(start, end),
-            cells: CellIndex[] = [firstCell];
+    private createRivers(firstCell: CellContext, start: Point, lastCell: CellContext, end: Point) {
+        const direction = VectorMath.startOperation(end)
+            .add(lastCell.index.column - firstCell.index.column, lastCell.index.row - firstCell.index.row)
+            .direction(start)
+            .invert();
 
         let cell = firstCell,
-            from = normalizedStart,
+            from = start,
             previous = this.getRiver(firstCell),
-            [to, nextCell, nextFrom] = GridHelper.getConnection(cell, from, direction);
+            [to, nextCell, nextFrom] = GridHelper.getConnection(from, direction),
+            iterations = 0;
 
         do {
-            cells.push(cell);
-            cell = nextCell;
+            cell = cell.neighbors[nextCell]!;
             from = nextFrom;
 
-            [to, nextCell, nextFrom] = GridHelper.getConnection(cell, from, direction);
+            [to, nextCell, nextFrom] = GridHelper.getConnection(from, direction);
             previous = this.createRiver(cell, from, to, previous);
+            Utilities.checkInfiniteLoop(iterations++);
         }
-        while (!GridHelper.cellIsEqual(cell, lastCell));
-
-        return cells;
+        while (!GridHelper.cellIsEqual(cell.index, lastCell.index));
     }
 
-    private createRiver(cellIndex: CellIndex, from: Point, to: Point, previous?: MapObject) {
-        const cell = this.map.getCell(cellIndex);
+    private createRiver(cell: CellContext, from: Point, to: Point, previous?: MapObject) {
         let bend1 = {
             x: MathHelper.random(.2, .8),
             y: MathHelper.random(.2, .8)
@@ -117,8 +107,6 @@ export class RiversTool implements Tool {
                 .add(from);
         }
 
-        from = VectorMath.round(from, 4);
-        to = VectorMath.round(to, 4);
         bend1 = VectorMath.round(bend1, 2);
         const bend2 = {
             x: MathHelper.round(MathHelper.random(.2, .8), 2),
@@ -132,7 +120,7 @@ export class RiversTool implements Tool {
         return river;
     }
 
-    private getRiver(cell: CellIndex) {
-        return this.map.getCell(cell).objects.value.find(o => o.type === 'river');
+    private getRiver(cell: CellContext) {
+        return cell.objects.value.find(o => o.type === 'river');
     }
 }

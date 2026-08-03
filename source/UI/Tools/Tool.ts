@@ -1,12 +1,12 @@
-import { Point } from "../../Model/Point";
 import { ToolConfiguration } from "./ToolConfiguration";
+import { ToolContext } from "./ToolContext";
 
 export interface Tool {
     readonly configuration: ToolConfiguration;
 
-    start(position: Point): void;
+    start(context: ToolContext): void;
 
-    move(position?: Point): void;
+    move(context: ToolContext): void;
 
-    stop(position?: Point): void;
+    stop(context: ToolContext): void;
 }

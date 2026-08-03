@@ -1,14 +1,13 @@
 import { GridHelper } from "../../Utilities/GridHelper";
 import { CellIndex } from "../../Model/CellIndex";
-import { Point } from "../../Model/Point";
 import { Tool } from "./Tool";
 import { ToolConfiguration } from "./ToolConfiguration";
 import { CellContext } from "../../Maps/Cells/CellContext";
 import { MapManager } from "../../Maps/MapManager";
+import { ToolContext } from "./ToolContext";
 
 export abstract class CellTool implements Tool {
     private lastCell?: CellIndex;
-    private lastPosition?: Point;
 
     public abstract readonly configuration: ToolConfiguration;
 
@@ -17,40 +16,35 @@ export abstract class CellTool implements Tool {
 
     protected abstract useOnCell(cell: CellContext): void;
 
-    public start(position: Point) {
-        this.guardedUse(position);
+    public start(context: ToolContext) {
+        this.guardedUse(context);
     }
 
-    public move(position?: Point) {
-        if (position !== undefined) {
-            this.guardedUse(position);
-        }
+    public move(context: ToolContext) {
+        this.guardedUse(context);
     }
 
-    public stop(position?: Point) {
-        if (position !== undefined) {
-            this.guardedUse(position);
-        }
+    public stop(context: ToolContext) {
+        this.guardedUse(context);
         this.lastCell = undefined;
-        this.lastPosition = undefined;
     }
 
-    private guardedUse(position: Point) {
-        const cellIndex = this.map.mapAccessor.getIndex(position);
+    private guardedUse(context: ToolContext) {
+        const cell = context.cell,
+            cellIndex = cell?.index;
 
-        if (cellIndex !== undefined && !GridHelper.cellIsEqual(cellIndex, this.lastCell)) {
-            const cell = this.map.getCell(cellIndex);
-
-            if (this.lastPosition === undefined) {
+        if (cell !== undefined && cellIndex !== undefined && !GridHelper.cellIsEqual(cellIndex, this.lastCell)) {
+            if (this.lastCell === undefined) {
                 this.useOnCell(cell);
             } else {
-                this.map.mapAccessor.getIndexes(this.lastPosition, position)
-                    .map(i => this.map.getCell(i))
-                    .forEach(c => this.useOnCell(c));
+                GridHelper.getConnectingCells(this.lastCell, cellIndex)
+                    .forEach(c => {
+                        const cell = this.map.getCell(c);
+                        this.useOnCell(cell);
+                    });
             }
         }
 
         this.lastCell = cellIndex;
-        this.lastPosition = position;
     }
 }

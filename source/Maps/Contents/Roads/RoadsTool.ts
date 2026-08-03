@@ -1,16 +1,15 @@
-import { CellIndex } from "../../../Model/CellIndex";
 import { Point } from "../../../Model/Point";
 import { DrawingUI } from "../../../UI/DrawingUI";
 import { Tool } from "../../../UI/Tools/Tool";
+import { ToolContext } from "../../../UI/Tools/ToolContext";
 import { GridHelper } from "../../../Utilities/GridHelper";
+import { Utilities } from "../../../Utilities/Utilities";
 import { VectorMath } from "../../../Utilities/VectorMath";
+import { CellContext } from "../../Cells/CellContext";
 import { MapAccessor } from "../../MapAccessor";
-import { MapManager } from "../../MapManager";
 
 
 export class RoadsTool implements Tool {
-    private readonly mapAccessor: MapAccessor;
-
     public readonly configuration = {
         id: 'roads',
         labelResourceId: 'tool_label_roads',
@@ -18,13 +17,16 @@ export class RoadsTool implements Tool {
     };
 
     private startPosition?: Point;
+    private startCell?: CellContext;
 
-    constructor(private ui: DrawingUI, private map: MapManager) {
-        this.mapAccessor = map.mapAccessor;
+    constructor(
+        private ui: DrawingUI,
+        private map: MapAccessor
+    ) {
     }
 
-    start(position: Point): void {
-        const cell = this.mapAccessor.getIndex(position);
+    start(context: ToolContext): void {
+        const cell = context.cell;
 
         this.ui.drawer.clear();
 
@@ -32,21 +34,20 @@ export class RoadsTool implements Tool {
             return;
         }
 
-        this.startPosition = position;
+        this.startCell = cell;
+        this.startPosition = context.mapPosition;
     }
 
-    move(position?: Point): void {
-        const cell = this.mapAccessor.getIndex(position);
-
+    move(context: ToolContext): void {
         this.ui.drawer.clear();
 
-        if (this.startPosition === undefined || position === undefined || cell === undefined) {
+        if (this.startCell === undefined || this.startPosition === undefined || context.cell === undefined) {
             return
         }
 
-        const zoom = this.mapAccessor.map.zoom,
+        const zoom = this.map.map.zoom,
             from = VectorMath.multiply(this.startPosition, zoom),
-            to = VectorMath.multiply(position, zoom);
+            to = VectorMath.multiply(context.mapPosition, zoom);
 
         this.ui.drawer.line([from, to], {
             lineWidth: 5,
@@ -54,54 +55,47 @@ export class RoadsTool implements Tool {
         });
     }
 
-    stop(position?: Point): void {
-        const firstCell = this.mapAccessor.getIndex(this.startPosition),
-            lastCell = this.mapAccessor.getIndex(position);
+    stop(context: ToolContext): void {
+        const firstCell = this.startCell,
+            lastCell = context.cell;
 
         this.ui.drawer.clear();
 
-        if (this.startPosition === undefined || firstCell === undefined || position === undefined || lastCell === undefined) {
+        if (this.startPosition === undefined || firstCell === undefined || lastCell === undefined) {
             return
         }
 
-        this.createRoads(firstCell, this.startPosition, lastCell, position);
+        this.createRoads(firstCell, this.startPosition, lastCell, context.mapPosition);
 
         this.startPosition = undefined;
     }
 
-    private createRoads(firstCell: CellIndex, start: Point, lastCell: CellIndex, end: Point) {
-        const normalizedStart = this.mapAccessor.normalizedPosition(firstCell, start),
-            normalizedEnd = this.mapAccessor.normalizedPosition(lastCell, end),
-            direction = VectorMath.direction(start, end),
-            cells: CellIndex[] = [firstCell];
+    private createRoads(firstCell: CellContext, start: Point, lastCell: CellContext, end: Point) {
+        const normalizedStart = this.map.normalizedPosition(firstCell.index, start),
+            normalizedEnd = this.map.normalizedPosition(lastCell.index, end),
+            direction = VectorMath.direction(start, end);
 
         let cell = firstCell,
             from = normalizedStart,
-            to,
-            nextCell = lastCell,
-            nextFrom;
+            iterations = 0;
 
-
-        while (!GridHelper.cellIsEqual(cell, lastCell)) {
-            [to, nextCell, nextFrom] = GridHelper.getConnection(cell, from, direction);
+        while (!GridHelper.cellIsEqual(cell.index, lastCell.index)) {
+            const [to, nextCell, nextFrom] = GridHelper.getConnection(from, direction);
 
             this.createRoad(cell, from, to);
 
-            cell = nextCell;
+            cell = cell.neighbors[nextCell]!;
             from = nextFrom;
-            cells.push(nextCell);
+            Utilities.checkInfiniteLoop(iterations++);
         }
         this.createRoad(cell, from, normalizedEnd);
-
-        return cells;
     }
 
-    private createRoad(cellIndex: CellIndex, from: Point, to: Point) {
+    private createRoad(cell: CellContext, from: Point, to: Point) {
         from = VectorMath.round(from, 2);
         to = VectorMath.round(to, 2);
 
-        const cell = this.map.getCell(cellIndex),
-            road = cell.createObject('road', [from, to]);
+        const road = cell.createObject('road', [from, to]);
 
         cell.clear();
         cell.addObjects([road]);

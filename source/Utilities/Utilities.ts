@@ -2,6 +2,12 @@ import { EditorMap } from "../Model/EditorMap";
 
 export class Utilities {
 
+    public static checkInfiniteLoop(iterations: number) {
+        if (iterations > 10000) {
+            throw new Error('Infinite loop detected.');
+        }
+    }
+
     public static deepCopy<T>(object: T) {
         const json = JSON.stringify(object),
             copy = JSON.parse(json);

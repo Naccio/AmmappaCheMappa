@@ -1,10 +1,8 @@
 import { Localizer } from "../../../Engine/Localization/Localizer";
-import { Point } from "../../../Model/Point";
 import { FormsHelper } from "../../../UI/Forms/FormsHelper";
 import { ModalLauncher } from "../../../UI/ModalLauncher";
 import { Tool } from "../../../UI/Tools/Tool";
-import { VectorMath } from "../../../Utilities/VectorMath";
-import { MapManager } from "../../MapManager";
+import { ToolContext } from "../../../UI/Tools/ToolContext";
 import { GridText } from "./GridText";
 
 
@@ -15,13 +13,16 @@ export class TextTool implements Tool {
         layerTypes: ['text']
     };
 
-    constructor(private map: MapManager, private modal: ModalLauncher, private localizer: Localizer) {
+    constructor(
+        private readonly modal: ModalLauncher,
+        private readonly localizer: Localizer
+    ) {
     }
 
-    public start(point: Point) {
-        const cellIndex = this.map.mapAccessor.getIndex(point);
+    public start(context: ToolContext) {
+        const cell = context.cell;
 
-        if (cellIndex === undefined) {
+        if (cell === undefined) {
             return;
         }
 
@@ -35,15 +36,12 @@ export class TextTool implements Tool {
         textInput.required = true;
 
         this.modal.launchForm(title, [textInput.html, sizeInput.html], () => {
-            const cell = this.map.getCell(cellIndex),
-                fontSize = parseInt(sizeInput.value!) / 100,
-                normalizedPosition = this.map.mapAccessor.normalizedPosition(cellIndex, point),
-                position = VectorMath.round(normalizedPosition, 2),
+            const fontSize = parseInt(sizeInput.value!) / 100,
                 data: GridText = {
                     value: textInput.value!,
                     fontSize
                 },
-                text = cell.createObject('text', [position], data);
+                text = cell.createObject('text', [context.cellPosition], data);
 
             cell.addObjects([text]);
         });
