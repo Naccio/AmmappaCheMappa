@@ -1,10 +1,12 @@
 import { MapManager } from "../../Maps/MapManager";
-import { Vector } from "../../Model/Vector";
+import { Point } from "../../Model/Point";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { Toolbar } from "./Toolbar";
 import { ToolContext } from "./ToolContext";
 
 export class ToolActivator {
+    private previousPosition?: Point;
+
     constructor(
         //TODO: Should it depend on UI element?
         private readonly toolbar: Toolbar,
@@ -12,31 +14,39 @@ export class ToolActivator {
     ) {
     }
 
-    public start(position: Vector) {
+    public start(position: Point) {
         const context = this.createContext(position);
         this.toolbar.activeTool?.start(context);
+        this.previousPosition = position;
     }
 
-    public move(position: Vector) {
+    public move(position: Point) {
         const context = this.createContext(position);
         this.toolbar.activeTool?.move(context);
+        this.previousPosition = position;
     }
 
-    public stop(position?: Vector) {
+    public stop(position?: Point) {
         const context = this.createContext(position);
         this.toolbar.activeTool?.stop(context);
+        this.previousPosition = undefined;
     }
 
-    private createContext(position?: Vector) {
+    private createContext(position?: Point) {
         const cellIndex = this.map.mapAccessor.getIndex(position),
             context: ToolContext = {
-                mapPosition: position ?? VectorMath.zero,
+                position: position ?? VectorMath.zero,
+                direction: VectorMath.zero,
                 cellPosition: VectorMath.zero
             };
 
         if (position !== undefined && cellIndex !== undefined) {
             context.cell = this.map.getCell(cellIndex);
             context.cellPosition = this.map.mapAccessor.normalizedPosition(cellIndex, position);
+
+            if (this.previousPosition !== undefined) {
+                context.direction = VectorMath.direction(this.previousPosition, position);
+            }
         }
 
         return context;

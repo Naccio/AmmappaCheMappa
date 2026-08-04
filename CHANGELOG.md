@@ -5,7 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 
-## [alpha.4] - 2026-07-07
+## alpha.5 - UNRELEASED
+
+### Changed
+
+- Tools:
+  - **Select**: Neighboring cells are shown while editing a cell
+
+### Fixed
+
+- Tools:
+  - **River**: Sometimes rivers would not connect properly between cells
+
+
+## alpha.4 - 2026-07-07
 
 ### Added
 
@@ -29,7 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   another map open
 
 
-## [alpha.3] - 2026-04-10
+## alpha.3 - 2026-04-10
 
 ### Added
 
@@ -62,7 +75,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - A nice thing about this is that now the output JavaScript is minimized
 
 
-## [alpha.2] - 2026-03-29
+## alpha.2 - 2026-03-29
 
 ### Added
 
@@ -92,7 +105,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - Map active layer
 
 
-## [alpha.1] - 2025-05-16
+## alpha.1 - 2025-05-16
 
 ### Added
 
@@ -123,7 +136,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **Eraser** works on *terrain* and *text* layers
 
 
-## [alpha.0] - 2025-04-13
+## alpha.0 - 2025-04-13
 
 ### Added
 

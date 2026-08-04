@@ -35,7 +35,7 @@ export class RoadsTool implements Tool {
         }
 
         this.startCell = cell;
-        this.startPosition = context.mapPosition;
+        this.startPosition = context.position;
     }
 
     move(context: ToolContext): void {
@@ -47,7 +47,7 @@ export class RoadsTool implements Tool {
 
         const zoom = this.map.map.zoom,
             from = VectorMath.multiply(this.startPosition, zoom),
-            to = VectorMath.multiply(context.mapPosition, zoom);
+            to = VectorMath.multiply(context.position, zoom);
 
         this.ui.drawer.line([from, to], {
             lineWidth: 5,
@@ -65,7 +65,7 @@ export class RoadsTool implements Tool {
             return
         }
 
-        this.createRoads(firstCell, this.startPosition, lastCell, context.mapPosition);
+        this.createRoads(firstCell, this.startPosition, lastCell, context.position);
 
         this.startPosition = undefined;
     }
@@ -80,12 +80,12 @@ export class RoadsTool implements Tool {
             iterations = 0;
 
         while (!GridHelper.cellIsEqual(cell.index, lastCell.index)) {
-            const [to, nextCell, nextFrom] = GridHelper.getConnection(from, direction);
+            const connection = GridHelper.getConnection(from, direction);
 
-            this.createRoad(cell, from, to);
+            this.createRoad(cell, from, connection.point);
 
-            cell = cell.neighbors[nextCell]!;
-            from = nextFrom;
+            cell = cell.neighbors[connection.neighborIndex]!;
+            from = connection.neighborPoint;
             Utilities.checkInfiniteLoop(iterations++);
         }
         this.createRoad(cell, from, normalizedEnd);

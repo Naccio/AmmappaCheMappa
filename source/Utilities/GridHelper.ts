@@ -1,3 +1,4 @@
+import { CellConnection } from "../Model/CellConnection";
 import { CellIndex } from "../Model/CellIndex";
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
@@ -108,61 +109,69 @@ export class GridHelper {
         return cells;
     }
 
-    public static getConnection(from: Point, direction: Vector): [Point, number, Point] {
+    public static getConnection(from: Point, direction: Vector): CellConnection {
         // Multiply by a large number to minimize the rounding errors
         // when calculating the intersections
-        const distantTo = VectorMath.multiply(direction, 1000),
-            line = { from, to: distantTo },
+        const to = VectorMath.multiply(direction, 1000),
+            line = { from, to },
             //TODO: There probably is a smarter way instead of checking
             //      every side of the cell
             top = { from: { x: 0, y: 0 }, to: { x: 1, y: 0 } },
             right = { from: { x: 1, y: 0 }, to: { x: 1, y: 1 } },
-            bottom = { from: { x: 0, y: 1 }, to: { x: 1, y: 1 } },
-            left = { from: { x: 0, y: 0 }, to: { x: 0, y: 1 } };
+            bottom = { from: { x: 1, y: 1 }, to: { x: 0, y: 1 } },
+            left = { from: { x: 0, y: 1 }, to: { x: 0, y: 0 } },
+            topIntersection = VectorMath.lineIntersection(line, top),
+            rightIntersection = VectorMath.lineIntersection(line, right),
+            bottomIntersection = VectorMath.lineIntersection(line, bottom),
+            leftIntersection = VectorMath.lineIntersection(line, left),
+            intersections = [topIntersection, rightIntersection, bottomIntersection, leftIntersection]
+                .filter(i => i !== undefined).length;
 
-        let to = VectorMath.lineIntersection(line, top),
-            nextCell: number | undefined = undefined,
-            nextFrom: Point | undefined = undefined;
+        let point: Point | undefined,
+            neighborIndex: number | undefined,
+            neighborPoint: Point | undefined;
 
-        if (from.y !== 0 && to !== undefined) {
-            to.y = 0;
-            nextCell = this.topNeighborIndex;
-            nextFrom = { x: to.x, y: 1 };
-
-            return [to, nextCell, nextFrom];
+        // There can only be one intersection between a segment moving from the
+        // inside to the outside of a convex polygon and the polygon's sides,
+        // unless the segment has one of its endpoints on one of the polygon's
+        // sides, in which case there are two, and we don't want the one
+        // corresponding to the segment's endpoint (because it would be the
+        // `from` parameter)
+        if (
+            topIntersection !== undefined &&
+            (from.y !== 0 || intersections === 1)
+        ) {
+            point = topIntersection;
+            neighborIndex = this.topNeighborIndex;
+            neighborPoint = { x: point.x, y: 1 };
+        } else if (
+            rightIntersection !== undefined &&
+            (from.x !== 1 || intersections === 1)
+        ) {
+            point = rightIntersection;
+            neighborIndex = this.rightNeighborIndex;
+            neighborPoint = { x: 0, y: point.y };
+        } else if (
+            bottomIntersection !== undefined &&
+            (from.y !== 1 || intersections === 1)
+        ) {
+            point = bottomIntersection;
+            neighborIndex = this.bottomNeighborIndex;
+            neighborPoint = { x: point.x, y: 0 };
+        } else if (
+            leftIntersection !== undefined &&
+            (from.x !== 0 || intersections === 1)
+        ) {
+            point = leftIntersection;
+            neighborIndex = this.leftNeighborIndex;
+            neighborPoint = { x: 1, y: point.y };
         }
 
-        to = VectorMath.lineIntersection(line, right);
-
-        if (from.x !== 1 && to !== undefined) {
-            to.x = 1;
-            nextCell = this.rightNeighborIndex;
-            nextFrom = { x: 0, y: to.y };
-
-            return [to, nextCell, nextFrom];
+        if (point === undefined || neighborIndex === undefined || neighborPoint === undefined) {
+            throw new Error(`Could not find connection from (${from.x},${from.y}) with direction (${direction.x},${direction.y}).`);
         }
 
-        to = VectorMath.lineIntersection(line, bottom);
-
-        if (from.y !== 1 && to !== undefined) {
-            to.y = 1;
-            nextCell = this.bottomNeighborIndex;
-            nextFrom = { x: to.x, y: 0 };
-
-            return [to, nextCell, nextFrom];
-        }
-
-        to = VectorMath.lineIntersection(line, left);
-
-        if (from.x !== 0 && to !== undefined) {
-            to.x = 0;
-            nextCell = this.leftNeighborIndex;
-            nextFrom = { x: 1, y: to.y };
-
-            return [to, nextCell, nextFrom];
-        }
-
-        throw new Error('Could not find next connection.');
+        return { point, neighborIndex, neighborPoint };
     }
 
     public static isBottom(quadrant: number) {

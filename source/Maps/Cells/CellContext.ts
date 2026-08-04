@@ -93,6 +93,14 @@ export class CellContext {
         }
     }
 
+    public hasObject(object?: MapObject) {
+        if (object === undefined) {
+            return false;
+        }
+
+        return this._objects.value.some(o => o.id === object.id);
+    }
+
     public update(id: string, points: Point[]) {
         this._objects.update(objects => {
             const object = objects.find(o => o.id === id);
@@ -106,5 +114,15 @@ export class CellContext {
 
     private loadObjects() {
         return this.map.map.data.objects.filter(o => o.cell === this.name);
+    }
+
+    private validatePoint(point: Point) {
+        if (point.x < 0 || point.x > 1 || point.y < 0 || point.y > 1) {
+            throw new Error('Object points must be between (0,0) and (1,1).');
+        }
+    }
+
+    private validatePoints(points: Point[]) {
+        points.forEach(p => this.validatePoint(p));
     }
 }
