@@ -20,12 +20,12 @@ export class ToolsManagerFactory {
         private editorFactory: CellEditorFactory
     ) { }
 
-    public create(mapManager: MapManager, uiLayer: DrawingUI) {
+    public create(mapManager: MapManager) {
         const eraser = new Eraser(mapManager);
         const mountainsTool = new MountainsTool(mapManager);
         const placesTool = new PlacesTool();
         const riversTool = new RiversTool();
-        const roadsTool = new RoadsTool(uiLayer, mapManager.mapAccessor);
+        const roadsTool = new RoadsTool();
         const selectTool = new SelectTool(this.modalLauncher, this.editorFactory);
         const textTool = new TextTool(this.modalLauncher, this.localizer);
         const treesTool = new TreesTool(mapManager);

@@ -16,10 +16,6 @@ export class DrawingUI implements DrawingLayer {
         this._drawer = drawer;
     }
 
-    public get drawer(): Drawer {
-        return this._drawer;
-    }
-
     public get html() {
         return this._drawer.html;
     }
