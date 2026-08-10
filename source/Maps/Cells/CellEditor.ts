@@ -14,7 +14,6 @@ import { CellRenderer } from "./CellRenderer";
 import { CellIndex } from "../../Model/CellIndex";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
-import { RangeConstraint } from "../Contents/Configuration/ContentPointConstraint";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
@@ -162,8 +161,6 @@ export class CellEditor implements UIElement {
 
     private getConstraints(point: ContentPoint) {
         const constraints = point.constraints ?? [];
-
-        constraints.push(new RangeConstraint(0, 1));
 
         return constraints;
     }

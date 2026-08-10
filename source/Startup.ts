@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             .setGraphics(o => new TreeGraphics(o))
             .configurePoints(b => b
                 .addPosition()
-                .addHelper(b => b.constrainVertically().applyToOthers([3]))
+                .addHelper(b => b.constrainVertically().applyToOthers([2, 3]))
                 .addHelper(b => b.constrainVertically())
                 .addHelper(b => b.constrainHorizontally())
             )
