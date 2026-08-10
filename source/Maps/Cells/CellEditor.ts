@@ -14,6 +14,7 @@ import { CellRenderer } from "./CellRenderer";
 import { CellIndex } from "../../Model/CellIndex";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
+import { RangeConstraint } from "../Contents/Configuration/ContentPointConstraint";
 
 export class CellEditor implements UIElement {
     private readonly radius = .03;
@@ -159,8 +160,12 @@ export class CellEditor implements UIElement {
         };
     }
 
-    private getRelativePoint(point: ContentPoint) {
-        return VectorMath.add(point.point, this.getCellShift(this.cell.index));
+    private getConstraints(point: ContentPoint) {
+        const constraints = point.constraints ?? [];
+
+        constraints.push(new RangeConstraint(0, 1));
+
+        return constraints;
     }
 
     private getPoints() {
@@ -173,6 +178,10 @@ export class CellEditor implements UIElement {
 
             this.points = content.points.get(selected);
         }
+    }
+
+    private getRelativePoint(point: ContentPoint) {
+        return VectorMath.add(point.point, this.getCellShift(this.cell.index));
     }
 
     private mouseMoveHandler(s: PointerStatus | undefined) {
@@ -193,7 +202,7 @@ export class CellEditor implements UIElement {
             const point = this.points[this.activePoint],
                 relativePoint = this.getRelativePoint(point),
                 change = pointer.subtract(relativePoint),
-                constraints = point.constraints ?? [];
+                constraints = this.getConstraints(point);
 
             let apply = true;
 
@@ -208,8 +217,12 @@ export class CellEditor implements UIElement {
             }
 
             if (apply) {
-                point.point.x += change.x;
-                point.point.y += change.y;
+                const newPoint = VectorMath.startOperation(point.point)
+                    .add(change)
+                    .round(2);
+
+                point.point.x = newPoint.x;
+                point.point.y = newPoint.y;
             }
             this.draw();
         } else {
