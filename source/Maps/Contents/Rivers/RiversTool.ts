@@ -1,5 +1,6 @@
 import { Point } from "../../../Model/Point";
 import { LinkedCellTool } from "../../../UI/Tools/LinkedCellTool";
+import { GridHelper } from "../../../Utilities/GridHelper";
 import { MathHelper } from "../../../Utilities/MathHelper";
 import { VectorMath } from "../../../Utilities/VectorMath";
 import { CellContext } from "../../Cells/CellContext";
@@ -21,10 +22,15 @@ export class RiversTool extends LinkedCellTool {
         };
 
         if (previous !== undefined) {
-            bend1 = VectorMath.startOperation(previous.points[3])
-                .direction(previous.points[1])
-                .multiply(MathHelper.random(.2, .5))
-                .add(from);
+            const direction = VectorMath.direction(previous.points[3], previous.points[1]),
+                connection = GridHelper.getConnection(from, direction),
+                maxLength = VectorMath.startOperation(connection.point)
+                    .subtract(from)
+                    .magnitude(),
+                length = maxLength < .1 ? maxLength : MathHelper.random(.1, maxLength),
+                scale = direction.multiply(length);
+
+            bend1 = scale.add(from);
         }
 
         bend1 = VectorMath.round(bend1, 2);

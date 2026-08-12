@@ -22,8 +22,8 @@ export class VectorMath {
     }
 
     public static checkNormalized(v: Vector) {
-        if (v.x < 0 || v.x > 1 || v.y < 0 || v.y > 0) {
-            throw new Error('Vector is not normalized.');
+        if (v.x < -1 || v.x > 1 || v.y < -1 || v.y > 1) {
+            throw new Error(`Vector '${v.x},${v.y}' is not normalized.`);
         }
     }
 

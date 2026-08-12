@@ -3,6 +3,7 @@ import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
 import { Vector } from "../../Model/Vector";
 import { GridHelper } from "../../Utilities/GridHelper";
+import { MathHelper } from "../../Utilities/MathHelper";
 import { Utilities } from "../../Utilities/Utilities";
 import { VectorMath } from "../../Utilities/VectorMath";
 import { Tool } from "./Tool";
@@ -14,6 +15,7 @@ export abstract class LinkedCellTool implements Tool {
     public abstract readonly configuration: ToolConfiguration;
 
     protected readonly endPointIndex = 1;
+    protected readonly padding = .1;
 
     private startPosition?: Point;
     private previousCell?: CellContext;
@@ -56,11 +58,11 @@ export abstract class LinkedCellTool implements Tool {
             previousObjectCell = GridHelper.cellNameToIndex(object.cell),
             neighbor = cell.neighbors.find(c => GridHelper.cellIsEqual(c?.index, previousObjectCell));
 
-        // Last river was in a neighboring cell
+        // Last object was in a neighboring cell
         if (neighbor !== undefined) {
-            const connection = GridHelper.getConnection(object.points[1], direction);
+            const connection = this.getConnection(object.points[1], direction);
 
-            // Last river connects to this cell
+            // Last object connects to this cell
             if (neighbor.neighbors[connection.neighborIndex] === cell) {
                 this.updateObject(neighbor, object, connection.point);
                 return connection;
@@ -68,6 +70,23 @@ export abstract class LinkedCellTool implements Tool {
         }
 
         return undefined;
+    }
+
+    private getConnection(from: Point, direction: Vector) {
+        const connection = GridHelper.getConnection(from, direction),
+            index = connection.neighborIndex,
+            min = 0 + this.padding,
+            max = 1 - this.padding;
+
+        if (index === GridHelper.topSideIndex || index === GridHelper.bottomSideIndex) {
+            connection.point.x = MathHelper.clamp(connection.point.x, min, max);
+            connection.neighborPoint.x = MathHelper.clamp(connection.neighborPoint.x, min, max);
+        } else if (index === GridHelper.rightSideIndex || index === GridHelper.leftSideIndex) {
+            connection.point.y = MathHelper.clamp(connection.point.y, min, max);
+            connection.neighborPoint.y = MathHelper.clamp(connection.neighborPoint.y, min, max);
+        }
+
+        return connection;
     }
 
     private moveBetweenCells(context: ToolContext) {
@@ -85,7 +104,7 @@ export abstract class LinkedCellTool implements Tool {
             return;
         }
 
-        let connection = GridHelper.getConnection(previousObject.points[1], direction),
+        let connection = this.getConnection(previousObject.points[1], direction),
             nextCell = previousCell.neighbors[connection.neighborIndex],
             iterations = 0;
 
@@ -98,7 +117,7 @@ export abstract class LinkedCellTool implements Tool {
 
             const from = connection.neighborPoint;
 
-            connection = GridHelper.getConnection(from, direction);
+            connection = this.getConnection(from, direction);
 
             this._previousObject = this.createObject(nextCell, from, connection.point);
 
