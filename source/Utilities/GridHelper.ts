@@ -5,10 +5,10 @@ import { Vector } from "../Model/Vector";
 import { VectorMath } from "./VectorMath";
 
 export class GridHelper {
-    public static readonly topNeighborIndex = 0;
-    public static readonly rightNeighborIndex = 1;
-    public static readonly bottomNeighborIndex = 2;
-    public static readonly leftNeighborIndex = 3;
+    public static readonly topSideIndex = 0;
+    public static readonly rightSideIndex = 1;
+    public static readonly bottomSideIndex = 2;
+    public static readonly leftSideIndex = 3;
 
     public static readonly defaultGridColor = '#999';
 
@@ -142,28 +142,28 @@ export class GridHelper {
             (from.y !== 0 || intersections === 1)
         ) {
             point = topIntersection;
-            neighborIndex = this.topNeighborIndex;
+            neighborIndex = this.topSideIndex;
             neighborPoint = { x: point.x, y: 1 };
         } else if (
             rightIntersection !== undefined &&
             (from.x !== 1 || intersections === 1)
         ) {
             point = rightIntersection;
-            neighborIndex = this.rightNeighborIndex;
+            neighborIndex = this.rightSideIndex;
             neighborPoint = { x: 0, y: point.y };
         } else if (
             bottomIntersection !== undefined &&
             (from.y !== 1 || intersections === 1)
         ) {
             point = bottomIntersection;
-            neighborIndex = this.bottomNeighborIndex;
+            neighborIndex = this.bottomSideIndex;
             neighborPoint = { x: point.x, y: 0 };
         } else if (
             leftIntersection !== undefined &&
             (from.x !== 0 || intersections === 1)
         ) {
             point = leftIntersection;
-            neighborIndex = this.leftNeighborIndex;
+            neighborIndex = this.leftSideIndex;
             neighborPoint = { x: 1, y: point.y };
         }
 

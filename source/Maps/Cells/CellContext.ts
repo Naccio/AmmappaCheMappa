@@ -39,19 +39,19 @@ export class CellContext {
     }
 
     public get topNeighbor() {
-        return this.neighbors[GridHelper.topNeighborIndex];
+        return this.neighbors[GridHelper.topSideIndex];
     }
 
     public get rightNeighbor() {
-        return this.neighbors[GridHelper.rightNeighborIndex];
+        return this.neighbors[GridHelper.rightSideIndex];
     }
 
     public get bottomNeighbor() {
-        return this.neighbors[GridHelper.bottomNeighborIndex];
+        return this.neighbors[GridHelper.bottomSideIndex];
     }
 
     public get leftNeighbor() {
-        return this.neighbors[GridHelper.leftNeighborIndex];
+        return this.neighbors[GridHelper.leftSideIndex];
     }
 
     public get objects(): Observable<readonly MapObject[]> {

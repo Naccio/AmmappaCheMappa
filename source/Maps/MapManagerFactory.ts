@@ -47,10 +47,10 @@ export class MapManagerFactory {
                     left = cells[column - 1][row];
                 }
 
-                neighbors[GridHelper.topNeighborIndex] = top;
-                neighbors[GridHelper.rightNeighborIndex] = right;
-                neighbors[GridHelper.bottomNeighborIndex] = bottom;
-                neighbors[GridHelper.leftNeighborIndex] = left;
+                neighbors[GridHelper.topSideIndex] = top;
+                neighbors[GridHelper.rightSideIndex] = right;
+                neighbors[GridHelper.bottomSideIndex] = bottom;
+                neighbors[GridHelper.leftSideIndex] = left;
 
                 cells[column][row].neighbors = neighbors;
             }
