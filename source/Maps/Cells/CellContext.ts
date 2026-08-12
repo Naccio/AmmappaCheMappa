@@ -65,14 +65,14 @@ export class CellContext {
 
     public addObjects(newObjects: MapObject[]) {
         this.map.addObjects(newObjects);
-        this._objects.value = this.loadObjects();
+        this.reload();
     }
 
     public clear() {
         const layer = this.map.map.activeLayer;
 
         this.map.deleteObjects(o => o.cell === this.name && o.layer === layer);
-        this._objects.value = this.loadObjects();
+        this.reload();
     }
 
     public createObject(type: string, points: Point[], data?: any): MapObject {
@@ -102,6 +102,10 @@ export class CellContext {
         }
 
         return this._objects.value.some(o => o.id === object.id);
+    }
+
+    public reload() {
+        this._objects.value = this.loadObjects();
     }
 
     public update(id: string, points: Point[]) {

@@ -15,8 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ### Fixed
 
+- Commands:
+  - **Delete layer**: Objects in a deleted layer are not deleted with it
 - Tools:
-  - **River**: Sometimes rivers would not connect properly between cells
+  - **River**: Sometimes rivers do not connect properly between cells
 
 
 ## alpha.4 - 2026-07-07

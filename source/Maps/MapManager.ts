@@ -9,6 +9,7 @@ export class MapManager {
         public readonly layers: LayersManager,
         public readonly cells: readonly CellContext[][]
     ) {
+        layers.onDelete(_ => cells.flat().forEach(c => c.reload()));
     }
 
     public get id() {

@@ -82,6 +82,7 @@ export class MapAccessor {
         const map = this.map.data;
 
         map.layers = map.layers.filter(l => l.id !== id);
+        map.objects = map.objects.filter(o => o.layer !== id);
 
         this.save();
     }
