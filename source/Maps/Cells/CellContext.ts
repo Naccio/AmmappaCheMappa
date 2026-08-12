@@ -5,6 +5,7 @@ import { MapObject } from "../../Model/MapObject";
 import { Point } from "../../Model/Point";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { Utilities } from "../../Utilities/Utilities";
+import { VectorMath } from "../../Utilities/VectorMath";
 import { MapAccessor } from "../MapAccessor";
 
 export class CellContext {
@@ -79,6 +80,8 @@ export class CellContext {
             layer = this.map.map.activeLayer,
             id = Utilities.generateId(type);
 
+        this.validatePoints(points);
+
         if (layer === undefined) {
             throw new Error('No layer selected');
         }
@@ -102,6 +105,8 @@ export class CellContext {
     }
 
     public update(id: string, points: Point[]) {
+        this.validatePoints(points);
+
         this._objects.update(objects => {
             const object = objects.find(o => o.id === id);
 
@@ -116,13 +121,7 @@ export class CellContext {
         return this.map.map.data.objects.filter(o => o.cell === this.name);
     }
 
-    private validatePoint(point: Point) {
-        if (point.x < 0 || point.x > 1 || point.y < 0 || point.y > 1) {
-            throw new Error('Object points must be between (0,0) and (1,1).');
-        }
-    }
-
     private validatePoints(points: Point[]) {
-        points.forEach(p => this.validatePoint(p));
+        points.forEach(p => VectorMath.checkNormalized(p));
     }
 }

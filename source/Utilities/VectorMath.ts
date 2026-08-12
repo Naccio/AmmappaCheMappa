@@ -21,6 +21,12 @@ export class VectorMath {
         return Math.acos(this.dotProduct(v1, v2));
     }
 
+    public static checkNormalized(v: Vector) {
+        if (v.x < 0 || v.x > 1 || v.y < 0 || v.y > 0) {
+            throw new Error('Vector is not normalized.');
+        }
+    }
+
     public static clamp(v: Vector, min: number, max: number) {
         return new VectorCalculator(
             MathHelper.clamp(v.x, min, max),

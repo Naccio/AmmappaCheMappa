@@ -110,6 +110,9 @@ export class GridHelper {
     }
 
     public static getConnection(from: Point, direction: Vector): CellConnection {
+        VectorMath.checkNormalized(from);
+        VectorMath.checkNormalized(direction);
+
         // Multiply by a large number to minimize the rounding errors
         // when calculating the intersections
         const to = VectorMath.multiply(direction, 1000),
