@@ -2,6 +2,8 @@ import { EditorMap } from "../Model/EditorMap";
 
 export class Utilities {
 
+    private constructor() { }
+
     public static checkInfiniteLoop(iterations: number) {
         if (iterations > 10000) {
             throw new Error('Infinite loop detected.');

@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 ### Changed
 
 - Tools:
+  - **River**: The tool tries to avoid creating loops when generating a river
   - **Road**: Roads are created cell-by-cell instead of on a straight line
   - **Select**: Neighboring cells are shown while editing a cell
 

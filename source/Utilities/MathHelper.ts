@@ -1,5 +1,7 @@
 export class MathHelper {
 
+    private constructor() { }
+
     public static clamp(number: number, min: number, max: number) {
         return Math.min(Math.max(number, min), max);
     }

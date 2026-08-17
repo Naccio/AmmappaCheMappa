@@ -1,6 +1,4 @@
 import { MathHelper } from "./MathHelper";
-import { Line } from "../Model/Line";
-import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
 import { VectorCalculator } from "./VectorCalculator";
 
@@ -9,6 +7,8 @@ export class VectorMath {
         x: 0,
         y: 0
     };
+
+    private constructor() { }
 
     public static add(v1: Vector, v2: Vector) {
         return new VectorCalculator(v1.x + v2.x, v1.y + v2.y);
@@ -68,46 +68,6 @@ export class VectorMath {
         return v1.x === v2.x && v1.y === v2.y;
     }
 
-    // http://paulbourke.net/geometry/pointlineplane/
-    public static lineIntersection(line1: Line, line2: Line): Point | undefined {
-        const p1 = line1.from,
-            p2 = line1.to,
-            p3 = line2.from,
-            p4 = line2.to,
-            x1 = p1.x,
-            y1 = p1.y,
-            x2 = p2.x,
-            y2 = p2.y,
-            x3 = p3.x,
-            y3 = p3.y,
-            x4 = p4.x,
-            y4 = p4.y,
-            denominator = ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
-
-        // Either segment length is 0
-        if (this.isEqual(p1, p2) || this.isEqual(p3, p4)) {
-            return undefined;
-        }
-
-        // Lines are parallel
-        if (denominator === 0) {
-            return undefined;
-        }
-
-        const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator,
-            ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
-
-        // Segments do not intersect
-        if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
-            return undefined;
-        }
-
-        return {
-            x: x1 + ua * (x2 - x1),
-            y: y1 + ua * (y2 - y1)
-        };
-    }
-
     public static magnitude(v: Vector) {
         return Math.sqrt(v.x * v.x + v.y * v.y);
     }
@@ -120,6 +80,15 @@ export class VectorMath {
         const m = this.magnitude(v);
 
         return this.divide(v, m);
+    }
+
+    public static randomDirection() {
+        const angle = MathHelper.random(-Math.PI, Math.PI);
+
+        return new VectorCalculator(
+            Math.cos(angle),
+            Math.sin(angle)
+        );
     }
 
     public static rotate(v: Vector, rad: number) {

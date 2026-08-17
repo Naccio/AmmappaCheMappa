@@ -2,6 +2,7 @@ import { CellConnection } from "../Model/CellConnection";
 import { CellIndex } from "../Model/CellIndex";
 import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
+import { GeometryHelper } from "./GeometryHelper";
 import { VectorMath } from "./VectorMath";
 
 export class GridHelper {
@@ -18,6 +19,8 @@ export class GridHelper {
         { x: 0, y: 1 },
         { x: 1, y: 1 }
     ];
+
+    private constructor() { }
 
     public static cellIndexToName(index: CellIndex) {
         // +1 to switch from 0-based to 1-based numbering
@@ -123,10 +126,10 @@ export class GridHelper {
             right = { from: { x: 1, y: 0 }, to: { x: 1, y: 1 } },
             bottom = { from: { x: 1, y: 1 }, to: { x: 0, y: 1 } },
             left = { from: { x: 0, y: 1 }, to: { x: 0, y: 0 } },
-            topIntersection = VectorMath.lineIntersection(line, top),
-            rightIntersection = VectorMath.lineIntersection(line, right),
-            bottomIntersection = VectorMath.lineIntersection(line, bottom),
-            leftIntersection = VectorMath.lineIntersection(line, left),
+            topIntersection = GeometryHelper.lineIntersection(line, top),
+            rightIntersection = GeometryHelper.lineIntersection(line, right),
+            bottomIntersection = GeometryHelper.lineIntersection(line, bottom),
+            leftIntersection = GeometryHelper.lineIntersection(line, left),
             intersections = [topIntersection, rightIntersection, bottomIntersection, leftIntersection]
                 .filter(i => i !== undefined).length;
 

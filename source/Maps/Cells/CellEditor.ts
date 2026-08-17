@@ -25,12 +25,6 @@ export class CellEditor implements UIElement {
 
     private readonly selectedObject: InternalObservable<MapObject | undefined>;
 
-    public readonly configuration = {
-        id: 'select',
-        labelResourceId: 'tool_label_select',
-        layerTypes: []
-    };
-
     private points: ContentPoint[] = [];
     private activePoint?: number;
 

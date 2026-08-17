@@ -1,5 +1,7 @@
+import { MapObject } from "../../../Model/MapObject";
 import { Point } from "../../../Model/Point";
 import { LinkedCellTool } from "../../../UI/Tools/LinkedCellTool";
+import { VectorMath } from "../../../Utilities/VectorMath";
 import { CellContext } from "../../Cells/CellContext";
 
 
@@ -17,5 +19,12 @@ export class RoadsTool extends LinkedCellTool {
         cell.addObjects([road]);
 
         return road;
+    }
+
+    protected updateObject(cell: CellContext, object: MapObject, position: Point) {
+        const points = [...object.points];
+
+        points[1] = VectorMath.round(position, 2);
+        cell.update(object.id, points);
     }
 }

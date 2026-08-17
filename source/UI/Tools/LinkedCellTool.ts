@@ -10,19 +10,26 @@ import { Tool } from "./Tool";
 import { ToolConfiguration } from "./ToolConfiguration";
 import { ToolContext } from "./ToolContext";
 
+interface ObjectCreationContext {
+    object?: MapObject;
+    cell: CellContext;
+}
 
 export abstract class LinkedCellTool implements Tool {
     public abstract readonly configuration: ToolConfiguration;
 
-    protected readonly endPointIndex = 1;
     protected readonly padding = .1;
 
     private startPosition?: Point;
-    private previousCell?: CellContext;
-    private _previousObject?: MapObject;
+    private activeContext?: ObjectCreationContext;
+    private previousContext?: ObjectCreationContext;
+
+    protected get activeObject() {
+        return this.activeContext?.object;
+    }
 
     protected get previousObject() {
-        return this._previousObject;
+        return this.previousContext?.object;
     }
 
     public start(context: ToolContext) {
@@ -33,25 +40,26 @@ export abstract class LinkedCellTool implements Tool {
         }
 
         this.startPosition = context.cellPosition;
-        this.previousCell = cell;
+        this.activeContext = { cell };
     }
 
     public move(context: ToolContext) {
-        if (GridHelper.cellIsEqual(this.previousCell?.index, context.cell?.index)) {
+        if (GridHelper.cellIsEqual(this.activeContext?.cell.index, context.cell?.index)) {
             this.moveInsideCell(context);
         } else {
             this.moveBetweenCells(context);
         }
-        this.previousCell = context.cell;
     }
 
     public stop() {
         this.startPosition = undefined;
-        this.previousCell = undefined;
-        this._previousObject = undefined;
+        this.activeContext = undefined;
+        this.previousContext = undefined;
     }
 
     protected abstract createObject(cell: CellContext, from: Point, to: Point): MapObject;
+
+    protected abstract updateObject(cell: CellContext, object: MapObject, position: Point): void;
 
     private connectObject(cell: CellContext, object: MapObject, direction: Vector) {
         const
@@ -70,6 +78,14 @@ export abstract class LinkedCellTool implements Tool {
         }
 
         return undefined;
+    }
+
+    private create(cell: CellContext, from: Point, to: Point) {
+        this.previousContext = this.activeContext;
+
+        const object = this.createObject(cell, from, to);
+
+        this.activeContext = { cell, object };
     }
 
     private getConnection(from: Point, direction: Vector) {
@@ -91,8 +107,8 @@ export abstract class LinkedCellTool implements Tool {
 
     private moveBetweenCells(context: ToolContext) {
         const cell = context.cell,
-            previousCell = this.previousCell,
-            previousObject = this._previousObject,
+            previousCell = this.activeContext?.cell,
+            previousObject = this.activeContext?.object,
             direction = context.direction;
 
         if (
@@ -119,7 +135,7 @@ export abstract class LinkedCellTool implements Tool {
 
             connection = this.getConnection(from, direction);
 
-            this._previousObject = this.createObject(nextCell, from, connection.point);
+            this.create(nextCell, from, connection.point);
 
             nextCell = nextCell.neighbors[connection.neighborIndex];
 
@@ -127,13 +143,13 @@ export abstract class LinkedCellTool implements Tool {
         }
 
         if (nextCell !== undefined) {
-            this._previousObject = this.createObject(nextCell, connection.neighborPoint, context.cellPosition);
+            this.create(nextCell, connection.neighborPoint, context.cellPosition);
         }
     }
 
     private moveInsideCell(context: ToolContext) {
         const cell = context.cell,
-            previousObject = this._previousObject;
+            activeObject = this.activeContext?.object;
 
         if (cell === undefined || this.startPosition === undefined) {
             return;
@@ -142,26 +158,20 @@ export abstract class LinkedCellTool implements Tool {
         let from = VectorMath.round(this.startPosition, 2),
             to = VectorMath.round(context.cellPosition, 2);
 
-        if (previousObject === undefined) {
-            this._previousObject = this.createObject(cell, from, to);
-        } else if (cell.hasObject(previousObject)) {
-            this.updateObject(cell, previousObject, to);
+        if (activeObject !== undefined && cell.hasObject(activeObject)) {
+            this.updateObject(cell, activeObject, to);
         } else {
-            const connection = this.connectObject(cell, previousObject, context.direction);
+            const previousObject = this.previousContext?.object;
 
-            if (connection !== undefined) {
-                from = VectorMath.round(connection.neighborPoint, 2);
+            if (previousObject !== undefined) {
+                const connection = this.connectObject(cell, previousObject, context.direction);
+
+                if (connection !== undefined) {
+                    from = VectorMath.round(connection.neighborPoint, 2);
+                }
             }
 
-            this._previousObject = this.createObject(cell, from, to);
+            this.create(cell, from, to);
         }
-
-    }
-
-    private updateObject(cell: CellContext, object: MapObject, position: Point) {
-        const points = [...object.points];
-
-        points[this.endPointIndex] = VectorMath.round(position, 2);
-        cell.update(object.id, points);
     }
 }
