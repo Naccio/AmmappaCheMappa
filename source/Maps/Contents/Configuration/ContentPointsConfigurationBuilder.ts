@@ -8,14 +8,13 @@ type PointConfiguration = (p: ContentPointConfigurationBuilder) => void;
 export class ContentPointsConfigurationBuilder {
     private readonly points: ContentPointConfiguration[] = [];
 
-    public addPosition() {
-        const builder = new ContentPointConfigurationBuilder(ContentPointType.position);
-
-        builder.applyToOthers();
-
-        this.points.push(builder.build());
-
-        return this;
+    public addPosition(action?: PointConfiguration) {
+        return this.addPoint(ContentPointType.position, b => {
+            if (action !== undefined) {
+                action(b);
+            }
+            b.applyToOthers();
+        });
     }
 
     public addPrimary(action?: PointConfiguration) {

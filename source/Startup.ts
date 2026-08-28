@@ -39,6 +39,9 @@ import { RoadGraphics } from "./Maps/Contents/Roads/RoadGraphics";
 import { TextGraphics } from "./Maps/Contents/Text/TextGraphics";
 import { TreeGraphics } from "./Maps/Contents/Trees/TreeGraphics";
 import { CellEditorFactory } from "./Maps/Cells/CellEditorFactory";
+import { VectorMath } from "./Utilities/VectorMath";
+import { RangeConstraint } from "./Maps/Contents/Configuration/ContentPointConstraint";
+import { MathHelper } from "./Utilities/MathHelper";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const builder = Application.createBuilder();
@@ -60,7 +63,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         .add('place', b => b
             .setGraphics(o => new PlaceGraphics(o))
             .configurePoints(b => b
-                .addPosition()
+                .addPosition(p =>
+                    //TODO: Replace with bounding-box system
+                    p.constrain((o, i, c) => {
+                        const radius = VectorMath.subtract(o.points[1], o.points[0]).magnitude(),
+                            constraint = new RangeConstraint(radius, 1 - radius);
+
+                        return constraint.apply(o, i, c);
+                    })
+                        .connectedTo(1))
                 .addHelper(p => p.constrainHorizontally().connectedTo(0))
             )
         )
@@ -89,11 +100,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         .add('tree', b => b
             .setGraphics(o => new TreeGraphics(o))
             .configurePoints(b => b
-                .addPosition()
-                .addPrimary(p =>
-                    p.constrainVertically()
-                        .applyToOthers([2, 3])
-                        .connectedTo([2, 3])
+                .addPosition(p =>
+                    //TODO: Replace with bounding-box system
+                    p.constrain((o, i, c) => {
+                        const position = o.points[0],
+                            center = o.points[1],
+                            bottom = o.points[2],
+                            right = o.points[3],
+                            radiusV = VectorMath.subtract(center, bottom).magnitude(),
+                            radiusH = VectorMath.subtract(center, right).magnitude(),
+                            trunk = VectorMath.subtract(position, bottom).magnitude(),
+                            minChangeX = radiusH - position.x,
+                            maxChangeX = 1 - radiusH - position.x,
+                            minChangeY = 2 * radiusV + trunk - position.y,
+                            maxChangeY = 1 - position.y;
+
+                        c.x = MathHelper.clamp(c.x, minChangeX, maxChangeX);
+                        c.y = MathHelper.clamp(c.y, minChangeY, maxChangeY);
+                        return true;
+                    }))
+                .addPrimary(p => p
+                    //TODO: Replace with bounding-box system
+                    .constrain((o, i, c) => {
+                        const position = o.points[0],
+                            center = o.points[1],
+                            bottom = o.points[2],
+                            radius = VectorMath.subtract(center, bottom).magnitude(),
+                            minChangeY = radius - center.y,
+                            maxChangeY = position.y - radius - center.y;
+
+                        c.x = 0;
+                        c.y = MathHelper.clamp(c.y, minChangeY, maxChangeY);
+                        return true;
+                    })
+                    .applyToOthers([2, 3])
+                    .connectedTo([2, 3])
                 )
                 .addHelper(p => p.constrainVertically().connectedTo(1))
                 .addHelper(p => p.constrainHorizontally().connectedTo(1))

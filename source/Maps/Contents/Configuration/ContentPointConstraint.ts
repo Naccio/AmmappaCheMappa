@@ -28,6 +28,15 @@ export class ApplyToOthersConstraint implements ContentPointConstraint {
     }
 }
 
+export class CustomConstraint implements ContentPointConstraint {
+    public constructor(private readonly action: (object: MapObject, pointIndex: number, change: Vector) => boolean) {
+    }
+
+    apply(object: MapObject, pointIndex: number, change: Vector): boolean {
+        return this.action(object, pointIndex, change);
+    }
+}
+
 export class HorizontalConstraint implements ContentPointConstraint {
     public apply(object: MapObject, pointIndex: number, change: Vector): boolean {
         change.y = 0;

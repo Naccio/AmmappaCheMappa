@@ -22,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **Delete layer**: Objects in a deleted layer are not deleted with it
 - Tools:
   - **River**: Sometimes rivers do not connect properly between cells
+  - **Select**: Object points can be pushed outside of cell boundaries by moving
+    other points that affect them
 
 
 ## alpha.4 - 2026-07-07
