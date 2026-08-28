@@ -3,6 +3,8 @@ import { ContentPointConfiguration } from "./ContentPointConfiguration";
 import { ContentPointConfigurationBuilder } from "./ContentPointConfigurationBuilder";
 import { ContentPointsConfiguration } from "./ContentPointsConfiguration";
 
+type PointConfiguration = (p: ContentPointConfigurationBuilder) => void;
+
 export class ContentPointsConfigurationBuilder {
     private readonly points: ContentPointConfiguration[] = [];
 
@@ -16,16 +18,20 @@ export class ContentPointsConfigurationBuilder {
         return this;
     }
 
-    public addPrimary() {
-        const builder = new ContentPointConfigurationBuilder(ContentPointType.primary);
-
-        this.points.push(builder.build());
-
-        return this;
+    public addPrimary(action?: PointConfiguration) {
+        return this.addPoint(ContentPointType.primary, action);
     }
 
-    public addHelper(action?: (p: ContentPointConfigurationBuilder) => void) {
-        const builder = new ContentPointConfigurationBuilder(ContentPointType.helper);
+    public addHelper(action?: PointConfiguration) {
+        return this.addPoint(ContentPointType.helper, action);
+    }
+
+    public build() {
+        return new ContentPointsConfiguration(this.points);
+    }
+
+    public addPoint(type: ContentPointType, action?: PointConfiguration) {
+        const builder = new ContentPointConfigurationBuilder(type);
 
         if (action !== undefined) {
             action(builder);
@@ -34,9 +40,5 @@ export class ContentPointsConfigurationBuilder {
         this.points.push(builder.build());
 
         return this;
-    }
-
-    public build() {
-        return new ContentPointsConfiguration(this.points);
     }
 }

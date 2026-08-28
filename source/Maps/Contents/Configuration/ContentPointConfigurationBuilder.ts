@@ -4,9 +4,21 @@ import { ApplyToOthersConstraint, ContentPointConstraint, HorizontalConstraint, 
 
 export class ContentPointConfigurationBuilder {
     private readonly constraints: ContentPointConstraint[];
+    private readonly connections: Set<number>;
 
     public constructor(public readonly type: ContentPointType) {
         this.constraints = [new RangeConstraint(0, 1)];
+        this.connections = new Set<number>();
+    }
+
+    public connectedTo(index: number): void;
+    public connectedTo(indexes: number[]): void;
+    public connectedTo(indexOrIndexes: number | number[]) {
+        if (typeof indexOrIndexes === 'number') {
+            this.connections.add(indexOrIndexes);
+        } else {
+            indexOrIndexes.forEach(i => this.connections.add(i));
+        }
     }
 
     public constrainVertically() {
@@ -27,6 +39,7 @@ export class ContentPointConfigurationBuilder {
     public build(): ContentPointConfiguration {
         return {
             type: this.type,
+            connections: [...this.connections],
             constraints: this.constraints
         };
     }

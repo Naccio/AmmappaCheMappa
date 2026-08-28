@@ -16,7 +16,7 @@ import { GridHelper } from "../../Utilities/GridHelper";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
 
 export class CellEditor implements UIElement {
-    private readonly radius = .03;
+    private readonly radius = .02;
     private readonly scale = 2.5;
 
     private readonly drawer: Drawer;
@@ -73,7 +73,38 @@ export class CellEditor implements UIElement {
         this.drawer.clear();
         this.drawCells();
         this.drawOverlay();
+        this.drawConnections();
         this.drawPoints();
+    }
+
+    private drawConnections() {
+        const points = this.points,
+            drawer = this.drawer,
+            alreadyDrawn = new Set<string>();
+
+        for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+
+            point.connections.forEach(c => {
+                const key = [i, c].sort().toString();
+
+                if (alreadyDrawn.has(key)) {
+                    return;
+                }
+
+                const connectedPoint = points[c],
+                    from = this.getRelativePoint(point),
+                    to = this.getRelativePoint(connectedPoint);
+
+                drawer.line([from, to], {
+                    lineWidth: .01,
+                    color: '#999',
+                    dashed: true
+                });
+                alreadyDrawn.add(key);
+            })
+
+        }
     }
 
     private drawPoints() {
@@ -85,15 +116,15 @@ export class CellEditor implements UIElement {
 
             switch (p.type) {
                 case ContentPointType.position:
-                    this.drawer.circle(point, this.radius, { fillStyle: 'red' });
+                    drawer.circle(point, this.radius, { fillStyle: 'red' });
                     break;
 
                 case ContentPointType.primary:
-                    this.drawer.circle(point, this.radius, { fillStyle: 'blue' });
+                    drawer.circle(point, this.radius, { fillStyle: 'blue' });
                     break;
 
                 case ContentPointType.helper:
-                    this.drawer.circle(point, this.radius, { fillStyle: 'green' });
+                    drawer.circle(point, this.radius, { fillStyle: 'green' });
                     break;
 
                 default:

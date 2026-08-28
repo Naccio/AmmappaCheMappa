@@ -61,16 +61,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             .setGraphics(o => new PlaceGraphics(o))
             .configurePoints(b => b
                 .addPosition()
-                .addHelper(b => b.constrainHorizontally())
+                .addHelper(p => p.constrainHorizontally().connectedTo(0))
             )
         )
         .add('river', b => b
             .setGraphics(o => new RiverGraphics(o))
             .configurePoints(b => b
-                .addPrimary()
-                .addPrimary()
-                .addHelper()
-                .addHelper()
+                .addPrimary(p => p.connectedTo(2))
+                .addPrimary(p => p.connectedTo(3))
+                .addHelper(p => p.connectedTo(0))
+                .addHelper(p => p.connectedTo(1))
             )
         )
         .add('road', b => b
@@ -90,9 +90,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             .setGraphics(o => new TreeGraphics(o))
             .configurePoints(b => b
                 .addPosition()
-                .addHelper(b => b.constrainVertically().applyToOthers([2, 3]))
-                .addHelper(b => b.constrainVertically())
-                .addHelper(b => b.constrainHorizontally())
+                .addPrimary(p =>
+                    p.constrainVertically()
+                        .applyToOthers([2, 3])
+                        .connectedTo([2, 3])
+                )
+                .addHelper(p => p.constrainVertically().connectedTo(1))
+                .addHelper(p => p.constrainHorizontally().connectedTo(1))
             )
         )
         .build();

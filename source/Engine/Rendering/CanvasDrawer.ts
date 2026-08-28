@@ -185,13 +185,17 @@ export class CanvasDrawer implements Drawer {
     private setLineStyle(style?: LineStyle) {
         const lineCap = style?.lineCap ?? 'square',
             lineJoin = style?.lineJoin ?? 'round',
-            lineWidth = this.getActualValue(style?.lineWidth ?? 1 / this.scale),
+            lineWidth = this.getActualValue(style?.lineWidth ?? (1 / this.scale)),
             color = style?.color ?? '#000';
 
         this.context.lineCap = lineCap;
         this.context.lineJoin = lineJoin;
         this.context.lineWidth = lineWidth;
         this.context.strokeStyle = color;
+
+        if (style?.dashed) {
+            this.context.setLineDash([lineWidth, lineWidth + 4]);
+        }
     }
 
     private setShapeStyle(style?: ShapeStyle) {
