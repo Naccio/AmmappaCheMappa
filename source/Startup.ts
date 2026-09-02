@@ -115,9 +115,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                             minChangeY = 2 * radiusV + trunk - position.y,
                             maxChangeY = 1 - position.y;
 
-                        c.x = MathHelper.clamp(c.x, minChangeX, maxChangeX);
-                        c.y = MathHelper.clamp(c.y, minChangeY, maxChangeY);
-                        return true;
+                        return {
+                            x: MathHelper.clamp(c.x, minChangeX, maxChangeX),
+                            y: MathHelper.clamp(c.y, minChangeY, maxChangeY)
+                        };
                     }))
                 .addPrimary(p => p
                     //TODO: Replace with bounding-box system
@@ -129,9 +130,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                             minChangeY = radius - center.y,
                             maxChangeY = position.y - radius - center.y;
 
-                        c.x = 0;
-                        c.y = MathHelper.clamp(c.y, minChangeY, maxChangeY);
-                        return true;
+                        return {
+                            x: 0,
+                            y: MathHelper.clamp(c.y, minChangeY, maxChangeY)
+                        };
                     })
                     .applyToOthers([2, 3])
                     .connectedTo([2, 3])

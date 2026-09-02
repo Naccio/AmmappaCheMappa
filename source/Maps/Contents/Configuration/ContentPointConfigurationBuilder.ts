@@ -2,14 +2,17 @@ import { MapObject } from "../../../Model/MapObject";
 import { Vector } from "../../../Model/Vector";
 import { ContentPointType } from "../ContentPointType";
 import { ContentPointConfiguration } from "./ContentPointConfiguration";
-import { ApplyToOthersConstraint, ContentPointConstraint, CustomConstraint, HorizontalConstraint, RangeConstraint, VerticalConstraint } from "./ContentPointConstraint";
+import { ContentPointConstraint, CustomConstraint, HorizontalConstraint, RangeConstraint, VerticalConstraint } from "./ContentPointConstraint";
+import { ApplyToOthersEffect, ContentPointEffect } from "./ContentPointEffect";
 
 export class ContentPointConfigurationBuilder {
     private readonly constraints: ContentPointConstraint[];
+    private readonly effects: ContentPointEffect[];
     private readonly connections: Set<number>;
 
     public constructor(public readonly type: ContentPointType) {
         this.constraints = [new RangeConstraint(0, 1)];
+        this.effects = [];
         this.connections = new Set<number>();
     }
 
@@ -24,7 +27,7 @@ export class ContentPointConfigurationBuilder {
         return this;
     }
 
-    public constrain(action: (object: MapObject, pointIndex: number, change: Vector) => boolean) {
+    public constrain(action: (object: MapObject, pointIndex: number, change: Vector) => Vector) {
         this.constraints.push(new CustomConstraint(action));
         return this;
     }
@@ -40,7 +43,7 @@ export class ContentPointConfigurationBuilder {
     }
 
     public applyToOthers(indexes?: number[]) {
-        this.constraints.push(new ApplyToOthersConstraint(indexes));
+        this.effects.push(new ApplyToOthersEffect(indexes));
         return this;
     }
 
@@ -48,7 +51,8 @@ export class ContentPointConfigurationBuilder {
         return {
             type: this.type,
             connections: [...this.connections],
-            constraints: this.constraints
+            constraints: this.constraints,
+            effects: this.effects
         };
     }
 }

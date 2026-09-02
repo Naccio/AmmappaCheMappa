@@ -15,6 +15,7 @@ import { CellIndex } from "../../Model/CellIndex";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
 import { Point } from "../../Model/Point";
+import { Vector } from "../../Model/Vector";
 
 export class CellEditor implements UIElement {
     private readonly radius = .02;
@@ -185,12 +186,6 @@ export class CellEditor implements UIElement {
         };
     }
 
-    private getConstraints(point: ContentPoint) {
-        const constraints = point.constraints ?? [];
-
-        return constraints;
-    }
-
     private getPoints() {
         const selected = this.selectedObject.value;
 
@@ -251,30 +246,23 @@ export class CellEditor implements UIElement {
 
     private updatePoint(object: MapObject, index: number, position: Point) {
         const point = this.points[index],
-            relativePoint = this.getRelativePoint(point),
-            change = VectorMath.subtract(position, relativePoint),
-            constraints = this.getConstraints(point);
+            relativePoint = this.getRelativePoint(point);
 
-        let apply = true;
+        let change: Vector = VectorMath.subtract(position, relativePoint);
 
-        for (let i = 0; i < constraints.length; i++) {
-            const constraint = constraints[i];
+        point.constraints.forEach(c => {
+            change = c.apply(object, index, change);
+        });
 
-            apply = constraint.apply(object, index, change);
+        const newPoint = VectorMath.startOperation(point.point)
+            .add(change)
+            .round(2);
 
-            if (!apply) {
-                break;
-            }
-        }
+        point.point.x = newPoint.x;
+        point.point.y = newPoint.y;
 
-        if (apply) {
-            const newPoint = VectorMath.startOperation(point.point)
-                .add(change)
-                .round(2);
+        point.effects.forEach(e => e.apply(object, index, change));
 
-            point.point.x = newPoint.x;
-            point.point.y = newPoint.y;
-        }
         this.draw();
     }
 }
