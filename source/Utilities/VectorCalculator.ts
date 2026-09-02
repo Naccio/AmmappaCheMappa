@@ -13,7 +13,7 @@ export class VectorCalculator {
         return VectorMath.add(this, v);
     }
 
-    public angle(v: Vector) {
+    public angle(v?: Vector) {
         return VectorMath.angle(this, v);
     }
 

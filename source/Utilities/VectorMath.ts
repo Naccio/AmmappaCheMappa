@@ -14,9 +14,11 @@ export class VectorMath {
         return new VectorCalculator(v1.x + v2.x, v1.y + v2.y);
     }
 
-    public static angle(v1: Vector, v2: Vector) {
+    public static angle(v1: Vector, v2?: Vector) {
         v1 = this.normalize(v1);
-        v2 = this.normalize(v2);
+        v2 = v2 === undefined
+            ? { x: 1, y: 0 }
+            : this.normalize(v2);
 
         return Math.acos(this.dotProduct(v1, v2));
     }

@@ -131,14 +131,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                             maxChangeY = position.y - radius - center.y;
 
                         return {
-                            x: 0,
+                            x: c.x,
                             y: MathHelper.clamp(c.y, minChangeY, maxChangeY)
                         };
                     })
-                    .applyToOthers([2, 3])
+                    //.applyToOthers([2, 3])
                     .connectedTo([2, 3])
                 )
-                .addHelper(p => p.constrainVertically().connectedTo(1))
+                .addHelper(p => p.constrainBetween(1, 0).connectedTo(1))
                 .addHelper(p => p.constrainHorizontally().connectedTo(1))
             )
         )

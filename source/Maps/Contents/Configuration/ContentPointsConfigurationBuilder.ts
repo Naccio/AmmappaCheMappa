@@ -13,7 +13,7 @@ export class ContentPointsConfigurationBuilder {
             if (action !== undefined) {
                 action(b);
             }
-            b.applyToOthers();
+            //b.applyToOthers();
         });
     }
 

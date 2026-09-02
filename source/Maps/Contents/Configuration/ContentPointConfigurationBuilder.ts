@@ -2,7 +2,7 @@ import { MapObject } from "../../../Model/MapObject";
 import { Vector } from "../../../Model/Vector";
 import { ContentPointType } from "../ContentPointType";
 import { ContentPointConfiguration } from "./ContentPointConfiguration";
-import { ContentPointConstraint, CustomConstraint, HorizontalConstraint, RangeConstraint, VerticalConstraint } from "./ContentPointConstraint";
+import { BetweenConstraint, ContentPointConstraint, CustomConstraint, DirectionConstraint, RangeConstraint } from "./ContentPointConstraint";
 import { ApplyToOthersEffect, ContentPointEffect } from "./ContentPointEffect";
 
 export class ContentPointConfigurationBuilder {
@@ -14,6 +14,16 @@ export class ContentPointConfigurationBuilder {
         this.constraints = [new RangeConstraint(0, 1)];
         this.effects = [];
         this.connections = new Set<number>();
+    }
+
+    public addConstraint(constraint: ContentPointConstraint) {
+        this.constraints.push(constraint);
+        return this;
+    }
+
+    public addEffect(effect: ContentPointEffect) {
+        this.effects.push(effect);
+        return this;
     }
 
     public connectedTo(index: number): ContentPointConfigurationBuilder;
@@ -28,23 +38,33 @@ export class ContentPointConfigurationBuilder {
     }
 
     public constrain(action: (object: MapObject, pointIndex: number, change: Vector) => Vector) {
-        this.constraints.push(new CustomConstraint(action));
-        return this;
+        return this.addConstraint(new CustomConstraint(action));
+    }
+
+    public constrainBetween(index1: number, index2: number) {
+        return this.addConstraint(new BetweenConstraint(index1, index2));
+    }
+
+    public constrainDirection(angle: number): ContentPointConfigurationBuilder;
+    public constrainDirection(direction: Vector): ContentPointConfigurationBuilder;
+    public constrainDirection(angleOrDirection: Vector | number) {
+        const direction = typeof angleOrDirection === 'number'
+            ? { x: Math.cos(angleOrDirection), y: Math.sign(angleOrDirection) }
+            : angleOrDirection;
+
+        return this.addConstraint(new DirectionConstraint(direction));
     }
 
     public constrainVertically() {
-        this.constraints.push(new VerticalConstraint());
-        return this;
+        return this.constrainDirection(Math.PI / 2);
     }
 
     public constrainHorizontally() {
-        this.constraints.push(new HorizontalConstraint());
-        return this;
+        return this.constrainDirection(0);
     }
 
     public applyToOthers(indexes?: number[]) {
-        this.effects.push(new ApplyToOthersEffect(indexes));
-        return this;
+        return this.addEffect(new ApplyToOthersEffect(indexes));
     }
 
     public build(): ContentPointConfiguration {

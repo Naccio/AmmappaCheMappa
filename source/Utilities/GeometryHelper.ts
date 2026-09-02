@@ -23,6 +23,37 @@ export class GeometryHelper {
     }
 
     // http://paulbourke.net/geometry/pointlineplane/
+    public static getProjection(point: Point, line: Line): Point {
+        const p1 = line.from,
+            p2 = line.to,
+            x1 = p1.x,
+            y1 = p1.y,
+            x2 = p2.x,
+            y2 = p2.y,
+            x3 = point.x,
+            y3 = point.y,
+            xDelta = x2 - x1,
+            yDelta = y2 - y1;
+
+        if (xDelta === 0 && yDelta === 0) {
+            return p1;
+        }
+
+        const u = ((x3 - x1) * xDelta + (y3 - y1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+
+        if (u < 0) {
+            return p1;
+        } else if (u > 1) {
+            return p2;
+        } else {
+            return {
+                x: x1 + u * xDelta,
+                y: y1 + u * yDelta
+            };
+        }
+    }
+
+    // http://paulbourke.net/geometry/pointlineplane/
     public static lineIntersection(line1: Line, line2: Line): Point | undefined {
         const p1 = line1.from,
             p2 = line1.to,
