@@ -14,6 +14,7 @@ import { CellRenderer } from "./CellRenderer";
 import { CellIndex } from "../../Model/CellIndex";
 import { GridHelper } from "../../Utilities/GridHelper";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
+import { Point } from "../../Model/Point";
 
 export class CellEditor implements UIElement {
     private readonly radius = .02;
@@ -206,58 +207,74 @@ export class CellEditor implements UIElement {
         return VectorMath.add(point.point, this.getCellShift(this.cell.index));
     }
 
-    private mouseMoveHandler(s: PointerStatus | undefined) {
+    private mouseMoveHandler(pointerStatus: PointerStatus | undefined) {
         const object = this.selectedObject.value;
 
-        if (object === undefined || s === undefined || s.button !== PointerButtons.primary) {
-            if (this.activePoint !== undefined && object !== undefined) {
-                this.cell.update(object.id, this.points.map(p => p.point));
-            }
-            this.activePoint = undefined;
+        if (object === undefined) {
+            return
+        }
+
+        if (pointerStatus?.button !== PointerButtons.primary) {
+            this.commitChanges(object);
             return;
         }
 
         const scale = this.scale * this.cell.pixels,
-            pointer = VectorMath.divide(s.position, scale);
+            position = VectorMath.divide(pointerStatus.position, scale);
 
-        if (this.activePoint !== undefined) {
-            const point = this.points[this.activePoint],
-                relativePoint = this.getRelativePoint(point),
-                change = pointer.subtract(relativePoint),
-                constraints = this.getConstraints(point);
-
-            let apply = true;
-
-            for (let i = 0; i < constraints.length; i++) {
-                const constraint = constraints[i];
-
-                apply = constraint.apply(object, this.activePoint, change);
-
-                if (!apply) {
-                    break;
-                }
-            }
-
-            if (apply) {
-                const newPoint = VectorMath.startOperation(point.point)
-                    .add(change)
-                    .round(2);
-
-                point.point.x = newPoint.x;
-                point.point.y = newPoint.y;
-            }
-            this.draw();
+        if (this.activePoint === undefined) {
+            this.selectPoint(position);
         } else {
-            const index = this.points
-                .map(p => this.getRelativePoint(p))
-                .findIndex(p =>
-                    p.x - this.radius < pointer.x &&
-                    p.x + this.radius > pointer.x &&
-                    p.y - this.radius < pointer.y &&
-                    p.y + this.radius > pointer.y
-                );
-
-            this.activePoint = index === -1 ? undefined : index;
+            this.updatePoint(object, this.activePoint, position);
         }
+    }
+
+    private commitChanges(object: MapObject) {
+        if (this.activePoint !== undefined) {
+            this.cell.update(object.id, this.points.map(p => p.point));
+        }
+        this.activePoint = undefined;
+    }
+
+    private selectPoint(position: Point) {
+        const index = this.points
+            .map(p => this.getRelativePoint(p))
+            .findIndex(p =>
+                p.x - this.radius < position.x &&
+                p.x + this.radius > position.x &&
+                p.y - this.radius < position.y &&
+                p.y + this.radius > position.y
+            );
+
+        this.activePoint = index === -1 ? undefined : index;
+    }
+
+    private updatePoint(object: MapObject, index: number, position: Point) {
+        const point = this.points[index],
+            relativePoint = this.getRelativePoint(point),
+            change = VectorMath.subtract(position, relativePoint),
+            constraints = this.getConstraints(point);
+
+        let apply = true;
+
+        for (let i = 0; i < constraints.length; i++) {
+            const constraint = constraints[i];
+
+            apply = constraint.apply(object, index, change);
+
+            if (!apply) {
+                break;
+            }
+        }
+
+        if (apply) {
+            const newPoint = VectorMath.startOperation(point.point)
+                .add(change)
+                .round(2);
+
+            point.point.x = newPoint.x;
+            point.point.y = newPoint.y;
+        }
+        this.draw();
     }
 }
