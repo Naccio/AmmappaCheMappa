@@ -6,7 +6,6 @@ import { Point } from "../Model/Point";
 import { Vector } from "../Model/Vector";
 import { Store } from "../Engine/Store";
 import { VectorMath } from "../Utilities/VectorMath";
-import { DrawingUI } from "./DrawingUI";
 import { UIElement } from "./UIElement";
 import { LayersConfiguration } from "../Maps/Layers/Configuration/LayersConfiguration";
 
@@ -19,14 +18,11 @@ export class MapDrawer implements UIElement {
     constructor(
         private mapManager: MapManager,
         private store: Store,
-        private ui: DrawingUI,
         private layersConfiguration: LayersConfiguration
     ) {
         const container = document.createElement('div');
 
         container.style.position = 'absolute';
-
-        container.append(ui.html);
 
         this.container = container;
         this._layers = new Map<string, DrawingLayer>();
@@ -44,7 +40,7 @@ export class MapDrawer implements UIElement {
     }
 
     private get layers(): DrawingLayer[] {
-        return [...this._layers.values(), this.ui];
+        return [...this._layers.values()];
     }
 
     private get currentShift() {

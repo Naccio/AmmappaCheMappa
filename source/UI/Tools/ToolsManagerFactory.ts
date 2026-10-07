@@ -1,5 +1,4 @@
 import { Localizer } from "../../Engine/Localization/Localizer";
-import { DrawingUI } from "../DrawingUI";
 import { ModalLauncher } from "../ModalLauncher";
 import { Eraser } from "./Eraser";
 import { ToolsManager } from "./ToolsManager";

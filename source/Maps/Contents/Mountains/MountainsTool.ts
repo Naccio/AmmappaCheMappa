@@ -36,7 +36,7 @@ export class MountainsTool extends CellTool {
     private create(quadrant?: number): Point[] {
         const M = MathHelper,
             scale = quadrant === undefined ? 1 : .5,
-            width = M.round(M.random(.8, .9) * scale, 2),
+            width = M.round(M.random(.7, .8) * scale, 2),
             height = M.round(M.random(.5, .8) * scale, 2),
             x = M.random(.4, .6) * scale,
             y = M.random(.8, 1) * scale,

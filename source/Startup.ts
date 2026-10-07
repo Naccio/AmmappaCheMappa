@@ -131,11 +131,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             maxChangeY = position.y - radius - center.y;
 
                         return {
-                            x: c.x,
+                            x: 0,
                             y: MathHelper.clamp(c.y, minChangeY, maxChangeY)
                         };
                     })
-                    //.applyToOthers([2, 3])
+                    .applyToOthers([2, 3])
                     .connectedTo([2, 3])
                 )
                 .addHelper(p => p.constrainBetween(1, 0).connectedTo(1))
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapManagerFactory = new MapManagerFactory(store);
     const mapsManager = new MapsManager(store, mapManagerFactory, modalLauncher, localizer);
     const toolsManagerFactory = new ToolsManagerFactory(modalLauncher, localizer, cellEditorFactory);
-    const mapUIFactory = new MapUIFactory(drawerFactory, toolsManagerFactory, localizer, store, uiFactory, layers);
+    const mapUIFactory = new MapUIFactory(toolsManagerFactory, localizer, store, uiFactory, layers);
     const mapRenderer = new MapRenderer(mapDrawerFactory, layers);
 
     const newMapCommand = new NewMap(mapFactory, mapsManager, modalLauncher, localizer);
