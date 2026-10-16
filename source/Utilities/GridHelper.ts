@@ -180,8 +180,30 @@ export class GridHelper {
         return { point, neighborIndex, neighborPoint };
     }
 
+    public static getSide(point: Point) {
+        //TODO: As of now points in the exact corner are not contemplated
+        if (point.x === 0) {
+            return this.leftSideIndex;
+        } else if (point.x === 1) {
+            return this.rightSideIndex;
+        } else if (point.y === 0) {
+            return this.topSideIndex;
+        } else if (point.y === 1) {
+            return this.bottomSideIndex;
+        } else {
+            return -1;
+        }
+    }
+
     public static isBottom(quadrant: number) {
         return quadrant === 2 || quadrant === 3;
+    }
+
+    public static isConnection(p1: Point, p2: Point) {
+        return p1.y === 0 && p2.y === 1 && p1.x === p2.x ||
+            p1.x === 1 && p2.x === 0 && p1.y === p2.y ||
+            p1.y === 1 && p2.y === 0 && p1.x === p2.x ||
+            p1.x === 0 && p2.x === 1 && p1.y === p2.y;
     }
 
     public static isLeft(quadrant: number) {

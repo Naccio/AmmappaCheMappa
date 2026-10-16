@@ -114,7 +114,24 @@ export class VectorMath {
         return new VectorCalculator(v.x, v.y);
     }
 
-    public static subtract(v1: Vector, v2: Vector) {
+    public static subtract(v1: Vector, k: number): VectorCalculator;
+    public static subtract(v1: Vector, x: number, y: number): VectorCalculator;
+    public static subtract(v1: Vector, v2: Vector): VectorCalculator;
+    public static subtract(v1: Vector, xOrV: number | Vector, y?: number): VectorCalculator;
+    public static subtract(v1: Vector, xOrV: number | Vector, y?: number) {
+        const v2 = this.getVector(xOrV, y);
+
         return new VectorCalculator(v1.x - v2.x, v1.y - v2.y);
+    }
+
+    private static getVector(xOrV: number | Vector, y?: number): Vector {
+        if (typeof xOrV === 'number') {
+            return {
+                x: xOrV,
+                y: y ?? xOrV
+            };
+        } else {
+            return xOrV;
+        }
     }
 }

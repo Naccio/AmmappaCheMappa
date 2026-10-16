@@ -96,6 +96,14 @@ export class CellContext {
         }
     }
 
+    public getNeighbor(index: number) {
+        if (index === -1) {
+            return undefined;
+        }
+
+        return this.neighbors[index];
+    }
+
     public hasObject(object?: MapObject) {
         if (object === undefined) {
             return false;

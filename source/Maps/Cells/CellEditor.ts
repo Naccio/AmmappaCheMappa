@@ -16,6 +16,7 @@ import { GridHelper } from "../../Utilities/GridHelper";
 import { ShapeStyle } from "../../Engine/Rendering/ShapeStyle";
 import { Point } from "../../Model/Point";
 import { Vector } from "../../Model/Vector";
+import { ContentPointContext, ContentPointOverlap } from "../Contents/ContentPointContext";
 
 export class CellEditor implements UIElement {
     private readonly radius = .02;
@@ -27,7 +28,7 @@ export class CellEditor implements UIElement {
 
     private readonly selectedObject: InternalObservable<MapObject | undefined>;
 
-    private points: ContentPoint[] = [];
+    private points: ContentPointContext[] = [];
     private activePoint?: number;
 
     public constructor(
@@ -61,8 +62,8 @@ export class CellEditor implements UIElement {
 
         this.pointer.status.subscribe(s => this.mouseMoveHandler(s));
 
-        this.selectedObject.subscribe(_ => {
-            this.getPoints();
+        this.selectedObject.subscribe(o => {
+            this.points = this.getPoints(o);
             this.draw();
         });
     }
@@ -85,7 +86,7 @@ export class CellEditor implements UIElement {
             alreadyDrawn = new Set<string>();
 
         for (let i = 0; i < points.length; i++) {
-            const point = points[i];
+            const point = points[i].point;
 
             point.connections.forEach(c => {
                 const key = [i, c].sort().toString();
@@ -94,9 +95,9 @@ export class CellEditor implements UIElement {
                     return;
                 }
 
-                const connectedPoint = points[c],
-                    from = this.getRelativePoint(point),
-                    to = this.getRelativePoint(connectedPoint);
+                const connectedPoint = points[c].point,
+                    from = this.getRelativePoint(point.point),
+                    to = this.getRelativePoint(connectedPoint.point);
 
                 drawer.line([from, to], {
                     lineWidth: .01,
@@ -114,9 +115,16 @@ export class CellEditor implements UIElement {
             drawer = this.drawer;
 
         points.forEach(p => {
-            const point = this.getRelativePoint(p);
+            const type = p.point.type,
+                point = this.getRelativePoint(p.point.point);
 
-            switch (p.type) {
+            if (p.isConnection) {
+                const size = this.radius * 2 + .02;
+
+                drawer.rectangle(VectorMath.subtract(point, size / 2), size, size, { fillStyle: 'magenta' });
+            }
+
+            switch (type) {
                 case ContentPointType.position:
                     drawer.circle(point, this.radius, { fillStyle: 'red' });
                     break;
@@ -130,7 +138,7 @@ export class CellEditor implements UIElement {
                     break;
 
                 default:
-                    throw new Error(`Invalid point type: '${p.type}'.`);
+                    throw new Error(`Invalid point type: '${type}'.`);
             }
         });
     }
@@ -186,20 +194,49 @@ export class CellEditor implements UIElement {
         };
     }
 
-    private getPoints() {
-        const selected = this.selectedObject.value;
+    private getOverlaps(point: ContentPoint) {
+        const side = GridHelper.getSide(point.point),
+            neighbor = this.cell.getNeighbor(side),
+            overlaps: ContentPointOverlap[] = [];
 
-        if (selected === undefined) {
-            this.points = [];
-        } else {
-            const content = this.contents.get(selected.type);
+        //HACK: Super ugly code
+        neighbor?.objects.value.forEach((o, oi) => {
+            if (o.type === this.selectedObject.value?.type) {
+                o.points.forEach((p, pi) => {
+                    if (GridHelper.isConnection(point.point, p)) {
+                        overlaps.push({
+                            cellNeighborIndex: side,
+                            objectIndex: oi,
+                            overlappingPointIndex: pi
+                        });
+                    }
+                });
+            }
+        });
 
-            this.points = content.points.get(selected);
-        }
+        return overlaps;
     }
 
-    private getRelativePoint(point: ContentPoint) {
-        return VectorMath.add(point.point, this.getCellShift(this.cell.index));
+    private getPoints(selected?: MapObject) {
+        const points: ContentPointContext[] = [];
+
+        if (selected === undefined) {
+            return points;
+        }
+
+        this.contents.getPoints(selected).forEach(p => {
+            const overlaps = this.getOverlaps(p);
+
+            points.push(new ContentPointContext(p, overlaps));
+        });
+
+        return points;
+    }
+
+    private getRelativePoint(point: Point, cell?: CellIndex) {
+        cell ??= this.cell.index;
+
+        return VectorMath.add(point, this.getCellShift(cell));
     }
 
     private mouseMoveHandler(pointerStatus: PointerStatus | undefined) {
@@ -226,14 +263,14 @@ export class CellEditor implements UIElement {
 
     private commitChanges(object: MapObject) {
         if (this.activePoint !== undefined) {
-            this.cell.update(object.id, this.points.map(p => p.point));
+            this.cell.update(object.id, this.points.map(p => p.point.point));
         }
         this.activePoint = undefined;
     }
 
     private selectPoint(position: Point) {
         const index = this.points
-            .map(p => this.getRelativePoint(p))
+            .map(p => this.getRelativePoint(p.point.point))
             .findIndex(p =>
                 p.x - this.radius < position.x &&
                 p.x + this.radius > position.x &&
@@ -245,8 +282,8 @@ export class CellEditor implements UIElement {
     }
 
     private updatePoint(object: MapObject, index: number, position: Point) {
-        const point = this.points[index],
-            relativePoint = this.getRelativePoint(point);
+        const point = this.points[index].point,
+            relativePoint = this.getRelativePoint(point.point);
 
         let change: Vector = VectorMath.subtract(position, relativePoint);
 

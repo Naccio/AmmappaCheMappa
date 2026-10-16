@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - Commands:
   - **Delete layer**: Objects in a deleted layer are not deleted with it
 - Tools:
+  - **Mountains**: Sometimes the tool tries to create a mountain that goes
+    outside the cell boundaries
   - **River**: Sometimes rivers do not connect properly between cells
   - **Select**: Object points can be pushed outside of cell boundaries by moving
     other points that affect them

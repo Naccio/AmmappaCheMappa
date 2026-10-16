@@ -72,7 +72,7 @@ export abstract class LinkedCellTool implements Tool {
 
             // Last object connects to this cell
             if (neighbor.neighbors[connection.neighborIndex] === cell) {
-                this.updateObject(neighbor, object, connection.point);
+                this.update(neighbor, object, connection.point);
                 return connection;
             }
         }
@@ -83,9 +83,18 @@ export abstract class LinkedCellTool implements Tool {
     private create(cell: CellContext, from: Point, to: Point) {
         this.previousContext = this.activeContext;
 
+        from = VectorMath.round(from, 2);
+        to = VectorMath.round(to, 2);
+
         const object = this.createObject(cell, from, to);
 
         this.activeContext = { cell, object };
+    }
+
+    private update(cell: CellContext, object: MapObject, position: Point) {
+        position = VectorMath.round(position, 2);
+
+        this.updateObject(cell, object, position);
     }
 
     private getConnection(from: Point, direction: Vector) {
@@ -124,7 +133,7 @@ export abstract class LinkedCellTool implements Tool {
             nextCell = previousCell.neighbors[connection.neighborIndex],
             iterations = 0;
 
-        this.updateObject(previousCell, previousObject, connection.point);
+        this.update(previousCell, previousObject, connection.point);
 
         while (!GridHelper.cellIsEqual(nextCell?.index, cell.index)) {
             if (nextCell === undefined) {
@@ -155,8 +164,8 @@ export abstract class LinkedCellTool implements Tool {
             return;
         }
 
-        let from = VectorMath.round(this.startPosition, 2),
-            to = VectorMath.round(context.cellPosition, 2);
+        let from = this.startPosition,
+            to = context.cellPosition;
 
         if (activeObject !== undefined && cell.hasObject(activeObject)) {
             this.updateObject(cell, activeObject, to);
@@ -167,7 +176,7 @@ export abstract class LinkedCellTool implements Tool {
                 const connection = this.connectObject(cell, previousObject, context.direction);
 
                 if (connection !== undefined) {
-                    from = VectorMath.round(connection.neighborPoint, 2);
+                    from = connection.neighborPoint;
                 }
             }
 

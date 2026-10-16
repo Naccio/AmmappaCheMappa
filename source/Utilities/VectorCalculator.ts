@@ -72,9 +72,7 @@ export class VectorCalculator {
     public subtract(x: number, y: number): VectorCalculator;
     public subtract(v: Vector): VectorCalculator;
     public subtract(xOrV: number | Vector, y?: number) {
-        const v = this.getVector(xOrV, y);
-
-        return VectorMath.subtract(this, v);
+        return VectorMath.subtract(this, xOrV, y);
     }
 
     private getVector(xOrV: number | Vector, y?: number): Vector {

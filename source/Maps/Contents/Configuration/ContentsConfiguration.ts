@@ -1,3 +1,4 @@
+import { MapObject } from "../../../Model/MapObject";
 import { ContentConfiguration } from "./ContentConfiguration";
 
 export class ContentsConfiguration {
@@ -12,5 +13,11 @@ export class ContentsConfiguration {
         }
 
         return content;
+    }
+
+    public getPoints(object: MapObject) {
+        const content = this.get(object.type);
+
+        return content.points.get(object);
     }
 }
