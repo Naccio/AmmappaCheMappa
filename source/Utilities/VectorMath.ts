@@ -10,7 +10,14 @@ export class VectorMath {
 
     private constructor() { }
 
-    public static add(v1: Vector, v2: Vector) {
+
+    public static add(v1: Vector, n: number): VectorCalculator;
+    public static add(v1: Vector, x: number, y: number): VectorCalculator;
+    public static add(v1: Vector, v2: Vector): VectorCalculator;
+    public static add(v1: Vector, xOrV: number | Vector, y?: number): VectorCalculator;
+    public static add(v1: Vector, xOrV: number | Vector, y?: number) {
+        const v2 = this.getVector(xOrV, y);
+
         return new VectorCalculator(v1.x + v2.x, v1.y + v2.y);
     }
 
@@ -114,7 +121,7 @@ export class VectorMath {
         return new VectorCalculator(v.x, v.y);
     }
 
-    public static subtract(v1: Vector, k: number): VectorCalculator;
+    public static subtract(v1: Vector, n: number): VectorCalculator;
     public static subtract(v1: Vector, x: number, y: number): VectorCalculator;
     public static subtract(v1: Vector, v2: Vector): VectorCalculator;
     public static subtract(v1: Vector, xOrV: number | Vector, y?: number): VectorCalculator;

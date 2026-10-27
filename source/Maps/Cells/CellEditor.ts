@@ -247,7 +247,8 @@ export class CellEditor implements UIElement {
         }
 
         if (pointerStatus?.button !== PointerButtons.primary) {
-            this.commitChanges(object);
+            this.activePoint = undefined;
+            //this.commitChanges(object);
             return;
         }
 
@@ -265,7 +266,7 @@ export class CellEditor implements UIElement {
         if (this.activePoint !== undefined) {
             this.cell.update(object.id, this.points.map(p => p.point.point));
         }
-        this.activePoint = undefined;
+        //this.activePoint = undefined;
     }
 
     private selectPoint(position: Point) {
@@ -282,24 +283,47 @@ export class CellEditor implements UIElement {
     }
 
     private updatePoint(object: MapObject, index: number, position: Point) {
-        const point = this.points[index].point,
-            relativePoint = this.getRelativePoint(point.point);
+        const pointContext = this.points[index],
+            contentPoint = pointContext.point,
+            point = contentPoint.point,
+            relativePoint = this.getRelativePoint(point);
 
         let change: Vector = VectorMath.subtract(position, relativePoint);
 
-        point.constraints.forEach(c => {
+        contentPoint.constraints.forEach(c => {
             change = c.apply(object, index, change);
         });
 
-        const newPoint = VectorMath.startOperation(point.point)
+        const newPoint = VectorMath.startOperation(point)
             .add(change)
             .round(2);
 
-        point.point.x = newPoint.x;
-        point.point.y = newPoint.y;
+        point.x = newPoint.x;
+        point.y = newPoint.y;
 
-        point.effects.forEach(e => e.apply(object, index, change));
+        contentPoint.effects.forEach(e => e.apply(object, index, change));
 
+        if (pointContext.isConnection) {
+            pointContext.overlaps.forEach(o => {
+                const connectedCell = this.cell.getNeighbor(o.cellNeighborIndex);
+
+                if (connectedCell !== undefined) {
+                    const object = connectedCell.objects.value[o.objectIndex],
+                        point = object.points[o.overlappingPointIndex];
+
+                    const newPoint = VectorMath.startOperation(point)
+                        .add(change)
+                        .round(2);
+
+                    point.x = newPoint.x;
+                    point.y = newPoint.y;
+
+                    connectedCell.update(object.id, object.points);
+                }
+            });
+        }
+
+        this.commitChanges(object);
         this.draw();
     }
 }
